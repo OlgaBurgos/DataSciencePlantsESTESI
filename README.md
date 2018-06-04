@@ -7,5 +7,5 @@ Gian puede editar.
 hola aqui estoy
 estoy probando...mas pruebas
 
-Pues yo también pruebo
+Pues también pruebo
 y ahora?
