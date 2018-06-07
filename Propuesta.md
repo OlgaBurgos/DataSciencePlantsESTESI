@@ -47,4 +47,14 @@ Otros: incorporar descripciones de especies con rasgos: por ejemplo si es arbol 
 
 
 ## Workflow
-Mapa de trabajo propuesto: under construction.
+Mapa de trabajo propuesto:
+1. Obtener la base de datos completa y limpia
+
+
+2. Analisis exploratorios
+
+
+3. Analisis estadísticos propuestos 
+
+4. Preparación de plataformas de visualización 
+
