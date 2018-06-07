@@ -8,9 +8,25 @@ Class = df['class'].unique()
 Order = df['order'].unique()
 Family = df['family'].unique()
 Species = df['species'].unique()
+Genus = df['genus'].unique()
+Taxonrank = df['taxonrank'].unique()
+Countrycode = df['countrycode'].unique()
 
-# We have 1753 different species within the 'Kingdom, Phylum, Class, Order, Species' classification
+
+# We have 133 genus and 1753 different species within the 'Kingdom, Phylum, Class, Order, Species' classification
 #                                           'Plantae, Tracheophyta, Magnoliopsida, Aizoaceae'
 
-
 df_drp = df[[column for column in list(df) if len(df[column].unique()) > 1]]
+
+# Comparing dataframe size
+
+df.info()       # 35.4+ MB
+df_drp.info()   # 31.4+ MB
+
+df_drp['taxonrank'] = df_drp['taxonrank'].astype('category')
+
+df_drp.info()   # 30.7+ MB
+
+df_drp['countrycode'] = df_drp['countrycode'].astype('category')
+
+df_drp.info()   # 30.1+ MB
