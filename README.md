@@ -1,11 +1,4 @@
 # DataSciencePlants
 Project for the course Data Science UB
-##b Vulll emancipació!!!
 
-
-Gian puede editar.
-hola aqui estoy
-estoy probando...mas pruebas
-
-Pues yo también pruebo
-y ahora?
+NEW: He incorporado un texto con la propuesta un poco en general, en el archivo "Propuesta".
