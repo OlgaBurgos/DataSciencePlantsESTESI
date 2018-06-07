@@ -41,6 +41,7 @@ Propongo algunas preguntas:
 - Las especies que son invasoras son tambien aquellas que ocupan un espacio climático mas amplio?
 - Cuantas especies tienen uso comercial? Por qué paises?
 - De donde venian aquellas especies que se han convertido en invasoras?
+- Que especie guarda un mayor parecido con *Carpobrotus edulis* y por tanto podria ser tambien invasora?
 
 Otros: incorporar descripciones de especies con rasgos: por ejemplo si es arbol o no o si sus semillas son grandes o pequeñas, y relacionarlo con su origen (región templada, alpina, desertica, etc.) y la amplitud de su espacio climatico. 
 
