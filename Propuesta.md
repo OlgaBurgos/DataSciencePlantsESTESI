@@ -31,6 +31,10 @@ Tenemos disponibilidad de tres fuentes de datos, algunos completos y otros por c
 2. WorldClim - Datos climaticos con grande precision de cualquier coordenada del mundo. http://www.worldclim.org/
 3. Lista de especies invasoras, exoticas o naturalizadas (existe? sino se puede construir).
 4. Open Tree of Life: Datos filogenéticos entre los generos y especies de la familia Aizoaceae: https://ot14.opentreeoflife.org/opentree/argus/ottol@367508/Aizoaceae  (Se pueden utilizar los datos des de R con este paquete: https://cran.r-project.org/web/packages/rotl/vignettes/data_mashups.html)
+¿como utilizar el Open Tree of Life??https://ot14.opentreeoflife.org/about/taxonomy-version/ott3.0 https://github.com/OpenTreeOfLife/germinator/wiki/Open-Tree-of-Life-Web-APIs#taxonomy-methods Nuestra especie:Reference taxonomy
+OTT: 973287,  Node id in synthetic tree: ott973287
+5. Interacciones Carpobrotus https://www.globalbioticinteractions.org/?interactionType=interactsWith&sourceTaxon=NCBI%3A379215
+6. Un mapa con los datos de distribución de Gbif. ejemplo sencillo de lo que queremos coneguir? http://eol.org/pages/60549/maps
 
 
 ## Hipotesis de trabajo - Cuestiones
