@@ -20,8 +20,8 @@ En realidad ninguna de estas hipotesis son exluyentes y lo que determina el exit
 ### Las Aizoaceas
 *Carpobrotus edulis* es una de las [100 especies invasoras mas agresivas](https://portals.iucn.org/library/sites/library/files/documents/2000-126-Es.pdf) segun la IUCN, perteneciente a la familia de las Aizoaceas y cumple algunos de los rasgos que definen a un "buen invasor": tiene crecimiento clonal (asexual) y ciclos de vida cortos. 
 
-Pese a no estar en la lista de las 100 peores, otras especies de la familia de las Aizoaceas han sido consideradas invasoras en algunas partes del mundo, como por ejemplo *Aptenia cordifolia*.
-
+Pese a no estar en la lista de las 100 peores, otras especies de la familia de las Aizoaceas han sido consideradas invasoras en algunas partes del mundo: 
+"Trianthema portulacastrum" "Mesembryanthemum nodiflorum"  "Carpobrotus chilensis"   "Conicosia pugioniformis"  "Carpobrotus acinaciformis"
 
 
 ## Bases de datos
