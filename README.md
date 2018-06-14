@@ -2,8 +2,8 @@
 Project for the course Data Science UB
 
 He organizado por carpetas:
-- Documentacion: documentos de texto de protocolo y contexto del trabajo
-- Rscripts: codigos de R de la realizacion del trabajo
+- Documentacion: documentos de texto como: [Propuesta](Documentacion/Propuesta.md) y [MaterialyMetodos](Documentacion/MaterialyMetodos.Rmd)
+- Rscripts: codigos de R de la realizacion del trabajo, como [Rscripts](Rscripts/ExtractWorldClim.R)
 
 Pues también pruebo
 y ahora?
