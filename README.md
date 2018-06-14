@@ -1,11 +1,9 @@
 # DataSciencePlants
 Project for the course Data Science UB
 
-<<<<<<< HEAD
-
-Gian puede editar.
-hola aqui estoy
-estoy probando...mas pruebas
+He organizado por carpetas:
+- Documentacion: documentos de texto de protocolo y contexto del trabajo
+- Rscripts: codigos de R de la realizacion del trabajo
 
 Pues también pruebo
 y ahora?
