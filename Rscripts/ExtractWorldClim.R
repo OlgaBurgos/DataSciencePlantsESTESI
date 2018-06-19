@@ -32,4 +32,15 @@ summary(df) #Hay muchos NA, hay que explorar porque.
 
 Data <- df[complete.cases(df),]
 
+#Ahora completar el dataframe con las variables del gbif.
+
+
+#Edito los nombres para que sean los mismos que df, asi haremos merge con esta variable comuna
+names(gbif)[names(gbif) == 'decimallatitude'] <- 'lat'
+names(gbif)[names(gbif) == 'decimallongitude'] <- 'lon'
+
+
+merged <- merge(gbif, df, by=c("lat", "lon")) #No combina bien... al final hay mas casos que al principio.
+
+View(merged)
 write.csv(Data, file = "Data.csv")
