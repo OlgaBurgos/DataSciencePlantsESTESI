@@ -7,9 +7,9 @@
 
 
 ## Workflow
-1) Descarga de datos de registros de presencia de especies de la familia de las Aizoaceas de GBIF
-2) Descarga de datos de las variables bioclimaticas del WordClim para las coordenadas de presencia de especies de (1).
-3) Descarga de los datos filogeneticos de las especies de Aizoaceas del Open Tree of Life
+1) Descarga de datos de registros de presencia de especies de la familia de las Aizoaceas de GBIF--> Data wranling + análisis exploratorio y descriptivo.
+2) Descarga de datos de las variables bioclimaticas del WordClim para las coordenadas de presencia de especies de (1).--> Data wranglin + analisis exploratorio y descriptivo 
+3) Descarga de los datos filogeneticos de las especies de Aizoaceas del Open Tree of Life --> Data Wrangling+ análisis exploratorio y descriptivo
 4) Construccion del nicho climatico de las especies de la familia de las Aizoaceas con PCA (individual y comun)
 5) Parametrizacion del nicho climatico (que variables podemos extraer?: anchura del nicho con MonteCarlo, centroide, etc. )
 6) Construccion de un entorno shinny para la visualización del nicho climatico de las especies categorizando su origen y si son o no invasoras.
@@ -18,3 +18,7 @@
 
 ## Descripción del procedimiento seguido
 Descripción de los paquetes usados, assumciones tomadas, etc..
+- Para el data-wrangling hemos utilizado paquetes como "dplyr", "tidyr" ayudandonos de los cheetsheets. 
+- Tambien el paquete "Dataexplorer", para entre otros objetivos, tratar con los missing-values. 
+- Realizando gráficos e histogramas con paquetes como "ggplot2"
+- Tablas de frecuencia 
