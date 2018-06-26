@@ -15,18 +15,27 @@ summary(DATOS)
 plot_str(DATOS)
 plot_missing(DATOS) #ayuda a decidir las variables a eliminar( las que más NA's tengan)
 
+kingdom<-unique(dat$kingdom) ##Reino "Planteae"
+phylum<- unique(dat$phylum) ## fílum "Traqueofitos"
+class<- unique(dat$class)  ##clase "Magnoliopsida"
+order<- unique(dat$order) ##  ordren "Caryophyllales"
+family<- unique(dat$family) ## família Aizoaceae
+genus<- unique(dat$genus) ## 133 generos
+species <- unique(dat$species)##1753 especies 
+
 ##Vamos a eliminar algunas columnas(variables que no nos són útiles)
 ##Eliminar columnas--> mirando los datos, podemos eliminar aquellas columnas que no nos interesen
-dat2 <- dat[, -c(3, 11,16,19:24,34:41,43)] ##subset data, eliminando las columans que no me sirven.
+dat2 <- dat[, -c(2:8, 11:13,15:16,19:24,29,32:34:41:43)] ##subset data, eliminando las columans que no me sirven.
 View(dat2)
 
 ###Aquí las que he eliminado(entre parentesis el número de columna que ocupaban y en algunas he puesto NA's por ser la razón de su deletion)
-###Occurrenceid(3),infraespecificepithet(11,Na’s) , publishingorgkey(16), 
+###datasetkey(2), Occurrenceid(3),infraespecificepithet(11,Na’s),taxonrank,scientificname(repetido) ,locality(15, ja tenim countrycode) publishingorgkey(16), 
 ###coodinateuncertaintyinmeters(19), coordinateprecision, elevation, elevationaccuracy, depth,depthacc(24) tenen molts NA’s,
-###catalognumber(34), recordnumber(NA’s), identifiedby, license,rightsolder, recordedby, typestatus(NA’s), establishmentmeans(41,NA’s) ,mediatype(43)
+###taxonkey(29),instutioncode(32), collectioncode(33)
+###catalognumber(34), recordnumber(NA’s), identifiedby, license,rightsolder, recordedby, typestatus(NA’s), establishmentmeans(41,NA’s),lastintep(42) ,mediatype(43)
 ###Hay algunas variables que no sabia si eliminar: institutioncode&collectioncode porque quizas nos puede estar hablando de un mal o buen muestreo?
 ###Issue habla sobre coordenadas, nos puede servir de ayuda cara a hacer un mapa?
-###datasetkey, puede que nos ayude a clasificar de otra forma
+###datasetkey, puede que nos ayude a clasificar de otra forma. 
 
 
 ##Transformar variables
@@ -34,13 +43,6 @@ summary(dat2) ##Hago un summary para ver de nuevo las variables
 plot_str(dat2)
 
 
-kingdom<-unique(dat2$kingdom) ##Reino "Planteae"
-phylum<- unique(dat2$phylum) ## fílum "Traqueofitos"
-class<- unique(dat2$class)  ##clase "Magnoliopsida"
-order<- unique(dat$order) ##  ordren "Caryophyllales"
-family<- unique(dat2$family) ## família Aizoaceae
-genus<- unique(dat2$genus) ## 133 generos
-species <- unique(dat2$species)##1753 especies 
 
 ##Vamos a transformar alguna variable en categórica 
 
