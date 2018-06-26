@@ -3,6 +3,9 @@
 #################################################################################################
 
 install.packages("ecospat")
+##com que no esta per aquesta versió hem d'instalar d'un repositori antic
+install.packages("remotes")
+install.version("ecospat", "2.0.0")
 install.packages("biomod2")
 install.packages("ade4")
 install.packages("adehabitatHS")
@@ -361,21 +364,23 @@ plot.overlap.test<-function (x,type,title)
 #################################################################################################
 
 # load climate variable for all site of the study area 1 (column names should be x,y,X1,X2,...,Xn)
-clim1<-na.exclude(read.delim("occsO_G.txt",h=T,sep="\t"))
-clim1 <- unique(clim1)
+clim1<-na.exclude(dat2)
+clim1 <- unique(TODO$BIO1) #TEMPERATURA
 
 # load climate variable for all site of the study area 1 (column names should be x,y,X1,X2,...,Xn)
 clim2<-na.exclude(read.delim("occsINV_G.txt",h=T,sep="\t")) 
-clim2 <- unique(clim2)
+clim2 <- unique(TODO$BIO12) #PRECIPITACIÓ
 
 # global climate for both ranges
 clim12<-rbind(clim1,clim2)
 clim12 <- unique(clim12)
 
 # loading occurrence sites for the species (column names should be x,y)
-occ.sp.aggr<- na.exclude(read.delim("occsG.txt",h=T,sep="\t"))
-occ.sp.aggr <- unique(occ.sp.aggr)
-
+colnames(TODO)[colnames(TODO)=="decimallatitude"] <- "y"
+colnames(TODO)[colnames(TODO)=="decimallongitude"] <- "x"
+occ.sp.aggr<- TODO
+occ.sp.aggr <- unique(TODO$x & TODO$y)
+View(TODO)
 
 # remove occurrences closer than a minimum distance to each other (remove aggregation). Setting min.dist=0 will remove no occurrence.
 occ.sp<-ecospat.occ.desaggregation(xy=occ.sp.aggr, min.dist=0.1)
@@ -383,7 +388,7 @@ occ.sp<-ecospat.occ.desaggregation(xy=occ.sp.aggr, min.dist=0.1)
 
 newmap <- getMap(resolution = "coarse")
 plot(newmap, asp = 1)
-points(occ.sp$x, occ.sp$y, 
+points(TODO$x, TODO$y, 
        col = "salmon", 
        pch = 19, 
        cex = .5)
