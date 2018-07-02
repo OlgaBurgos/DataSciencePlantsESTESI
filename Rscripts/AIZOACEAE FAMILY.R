@@ -16,13 +16,19 @@ plot_str(DATOS)
 plot_missing(DATOS) #ayuda a decidir las variables a eliminar( las que más NA's tengan)
 
 kingdom<-unique(dat$kingdom) ##Reino "Planteae"
+kingdom
 phylum<- unique(dat$phylum) ## fílum "Traqueofitos"
+phylum
 class<- unique(dat$class)  ##clase "Magnoliopsida"
+class
 order<- unique(dat$order) ##  ordren "Caryophyllales"
+order
 family<- unique(dat$family) ## família Aizoaceae
+family
 genus<- unique(dat$genus) ## 133 generos
+genus
 species <- unique(dat$species)##1753 especies 
-
+species
 ##Vamos a eliminar algunas columnas(variables que no nos són útiles)
 ##Eliminar columnas--> mirando los datos, podemos eliminar aquellas columnas que no nos interesen
 dat2 <- dat[, -c(2:8, 11:13,15:16,19:24,29,32:34:41:43)] ##subset data, eliminando las columans que no me sirven.
