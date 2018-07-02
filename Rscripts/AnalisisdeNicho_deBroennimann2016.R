@@ -368,6 +368,7 @@ clim1<-na.exclude(dat2)
 clim1 <- unique(TODO$BIO1) #TEMPERATURA
 
 # load climate variable for all site of the study area 1 (column names should be x,y,X1,X2,...,Xn)
+##(TENDRÍAMOS QUE CAMBIAR EL NOMBRE DE LAS VARIABLES CLIMÁTICAS A X1,X2,X3..? )
 clim2<-na.exclude(read.delim("occsINV_G.txt",h=T,sep="\t")) 
 clim2 <- unique(TODO$BIO12) #PRECIPITACIÓ
 
