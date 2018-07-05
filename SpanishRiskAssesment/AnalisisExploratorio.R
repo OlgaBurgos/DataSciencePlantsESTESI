@@ -29,3 +29,16 @@ install.packages("ppcor") #correlacion entre variables
 library(ppcor)
 
 #Reduccion de la dimension. PCA, LDA? 
+
+
+# ELIMINAR NAs
+##Para eliminar todas las filas que no estan completas:
+marcoclim1<- MarcoClim10[complete.cases(MarcoClim10), ]
+
+# Ahora podemos hacer correlaciones:
+install.packages("GGally")
+library("GGally")
+# Check correlation between variables
+cor(marcoclim1) 
+# Nice visualization of correlations
+ggcorr(marcoclim1, method = c("everything", "pearson")) 
