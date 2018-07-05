@@ -17,20 +17,6 @@ plot_histogram(MarcoClim10)
 plot_density(MarcoClim10)#This function visualizes density estimates for each continuous feature.
 
 
-##Anlalisis Exploratorio Multivariante##
-
-plot_correlation(MarcoClim10, 
-                 type = "continuous") #Nose si esta bien escrito
-
-
-install.packages("leaflet") #crear mapas
-library(leaflet)
-install.packages("ppcor") #correlacion entre variables
-library(ppcor)
-
-#Reduccion de la dimension. PCA, LDA? 
-
-
 # ELIMINAR NAs
 ##Para eliminar todas las filas que no estan completas:
 marcoclim1<- MarcoClim10[complete.cases(MarcoClim10), ]
@@ -42,3 +28,17 @@ library("GGally")
 cor(marcoclim1) 
 # Nice visualization of correlations
 ggcorr(marcoclim1, method = c("everything", "pearson")) 
+
+
+##Anlalisis Exploratorio Multivariante##
+
+plot_correlation(MarcoClim1, 
+                 type = "continuous") #Matriz de correlaciones con colores
+
+
+install.packages("leaflet") #crear mapas
+library(leaflet)
+install.packages("ppcor") #correlacion entre variables
+library(ppcor)
+
+#Reduccion de la dimension. PCA, LDA? 
