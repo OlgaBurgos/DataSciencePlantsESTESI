@@ -6,13 +6,14 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+sns.set_style("darkgrid")
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
 # GIAN: Importar datos
 df_025 = pd.read_csv('MarcoClim2.5.csv', sep=',')
 
-# GIAN: Exploración inicial ()
+# GIAN: Exploración inicial
 #df_025.info()
 #df_025.describe()
 #df_025.head()
@@ -38,22 +39,43 @@ df_025.info()
 # Ahora pesa 3.3 MB
 
 # %%===========================================================================
-# 
+# ESCALANDO DATOS
 # =============================================================================
+# Instanciando el scaler
 scaler = StandardScaler()
 df_025_scld = pd.DataFrame(scaler.fit_transform(df_025), columns=df_025.columns)
+df_025_scld.info()
+# Ahora pesa 6.0 MB
 
+# %%===========================================================================
+# REALIZANDO PCA
+# =============================================================================
+# Creando una lista de etiquetas para nombrar las PCAs
+PCA_lst = ['PCA ' + tag[3:] for tag in df_025_col_lst]
 
+# Instanciando la PCA
 pca = PCA()
-x_pca = pd.DataFrame(pca.fit_transform(df_025_scld))
+df_025_scld_pca = pd.DataFrame(pca.fit_transform(df_025_scld), columns=PCA_lst)
+df_025_scld_pca.info()
+# Sigue pesando pesa 6.0 MB
 
-ax = sns.regplot(x="total_bill", y="tip", data=tips)
+# %%===========================================================================
+# REPRESENTANDO PCA
+# =============================================================================
 
-plt.scatter(x_pca[:,0], x_pca[:,1], alpha = 0.1, s = 1, c='darkred')
-plt.xlabel('PC1')
-plt.ylabel('PC2')
-plt.title('df_025_scld')
+ax = sns.regplot(x='PCA 1',
+                 y='PCA 2',
+                 data=df_025_scld_pca,
+                 fit_reg=False,
+                 scatter_kws={'color': 'darkred', 's':0.1, 'alpha':0.1}
+                )
 
-sns.jointplot(x=x_pca[:,0], y=x_pca[:,1], kind='kde')
+
+
+
+
+
+
+
 
 
