@@ -1,4 +1,5 @@
 #Como sacar los datos de WordClim de un pais concreto
+#Basado en :http://www.jamieafflerbach.com/post/cropping-rasters-down-to-size/
 #Se tienen que hacer dos pasos: primero cortar y luego emascarar
 #La función crop corta una caja inclyendo el poligono a cortar
 #La función mask aplica una mascara seleccionando solo los puntos dentro del poligono.
