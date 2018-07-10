@@ -5,6 +5,7 @@
 - Si las condiciones climaticas en la peninsula cambiasen en el contexto del cambio climatico, ¿el numero de especies potencialmente invasoras seria mayor, menor o igual? ¿El cambio climatico podria potenciar la amenaza invasora?
 - Teniendo en cuenta el origen de las especies potencialmente invasoras y los movimientos globales de mercancias y personas, ¿Que invasiones son mas probables? ¿Con que paises deberiamos endurecer las politicas de comercio de especies?
 - ¿Por que superficie se extenderian las especies potencialmente invasoras en la peninsula? ¿Cuanto es su daño potencial?
+- Teniendo en cuenta las condiciones climáticas en la península, ¿que otros países de Europa pueden ser susceptibles a la invasión debido a similaridades con el marco climático de España i Portugal? 
 
 ### DEFINICIONES:
 - Marco climatico Ibérico: espacio multidimensional definido por los valores de diferentes variables bioclimáticas georeferenciados dentro de la Peninsula Ibérica.
