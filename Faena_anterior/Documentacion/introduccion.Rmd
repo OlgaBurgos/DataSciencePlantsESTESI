@@ -1,0 +1,56 @@
+---
+title: "Analizando Aizoaceas"
+author: "Gian, Erola, Ramón, Olga Burgos" ##añadir apellidos
+date: "Proyecto Data Science 2018"
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '5'
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 5
+---
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, fig.pos = 'h',
+                      fig.width=6, fig.height=4, fig.align="center", eval = TRUE)
+library(knitr)
+options("scipen"=100, "digits"=4)
+set.seed(533)
+```
+
+# Introducción 
+##Especies invasoras
+Las especies invasoras suponen una amenaza muy importante para la biodiversidad. De hecho se consideran la segunda mayor amenaza a esta,
+después de la perdida de hábitat. Según la UICN,
+
+>“Especie exótica invasora”: especie exótica que se establece en un ecosistema o hábitat natural o seminatural; es un agente de cambio y amenaza la diversidad biológica nativa. (UICN, 2000)
+
+
+### ¿Por que son invasoras?
+Hay diversas hipotesis que tratan de entender los motivos por los cuales algunas especies se convierten en invasoras. La hipotesis mayoritaria es que la falta de enemigos naturales en el nuevo habitat donde la invasora llegan, le permiten crecer sin control invirtiendo menos en compuestos y estrategias defensivas. Esta es la *Enemy Release Hypothesis*.
+
+Otros autores postulan la regla del 10. De diez especies exoticas que llegan a un nuevo terreno, una se convierte en invasora. Esta hipotesis se basa en el azar y el hecho que algunas comunidades son mas faciles de ser invadidas que otras.
+
+Una tercera corriente de autores postula que hay ciertos rasgos que proporcionan a las especies invasoras mayores posibilidades para serlo. Por ejemplo, grandes inversiones en dispersion de semillas, ciclos de vida cortos o crecimiento clonal son algunos de los rasgos propuestos, como los que definen a un "buen invasor"
+
+En realidad ninguna de estas hipotesis son exluyentes y lo que determina el exito invasor podria ser una combinacion de aspectos de las tres corrientes. Lo que esta claro es que poder disponer de la información de que factores determinan o condicionan si una especie se convierte en invasora o no podria ser muy util para las politicas conservación de la biodiversidad, pues la prevención es la accion mas barata para erradicar una especie invasora.
+
+En España existe el Catálogo Español de Especies Exóticas Invasoras, donde se incluiyen todas aquellas especies y subespecies exóticas invasoras que constituyan, de hecho, o puedan llegar a constituir una amenaza grave para las especies autóctonas, los hábitats o los ecosistemas, la agronomía, o para los recursos económicos asociados al uso del patrimonio natural. En cuanto a la flora recogida en este listado, encontramos una especie altamente distribuida, *Carpobrotus edulis*, perteneciente a la familia Aicoaceae, en la que se centrará este trabajo. 
+
+### Las Aizoaceas
+*Carpobrotus edulis* es una de las [100 especies invasoras mas agresivas](https://portals.iucn.org/library/sites/library/files/documents/2000-126-Es.pdf) segun la UICN, cumple algunos de los rasgos que definen a un "buen invasor": tiene crecimiento clonal (asexual) y ciclos de vida cortos. 
+
+Pese a no estar en la lista de las 100 peores, otras especies de la familia de las Aizoaceas han sido consideradas invasoras en algunas partes del mundo: 
+*Trianthema portulacastrum*, *Mesembryanthemum nodiflorum* , *Carpobrotus chilensis*, *Conicosia pugioniformis* o *Carpobrotus acinaciformis*
+
+##Objetivo de estudio
+Nos gustaría hacer un análisis de la familia vegetal Aizoaceae, respecto a su diversidad, distribución greográfica y bioclimática, y al carácter invasor de algunas especies, como *Carpobrotus edulis*. 
+
+
+
+
+
+
+
