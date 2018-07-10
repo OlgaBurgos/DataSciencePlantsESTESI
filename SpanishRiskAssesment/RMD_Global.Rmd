@@ -137,7 +137,7 @@ Al trabajar con 19 varaibles, algunas producto lineal de otras, estamos trabajan
 
 Esto se describe en : https://www.r-bloggers.com/collinearity-and-stepwise-vif-selection/
 
-#Defnimos la funcion de calculo y seleccion de variables con el VIF
+Defnimos la funcion de calculo y seleccion de variables con el VIF
 ```{r}
 vif_func<-function(in_frame,thresh=10,trace=T,...){
   
@@ -205,7 +205,7 @@ vif_func<-function(in_frame,thresh=10,trace=T,...){
 }
 ```
 
-# Aplicamos la funcion a los datos
+Aplicamos la funcion a los datos
 ```{r}
 vif_func(in_frame=marcoclim1,thresh=5,trace=T) # La funcion va calculando los VIF cada vez que quita el que tiene mayor valor hasta quedarnos con valores de VIF por debajo del umbral (hemos puesto 5, pero podria ser otro)
 ```
