@@ -315,3 +315,11 @@ i [,1:4]
 ```
 
 Pretendemos evaluar país por país, si sus condiciones climáticas se parecen a las de la península ibérica, con el fin de determinar después especies que podrían encontrar condiciones favorables en nuestro país actuando como invasoras. Por eso proyectamos los datos de marco climático de estos países sobre el nuestro.
+
+
+
+#7 OBTENCION DATOS DE ESPECIES INVASORAS MUNDIALES.ORIGEN Y PRESENCIA
+
+consultamos este artículo de Turbelin et al. 2017, donde utilizan datos de http://www.iucngisd.org/gisd/ y de https://www.cabi.org/isc/. para determinar los patrones de distribucion de especies invasoras,
+
+Interesante!!! tambien mapean vias de introduccion de invasoras!
