@@ -9,7 +9,9 @@
 <meta name="generator" content="pandoc" />
 
 
+<meta name="author" content="DSTeam" />
 
+<meta name="date" content="2018-07-10" />
 
 <title>R Notebook</title>
 
@@ -168,10 +170,14 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">R Notebook</h1>
+<h4 class="author"><em>DSTeam</em></h4>
+<h4 class="date"><em>July 10, 2018</em></h4>
 
 </div>
 
 
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
 <!-- rnb-text-begin -->
 <div id="assesoramiento-del-riesgo-invasor-en-la-peninsula-iberica." class="section level2">
 <h2>Assesoramiento del riesgo invasor en la Península Iberica.</h2>
@@ -243,9 +249,267 @@ library(factoextra)
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="delimitacion-del-marco-climatico-iberico-1" class="section level1">
+<h1>3. DELIMITACIÓN DEL MARCO CLIMÁTICO IBÉRICO</h1>
+<p>En primer lugar descargamos los datos de la base de datos globales WorldClim (<a href="http://worldclim.org/" class="uri">http://worldclim.org/</a>). Descargamos las 19 variables bioclimáticas con una resolución de 2.5 que son “minutes of a degree”. El argumento var = bio reclama las 19 variables bioclimaticas, descritas aquí: (<a href="http://worldclim.org/bioclim" class="uri">http://worldclim.org/bioclim</a>). Este mismo portal incluye variables climaticas teniendo en cuenta un contexto de cambio climatico. Más adelante se pueden testear las diferencias. Las variables referentes a la temperatura estan multiplicadas por diez.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI0Rvd25sb2FkIHRoZSBXb3JsZENsaW0gRGF0YVxud29ybGRhdGEgPC0gZ2V0RGF0YShcIndvcmxkY2xpbVwiLHZhcj1cImJpb1wiLCByZXM9Mi41KVxuYGBgIn0= -->
+<pre class="r"><code>#Download the WorldClim Data
+worldata &lt;- getData(&quot;worldclim&quot;,var=&quot;bio&quot;, res=2.5)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Los datos se descargan en formato raster. Ahora hay que seleccionar los datos correspondientes a la peninsula Iberica. Realizamos la selección recortando el cuadrado en el cual se comprende la peninsula.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1JlY29ydGFtb3MgY29uIGV4dGVudCBsb3MgZ3JhZG9zIGRlIGxvbmdpdHVkIHkgbGF0aXR1ZCBxdWUgZW1hcmNhbiBsYSBwZW5pbnN1bGEgaWJlcmljYVxuZSA8LSBleHRlbnQoLTEwLDQsMzYsNDQpICNkZWZpbmltb3MgZWwgbWFyY29cbnMuY3JvcCA8LSBjcm9wKHdvcmxkYXRhLCBlKSAjUmVjb3J0YW1vcyBlbCB3b3JsZGRhdGEgY29uIGVsIGV4dGVudFxucGxvdCAocy5jcm9wJGJpbzEpXG5gYGAifQ== -->
+<pre class="r"><code>#Recortamos con extent los grados de longitud y latitud que emarcan la peninsula iberica
+e &lt;- extent(-10,4,36,44) #definimos el marco
+s.crop &lt;- crop(worldata, e) #Recortamos el worlddata con el extent
+plot (s.crop$bio1)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Para sacar los valores dentro del archivo s.crop que esta en raster, usamos la funcion as.matrix del paquete raster que saca todos los valores y despues lo convertimos en data frame, definiendo los nombres de las variables:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYTwtYXMubWF0cml4KHMuY3JvcCkgI0VzIHVuYSBtYXRyaXogZGUgMTkgdmFyaWFibGVzLCBub3MgZmFsdGFuIGxhcyBjb29yZGVuYWRhcyBkZSBjYWRhIHB1bnRvLCBhdW5xdWUgbm8gc29uIGVzZW5jaWFsZXMuIFxubWFyY29jbGltIDwtIGFzLmRhdGEuZnJhbWUoYSlcbm5hbWVzKG1hcmNvY2xpbSkgPC0gYyhcIkJJTzFcIixcIkJJTzJcIixcIkJJTzNcIixcIkJJTzRcIiwgXCJCSU81XCIsIFwiQklPNlwiLCBcIkJJTzdcIiwgXCJCSU84XCIsIFwiQklPOVwiLFxuICAgICAgICAgICAgICAgICBcIkJJTzEwXCIsXCJCSU8xMVwiLFwiQklPMTJcIixcIkJJTzEzXCIsIFwiQklPMTRcIiwgXCJCSU8xNVwiLCBcIkJJTzE2XCIsIFwiQklPMTdcIiwgXCJCSU8xOFwiLCBcIkJJTzE5XCIpXG5gYGAifQ== -->
+<pre class="r"><code>a&lt;-as.matrix(s.crop) #Es una matriz de 19 variables, nos faltan las coordenadas de cada punto, aunque no son esenciales. 
+marcoclim &lt;- as.data.frame(a)
+names(marcoclim) &lt;- c(&quot;BIO1&quot;,&quot;BIO2&quot;,&quot;BIO3&quot;,&quot;BIO4&quot;, &quot;BIO5&quot;, &quot;BIO6&quot;, &quot;BIO7&quot;, &quot;BIO8&quot;, &quot;BIO9&quot;,
+                 &quot;BIO10&quot;,&quot;BIO11&quot;,&quot;BIO12&quot;,&quot;BIO13&quot;, &quot;BIO14&quot;, &quot;BIO15&quot;, &quot;BIO16&quot;, &quot;BIO17&quot;, &quot;BIO18&quot;, &quot;BIO19&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Exportamos los datos</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGUuY3N2KG1hcmNvY2xpbSwgZmlsZT1cIlNwYW5pc2hSaXNrQXNzZXNtZW50L0RhdG9zL01hcmNvQ2xpbTIuNS5jc3ZcIikgI0d1YXJkYW1vcyBsb3MgZGF0b3NcbmBgYCJ9 -->
+<pre class="r"><code>write.csv(marcoclim, file=&quot;SpanishRiskAssesment/Datos/MarcoClim2.5.csv&quot;) #Guardamos los datos</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>!!!!!!!!! PARA REEMPRENDER DES DE AQUÍ, CARGA LOS DATOS: !!!!!!!!!!!</p>
+</div>
+<div id="descartar-variables-muy-correlacionadas-opcional" class="section level1">
+<h1>4. DESCARTAR VARIABLES MUY CORRELACIONADAS (opcional)</h1>
+<p>Al trabajar con 19 varaibles, algunas producto lineal de otras, estamos trabajando con información redundante. Podemos basarnos en el criterio VIF para descartar algunas y probar el modelo mas adelante con todas las variables y con solo las seleccionadas.</p>
+<p>Esto se describe en : <a href="https://www.r-bloggers.com/collinearity-and-stepwise-vif-selection/" class="uri">https://www.r-bloggers.com/collinearity-and-stepwise-vif-selection/</a></p>
+<p>Defnimos la funcion de calculo y seleccion de variables con el VIF</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudmlmX2Z1bmM8LWZ1bmN0aW9uKGluX2ZyYW1lLHRocmVzaD0xMCx0cmFjZT1ULC4uLil7XG4gIFxuICBsaWJyYXJ5KGZtc2IpXG4gIFxuICBpZihhbnkoISdkYXRhLmZyYW1lJyAlaW4lIGNsYXNzKGluX2ZyYW1lKSkpIGluX2ZyYW1lPC1kYXRhLmZyYW1lKGluX2ZyYW1lKVxuICBcbiAgI2dldCBpbml0aWFsIHZpZiB2YWx1ZSBmb3IgYWxsIGNvbXBhcmlzb25zIG9mIHZhcmlhYmxlc1xuICB2aWZfaW5pdDwtTlVMTFxuICB2YXJfbmFtZXMgPC0gbmFtZXMoaW5fZnJhbWUpXG4gIGZvcih2YWwgaW4gdmFyX25hbWVzKXtcbiAgICByZWdyZXNzb3JzIDwtIHZhcl9uYW1lc1std2hpY2godmFyX25hbWVzID09IHZhbCldXG4gICAgZm9ybSA8LSBwYXN0ZShyZWdyZXNzb3JzLCBjb2xsYXBzZSA9ICcrJylcbiAgICBmb3JtX2luIDwtIGZvcm11bGEocGFzdGUodmFsLCAnficsIGZvcm0pKVxuICAgIHZpZl9pbml0PC1yYmluZCh2aWZfaW5pdCwgYyh2YWwsIFZJRihsbShmb3JtX2luLCBkYXRhID0gaW5fZnJhbWUsIC4uLikpKSlcbiAgfVxuICB2aWZfbWF4PC1tYXgoYXMubnVtZXJpYyh2aWZfaW5pdFssMl0pLCBuYS5ybSA9IFRSVUUpXG4gIFxuICBpZih2aWZfbWF4IDwgdGhyZXNoKXtcbiAgICBpZih0cmFjZT09VCl7ICNwcmludCBvdXRwdXQgb2YgZWFjaCBpdGVyYXRpb25cbiAgICAgIHBybWF0cml4KHZpZl9pbml0LGNvbGxhYj1jKCd2YXInLCd2aWYnKSxyb3dsYWI9cmVwKCcnLG5yb3codmlmX2luaXQpKSxxdW90ZT1GKVxuICAgICAgY2F0KCdcXG4nKVxuICAgICAgY2F0KHBhc3RlKCdBbGwgdmFyaWFibGVzIGhhdmUgVklGIDwgJywgdGhyZXNoLCcsIG1heCBWSUYgJyxyb3VuZCh2aWZfbWF4LDIpLCBzZXA9JycpLCdcXG5cXG4nKVxuICAgIH1cbiAgICByZXR1cm4odmFyX25hbWVzKVxuICB9XG4gIGVsc2V7XG4gICAgXG4gICAgaW5fZGF0PC1pbl9mcmFtZVxuICAgIFxuICAgICNiYWNrd2FyZHMgc2VsZWN0aW9uIG9mIGV4cGxhbmF0b3J5IHZhcmlhYmxlcywgc3RvcHMgd2hlbiBhbGwgVklGIHZhbHVlcyBhcmUgYmVsb3cgJ3RocmVzaCdcbiAgICB3aGlsZSh2aWZfbWF4ID49IHRocmVzaCl7XG4gICAgICBcbiAgICAgIHZpZl92YWxzPC1OVUxMXG4gICAgICB2YXJfbmFtZXMgPC0gbmFtZXMoaW5fZGF0KVxuICAgICAgXG4gICAgICBmb3IodmFsIGluIHZhcl9uYW1lcyl7XG4gICAgICAgIHJlZ3Jlc3NvcnMgPC0gdmFyX25hbWVzWy13aGljaCh2YXJfbmFtZXMgPT0gdmFsKV1cbiAgICAgICAgZm9ybSA8LSBwYXN0ZShyZWdyZXNzb3JzLCBjb2xsYXBzZSA9ICcrJylcbiAgICAgICAgZm9ybV9pbiA8LSBmb3JtdWxhKHBhc3RlKHZhbCwgJ34nLCBmb3JtKSlcbiAgICAgICAgdmlmX2FkZDwtVklGKGxtKGZvcm1faW4sIGRhdGEgPSBpbl9kYXQsIC4uLikpXG4gICAgICAgIHZpZl92YWxzPC1yYmluZCh2aWZfdmFscyxjKHZhbCx2aWZfYWRkKSlcbiAgICAgIH1cbiAgICAgIG1heF9yb3c8LXdoaWNoKHZpZl92YWxzWywyXSA9PSBtYXgoYXMubnVtZXJpYyh2aWZfdmFsc1ssMl0pLCBuYS5ybSA9IFRSVUUpKVsxXVxuICAgICAgXG4gICAgICB2aWZfbWF4PC1hcy5udW1lcmljKHZpZl92YWxzW21heF9yb3csMl0pXG4gICAgICBcbiAgICAgIGlmKHZpZl9tYXg8dGhyZXNoKSBicmVha1xuICAgICAgXG4gICAgICBpZih0cmFjZT09VCl7ICNwcmludCBvdXRwdXQgb2YgZWFjaCBpdGVyYXRpb25cbiAgICAgICAgcHJtYXRyaXgodmlmX3ZhbHMsY29sbGFiPWMoJ3ZhcicsJ3ZpZicpLHJvd2xhYj1yZXAoJycsbnJvdyh2aWZfdmFscykpLHF1b3RlPUYpXG4gICAgICAgIGNhdCgnXFxuJylcbiAgICAgICAgY2F0KCdyZW1vdmVkOiAnLHZpZl92YWxzW21heF9yb3csMV0sdmlmX21heCwnXFxuXFxuJylcbiAgICAgICAgZmx1c2guY29uc29sZSgpXG4gICAgICB9XG4gICAgICBcbiAgICAgIGluX2RhdDwtaW5fZGF0WywhbmFtZXMoaW5fZGF0KSAlaW4lIHZpZl92YWxzW21heF9yb3csMV1dXG4gICAgICBcbiAgICB9XG4gICAgXG4gICAgcmV0dXJuKG5hbWVzKGluX2RhdCkpXG4gICAgXG4gIH1cbiAgXG59XG5gYGAifQ== -->
+<pre class="r"><code>vif_func&lt;-function(in_frame,thresh=10,trace=T,...){
+  
+  library(fmsb)
+  
+  if(any(!'data.frame' %in% class(in_frame))) in_frame&lt;-data.frame(in_frame)
+  
+  #get initial vif value for all comparisons of variables
+  vif_init&lt;-NULL
+  var_names &lt;- names(in_frame)
+  for(val in var_names){
+    regressors &lt;- var_names[-which(var_names == val)]
+    form &lt;- paste(regressors, collapse = '+')
+    form_in &lt;- formula(paste(val, '~', form))
+    vif_init&lt;-rbind(vif_init, c(val, VIF(lm(form_in, data = in_frame, ...))))
+  }
+  vif_max&lt;-max(as.numeric(vif_init[,2]), na.rm = TRUE)
+  
+  if(vif_max &lt; thresh){
+    if(trace==T){ #print output of each iteration
+      prmatrix(vif_init,collab=c('var','vif'),rowlab=rep('',nrow(vif_init)),quote=F)
+      cat('\n')
+      cat(paste('All variables have VIF &lt; ', thresh,', max VIF ',round(vif_max,2), sep=''),'\n\n')
+    }
+    return(var_names)
+  }
+  else{
+    
+    in_dat&lt;-in_frame
+    
+    #backwards selection of explanatory variables, stops when all VIF values are below 'thresh'
+    while(vif_max &gt;= thresh){
+      
+      vif_vals&lt;-NULL
+      var_names &lt;- names(in_dat)
+      
+      for(val in var_names){
+        regressors &lt;- var_names[-which(var_names == val)]
+        form &lt;- paste(regressors, collapse = '+')
+        form_in &lt;- formula(paste(val, '~', form))
+        vif_add&lt;-VIF(lm(form_in, data = in_dat, ...))
+        vif_vals&lt;-rbind(vif_vals,c(val,vif_add))
+      }
+      max_row&lt;-which(vif_vals[,2] == max(as.numeric(vif_vals[,2]), na.rm = TRUE))[1]
+      
+      vif_max&lt;-as.numeric(vif_vals[max_row,2])
+      
+      if(vif_max&lt;thresh) break
+      
+      if(trace==T){ #print output of each iteration
+        prmatrix(vif_vals,collab=c('var','vif'),rowlab=rep('',nrow(vif_vals)),quote=F)
+        cat('\n')
+        cat('removed: ',vif_vals[max_row,1],vif_max,'\n\n')
+        flush.console()
+      }
+      
+      in_dat&lt;-in_dat[,!names(in_dat) %in% vif_vals[max_row,1]]
+      
+    }
+    
+    return(names(in_dat))
+    
+  }
+  
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Aplicamos la funcion a los datos</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudmlmX2Z1bmMoaW5fZnJhbWU9bWFyY29jbGltMSx0aHJlc2g9NSx0cmFjZT1UKSAjIExhIGZ1bmNpb24gdmEgY2FsY3VsYW5kbyBsb3MgVklGIGNhZGEgdmV6IHF1ZSBxdWl0YSBlbCBxdWUgdGllbmUgbWF5b3IgdmFsb3IgaGFzdGEgcXVlZGFybm9zIGNvbiB2YWxvcmVzIGRlIFZJRiBwb3IgZGViYWpvIGRlbCB1bWJyYWwgKGhlbW9zIHB1ZXN0byA1LCBwZXJvIHBvZHJpYSBzZXIgb3RybylcbmBgYCJ9 -->
+<pre class="r"><code>vif_func(in_frame=marcoclim1,thresh=5,trace=T) # La funcion va calculando los VIF cada vez que quita el que tiene mayor valor hasta quedarnos con valores de VIF por debajo del umbral (hemos puesto 5, pero podria ser otro)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="reduccion-de-dimensiones-por-pca-1" class="section level1">
+<h1>5. REDUCCIÓN DE DIMENSIONES POR PCA</h1>
+<p>PAra describir de forma reducida el marco climático Ibérico realizamos una reducción de dimensiones por Analisis de Componentes principales:</p>
+<p>Cargamos los datos</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWFyY29jbGltPC0gcmVhZF9jc3YoXCJTcGFuaXNoUmlza0Fzc2VzbWVudC9EYXRvcy9NYXJjb0NsaW0yLjUuY3N2XCIsIFxuICAgIGNvbF90eXBlcyA9IGNvbHMoWDEgPSBjb2xfc2tpcCgpKSlcblZpZXcobWFyY29jbGltKVxuXG5gYGAifQ== -->
+<pre class="r"><code>marcoclim&lt;- read_csv(&quot;SpanishRiskAssesment/Datos/MarcoClim2.5.csv&quot;, 
+    col_types = cols(X1 = col_skip()))
+View(marcoclim)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>PCA con todos los datos:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGNhY2xpbSA8LSBwcmNvbXAobWFyY29jbGltLCBjZW50ZXIgPSBUUlVFLCBzY2FsZS4gPSBUUlVFKSBcbnByaW50KHBjYWNsaW0pXG5wbG90KHBjYWNsaW0sIHR5cGUgPSBcImxcIilcbnN1bW1hcnkocGNhY2xpbSlcbnBsb3QocGNhY2xpbSR4WywxXSxwY2FjbGltJHhbLDJdKVxuYGBgIn0= -->
+<pre class="r"><code>pcaclim &lt;- prcomp(marcoclim, center = TRUE, scale. = TRUE) 
+print(pcaclim)
+plot(pcaclim, type = &quot;l&quot;)
+summary(pcaclim)
+plot(pcaclim$x[,1],pcaclim$x[,2])</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>PCA solo con las variables que VIF &lt; 5</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWFyY29jbGltVklGIDwtIG1hcmNvY2xpbVssYygyLDMsOCw5LDEzLDE1KV1cblxucGNhY2xpbTIgPC0gcHJjb21wKG1hcmNvY2xpbVZJRiwgY2VudGVyID0gVFJVRSwgc2NhbGUuID0gVFJVRSkgXG5wcmludChwY2FjbGltMilcbnBsb3QocGNhY2xpbTIsIHR5cGUgPSBcImxcIilcbnN1bW1hcnkocGNhY2xpbTIpXG5gYGAifQ== -->
+<pre class="r"><code>marcoclimVIF &lt;- marcoclim[,c(2,3,8,9,13,15)]
+
+pcaclim2 &lt;- prcomp(marcoclimVIF, center = TRUE, scale. = TRUE) 
+print(pcaclim2)
+plot(pcaclim2, type = &quot;l&quot;)
+summary(pcaclim2)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Ploteamos los dos primeros componentes principales:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdChwY2FjbGltMiR4WywxXSxwY2FjbGltMiR4WywyXSlcbmBgYCJ9 -->
+<pre class="r"><code>plot(pcaclim2$x[,1],pcaclim2$x[,2])</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Otros plots</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZnZpel9wY2FfdmFyKHBjYWNsaW0sXG4gICAgICAgICAgICAgY29sLnZhciA9IFwiY29udHJpYlwiLCAjIENvbG9yIGJ5IGNvbnRyaWJ1dGlvbnMgdG8gdGhlIFBDXG4gICAgICAgICAgICAgZ3JhZGllbnQuY29scyA9IGMoXCIjMDBBRkJCXCIsIFwiI0U3QjgwMFwiLCBcIiNGQzRFMDdcIiksXG4gICAgICAgICAgICAgcmVwZWwgPSBUUlVFICAgICAjIEF2b2lkIHRleHQgb3ZlcmxhcHBpbmdcbikgICMjRnVuY2nDs24gcGFyYSB2ZXIgbGEgY29udHJpYnVjacOzbiBkZSBjYWRhIHZhcmlhYmxlIGVuIGVzdGEgUENBXG5cbiMjIE1hbmVyYSBkZSByZXByZXNlbnRhciBsYSBQQ0EgZXh0cmHDrWRvIGRlIGh0dHBzOi8vdGdtc3RhdC53b3JkcHJlc3MuY29tLzIwMTMvMTEvMjgvY29tcHV0aW5nLWFuZC12aXN1YWxpemluZy1wY2EtaW4tci9cblxuZyA8LSBnZ2JpcGxvdChwY2FjbGltLCBvYnMuc2NhbGUgPSAxLCB2YXIuc2NhbGUgPSAxLCBcbiAgICAgICAgICAgICAgIGVsbGlwc2UgPSBUUlVFLCBhbHBoYT0wLjEsIFxuICAgICAgICAgICAgICBjaXJjbGUgPSBUUlVFKVxuZyA8LSBnICsgc2NhbGVfY29sb3JfZGlzY3JldGUobmFtZSA9ICcnKVxuZyA8LSBnICsgdGhlbWUobGVnZW5kLmRpcmVjdGlvbiA9ICdob3Jpem9udGFsJywgXG4gICAgICAgICAgICAgICBsZWdlbmQucG9zaXRpb24gPSAndG9wJylcbnByaW50KGcpXG5gYGAifQ== -->
+<pre class="r"><code>fviz_pca_var(pcaclim,
+             col.var = &quot;contrib&quot;, # Color by contributions to the PC
+             gradient.cols = c(&quot;#00AFBB&quot;, &quot;#E7B800&quot;, &quot;#FC4E07&quot;),
+             repel = TRUE     # Avoid text overlapping
+)  ##Función para ver la contribución de cada variable en esta PCA
+
+## Manera de representar la PCA extraído de https://tgmstat.wordpress.com/2013/11/28/computing-and-visualizing-pca-in-r/
+
+g &lt;- ggbiplot(pcaclim, obs.scale = 1, var.scale = 1, 
+               ellipse = TRUE, alpha=0.1, 
+              circle = TRUE)
+g &lt;- g + scale_color_discrete(name = '')
+g &lt;- g + theme(legend.direction = 'horizontal', 
+               legend.position = 'top')
+print(g)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="obtencion-de-datos-de-otros-paises-y-proyeccion-sobre-el-marco-climatico-iberico-1" class="section level1">
+<h1>6. OBTENCIÓN DE DATOS DE OTROS PAISES Y PROYECCIÓN SOBRE EL MARCO CLIMÁTICO IBÉRICO</h1>
+<p>Cargamos los datos del marco climatico ibérico:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWFyY29jbGltPC0gcmVhZF9jc3YoXCJTcGFuaXNoUmlza0Fzc2VzbWVudC9EYXRvcy9NYXJjb0NsaW0yLjUuY3N2XCIsIFxuICAgIGNvbF90eXBlcyA9IGNvbHMoWDEgPSBjb2xfc2tpcCgpKSlcblZpZXcobWFyY29jbGltKVxuXG5gYGAifQ== -->
+<pre class="r"><code>marcoclim&lt;- read_csv(&quot;SpanishRiskAssesment/Datos/MarcoClim2.5.csv&quot;, 
+    col_types = cols(X1 = col_skip()))
+View(marcoclim)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Descargamos los datos del WordClim (ya hecho previamente en el #3)</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI0Rvd25sb2FkIHRoZSBXb3JsZENsaW0gRGF0YVxud29ybGRhdGEgPC0gZ2V0RGF0YShcIndvcmxkY2xpbVwiLHZhcj1cImJpb1wiLCByZXM9Mi41KVxuYGBgIn0= -->
+<pre class="r"><code>#Download the WorldClim Data
+worldata &lt;- getData(&quot;worldclim&quot;,var=&quot;bio&quot;, res=2.5)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>En: <a href="https://www.gis-blog.com/r-raster-data-acquisition" class="uri">https://www.gis-blog.com/r-raster-data-acquisition</a>, encontramos como se realiza la descarga y recorte de los paises. Para llamar a un pais concreto se usa la nomenclatura de tres letras definida en: <a href="http://kirste.userpage.fu-berlin.de/diverse/doc/ISO_3166.html.Hay" class="uri">http://kirste.userpage.fu-berlin.de/diverse/doc/ISO_3166.html.Hay</a> una base de datos con los nombres y codigos de los 241 paises que incluye la lista. Podemos importar esos datos:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuQ291bnRyeUNvZGVzIDwtIHJlYWRfZGVsaW0oXCJTcGFuaXNoUmlza0Fzc2VzbWVudC9EYXRvcy9Db3VudHJ5Q29kZXMuY3N2XCIsIFxuICAgIFwiO1wiLCBlc2NhcGVfZG91YmxlID0gRkFMU0UsIHRyaW1fd3MgPSBUUlVFKVxuXG4jQTMgc29uIGxvcyBjb2RpZ29zIHBhcmEgZGVzY2FyZ2FyIGVsIHBhaXNcbmBgYCJ9 -->
+<pre class="r"><code>CountryCodes &lt;- read_delim(&quot;SpanishRiskAssesment/Datos/CountryCodes.csv&quot;, 
+    &quot;;&quot;, escape_double = FALSE, trim_ws = TRUE)
+
+#A3 son los codigos para descargar el pais</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Descargamos los limites politicos de un pais con la función:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGVubWFyayA8LSBnZXREYXRhKCdHQURNJywgY291bnRyeT0nRE5LJywgbGV2ZWw9MClcbnBsb3QoZGVubWFyaylcbnM8LSBjcm9wKHdvcmxkYXRhLCBkZW5tYXJrKVxuczIgPC0gbWFzayhzLCBkZW5tYXJrKVxuczI8LWFzLm1hdHJpeChzMilcbm1hcmNvY2xpbS5kZW5tYXJrIDwtIGFzLmRhdGEuZnJhbWUoczIpXG5uYW1lcyhtYXJjb2NsaW0uZGVubWFyaykgPC0gYyhcIkJJTzFcIixcIkJJTzJcIixcIkJJTzNcIixcIkJJTzRcIiwgXCJCSU81XCIsIFwiQklPNlwiLCBcIkJJTzdcIiwgXCJCSU84XCIsIFwiQklPOVwiLFxuICAgICAgICAgICAgICAgICBcIkJJTzEwXCIsXCJCSU8xMVwiLFwiQklPMTJcIixcIkJJTzEzXCIsIFwiQklPMTRcIiwgXCJCSU8xNVwiLCBcIkJJTzE2XCIsIFwiQklPMTdcIiwgXCJCSU8xOFwiLCBcIkJJTzE5XCIpXG5cbnBsb3QgKG1hcmNvY2xpbS5kZW5tYXJrJGJpbzEpXG5gYGAifQ== -->
+<pre class="r"><code>denmark &lt;- getData('GADM', country='DNK', level=0)
+plot(denmark)
+s&lt;- crop(worldata, denmark)
+s2 &lt;- mask(s, denmark)
+s2&lt;-as.matrix(s2)
+marcoclim.denmark &lt;- as.data.frame(s2)
+names(marcoclim.denmark) &lt;- c(&quot;BIO1&quot;,&quot;BIO2&quot;,&quot;BIO3&quot;,&quot;BIO4&quot;, &quot;BIO5&quot;, &quot;BIO6&quot;, &quot;BIO7&quot;, &quot;BIO8&quot;, &quot;BIO9&quot;,
+                 &quot;BIO10&quot;,&quot;BIO11&quot;,&quot;BIO12&quot;,&quot;BIO13&quot;, &quot;BIO14&quot;, &quot;BIO15&quot;, &quot;BIO16&quot;, &quot;BIO17&quot;, &quot;BIO18&quot;, &quot;BIO19&quot;)
+
+plot (marcoclim.denmark$bio1)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Proyectamos estos valores sobre el PCA del marco climatico ibérico</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaSA8LSBwcmVkaWN0IChwY2FjbGltLCBuZXdkYXRhID0gbWFyY29jbGltLmRlbm1hcmspXG5pIFssMTo0XVxuXG5gYGAifQ== -->
+<pre class="r"><code>i &lt;- predict (pcaclim, newdata = marcoclim.denmark)
+i [,1:4]
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQojIyBBc3Nlc29yYW1pZW50byBkZWwgcmllc2dvIGludmFzb3IgZW4gbGEgUGVuw61uc3VsYSBJYmVyaWNhLg0KDQojIElORElDRSBERSBDT05URU5JRE9TDQojIDEuIFBSRUdVTlRBUyBZIERFRklOSUNJT05FUyBJTklDSUFMRVMNCiMgMi4gUEFRVUVURVMgTkVDRVNBUklPUw0KIyAzLiBERUxJTUlUQUNJw5NOIERFTCBNQVJDTyBDTElNw4FUSUNPIElCw4lSSUNPDQojIDQuIERFU0NBUlRBUiBWQVJJQUJMRVMgTVVZIENPUlJFTEFDSU9OQURBUw0KIyA1LiBSRURVQ0NJw5NOIERFIERJTUVOU0lPTkVTIFBPUiBQQ0ENCiMgNi4gT0JURU5DScOTTiBERSBEQVRPUyBERSBPVFJPUyBQQUlTRVMgWSBQUk9ZRUNDScOTTiBTT0JSRSBFTCBNQVJDTyBDTElNw4FUSUNPIElCw4lSSUNPIA0KDQoNCg0KIyAxLiBQUkVHVU5UQVMgWSBERUZJTklDSU9ORVMgSU5JQ0lBTEVTDQojIDEuMSBQcmVndW50YXMNClNpIGxhcyBpbnZhc2lvbmVzIHNvbiBleGl0b3NhcyBwb3IgZW4gY29pbmNpZGVuY2lhIGRlbCBjbGltYSwgwr9xdWUgZXNwZWNpZXMgZXN0YXJpYW4gYmllbiBlbiBsYSBwZW5pbnN1bGEgaWJlcmljYSB5IHNvbiBwb3IgdGFudG8gcG90ZW5jaWFsZXMgaW52YXNvcmVzPw0KDQrCv0xhcyBlc3BlY2llcyBpbnZhc29yYXMgYWN0dWFsZXMgZW4gbGEgcGVuaW5zdWxhIGliZXJpY2EgY3VtcGxlbiBlc2EgaGlwb3Rlc2lzIGRlIGNvaW5jaWRlbmNpYSBkZWwgY2xpbWE/DQpTaSBsYXMgY29uZGljaW9uZXMgY2xpbWF0aWNhcyBlbiBsYSBwZW5pbnN1bGEgY2FtYmlhc2VuIGVuIGVsIGNvbnRleHRvIGRlbCBjYW1iaW8gY2xpbWF0aWNvLCDCv2VsIG51bWVybyBkZSBlc3BlY2llcyBwb3RlbmNpYWxtZW50ZSBpbnZhc29yYXMgc2VyaWEgbWF5b3IsIG1lbm9yIG8gaWd1YWw/IMK/RWwgY2FtYmlvIGNsaW1hdGljbyBwb2RyaWEgcG90ZW5jaWFyIGxhIGFtZW5hemEgaW52YXNvcmE/DQoNClRlbmllbmRvIGVuIGN1ZW50YSBlbCBvcmlnZW4gZGUgbGFzIGVzcGVjaWVzIHBvdGVuY2lhbG1lbnRlIGludmFzb3JhcyB5IGxvcyBtb3ZpbWllbnRvcyBnbG9iYWxlcyBkZSBtZXJjYW5jaWFzIHkgcGVyc29uYXMsIMK/UXVlIGludmFzaW9uZXMgc29uIG1hcyBwcm9iYWJsZXM/IMK/Q29uIHF1ZSBwYWlzZXMgZGViZXJpYW1vcyBlbmR1cmVjZXIgbGFzIHBvbGl0aWNhcyBkZSBjb21lcmNpbyBkZSBlc3BlY2llcz8NCg0Kwr9Qb3IgcXVlIHN1cGVyZmljaWUgc2UgZXh0ZW5kZXJpYW4gbGFzIGVzcGVjaWVzIHBvdGVuY2lhbG1lbnRlIGludmFzb3JhcyBlbiBsYSBwZW5pbnN1bGE/IMK/Q3VhbnRvIGVzIHN1IGRhw7FvIHBvdGVuY2lhbD8NCg0KVGVuaWVuZG8gZW4gY3VlbnRhIGxhcyBjb25kaWNpb25lcyBjbGltw6F0aWNhcyBlbiBsYSBwZW7DrW5zdWxhLCDCv3F1ZSBvdHJvcyBwYcOtc2VzIGRlIEV1cm9wYSBwdWVkZW4gc2VyIHN1c2NlcHRpYmxlcyBhIGxhIGludmFzacOzbiBkZWJpZG8gYSBzaW1pbGFyaWRhZGVzIGNvbiBlbCBtYXJjbyBjbGltw6F0aWNvIGRlIEVzcGHDsWEgaSBQb3J0dWdhbD8NCg0KIyAxLjIuIERlZmluaWNpb25lcw0KTWFyY28gY2xpbWF0aWNvIEliw6lyaWNvOiBlc3BhY2lvIG11bHRpZGltZW5zaW9uYWwgZGVmaW5pZG8gcG9yIGxvcyB2YWxvcmVzIGRlIGRpZmVyZW50ZXMgdmFyaWFibGVzIGJpb2NsaW3DoXRpY2FzIGdlb3JlZmVyZW5jaWFkb3MgZGVudHJvIGRlIGxhIFBlbmluc3VsYSBJYsOpcmljYS4NCg0KVmFyaWFibGUgYmlvY2xpbcOhdGljYTogVmFyaWFibGUgZGVzY3JpcHRvcmEgYW1iaWVudGFsIGNvbnNpZGVyYWRhIGRldGVybWluYW50ZSBwYXJhIGVsIGNyZWNpbWllbnRvLCBkZXNhcnJvbGxvIHkgcmVwcm9kdWNjacOzbiBkZSBsYSBiaW9zZmVyYS4NCg0KTmljaG8gY2xpbcOhdGljbzogZXNwYWNpbyBtdWx0aWRpbWVuc2lvbmFsIGRlZmluaWRvIHBvciBsb3MgdmFsb3JlcyBkZSBkaWZlcmVudGVzIHZhcmlhYmxlcyBiaW9jbGltw6F0aWNhcyBkZSBsb3MgcHVudG9zIGRlIHByZXNlbmNpYSBkZSB1bmEgZXNwZWNpZS4NCg0KRXNwZWNpZSBwb3RlbmNpYWxtZW50ZSBpbnZhc29yYSBlbiBsYSBQZW5pbnN1bGEgSWJlcmljYTogZXNwZWNpZSBjdXlvIG5pY2hvIGNsaW3DoXRpY28gZXN0w6EgY29tcHJlbmRpZG8gZGVudHJvIGRlbCBNYXJjbyBjbGltw6F0aWNvIEliw6lyaWNvLg0KDQojIDIuIFBBUVVFVEVTIE5FQ0VTQVJJT1MNCmBgYHtyfQ0KaW5zdGFsbC5wYWNrYWdlcygicmFzdGVyIikNCmxpYnJhcnkoInJhc3RlciIpDQpsaWJyYXJ5KHNwKQ0KaW5zdGFsbC5wYWNrYWdlcygiZGlzbW8iKQ0KbGlicmFyeSgiZGlzbW8iKQ0KbGlicmFyeShyZWFkcikNCmxpYnJhcnkoZ2dwbG90MikNCmluc3RhbGwucGFja2FnZXMoInBsb3RseSIpDQpsaWJyYXJ5KHBsb3RseSkNCmxpYnJhcnkoTUFTUykNCnJlcXVpcmUoTUFTUykNCmluc3RhbGwucGFja2FnZXMoImZtc2IiKQ0KbGlicmFyeShmbXNiKQ0KbGlicmFyeShkZXZ0b29scykNCmluc3RhbGxfZ2l0aHViKCJnZ2JpcGxvdCIsICJ2cXYiKQ0KbGlicmFyeShnZ2JpcGxvdCkNCmluc3RhbGwucGFja2FnZXMoImZhY3RvZXh0cmEiKQ0KbGlicmFyeShmYWN0b2V4dHJhKQ0KDQojIHNldHdkKCJDOi9Vc2Vycy9EZXNrdG9wL0RhdGFTY2llbmNlUGxhbnRzRVNURVNJIikgDQoNCmBgYA==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQphdXRob3I6ICJEU1RlYW0iDQpkYXRlOiAiSnVseSAxMCwgMjAxOCINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRX0NCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkNCmBgYA0KDQoNCiMjIEFzc2Vzb3JhbWllbnRvIGRlbCByaWVzZ28gaW52YXNvciBlbiBsYSBQZW7DrW5zdWxhIEliZXJpY2EuDQoNCiMgSU5ESUNFIERFIENPTlRFTklET1MNCiMgMS4gUFJFR1VOVEFTIFkgREVGSU5JQ0lPTkVTIElOSUNJQUxFUw0KIyAyLiBQQVFVRVRFUyBORUNFU0FSSU9TDQojIDMuIERFTElNSVRBQ0nDk04gREVMIE1BUkNPIENMSU3DgVRJQ08gSULDiVJJQ08NCiMgNC4gREVTQ0FSVEFSIFZBUklBQkxFUyBNVVkgQ09SUkVMQUNJT05BREFTDQojIDUuIFJFRFVDQ0nDk04gREUgRElNRU5TSU9ORVMgUE9SIFBDQQ0KIyA2LiBPQlRFTkNJw5NOIERFIERBVE9TIERFIE9UUk9TIFBBSVNFUyBZIFBST1lFQ0NJw5NOIFNPQlJFIEVMIE1BUkNPIENMSU3DgVRJQ08gSULDiVJJQ08gDQoNCg0KDQojIDEuIFBSRUdVTlRBUyBZIERFRklOSUNJT05FUyBJTklDSUFMRVMNCiMgMS4xIFByZWd1bnRhcw0KU2kgbGFzIGludmFzaW9uZXMgc29uIGV4aXRvc2FzIHBvciBlbiBjb2luY2lkZW5jaWEgZGVsIGNsaW1hLCDCv3F1ZSBlc3BlY2llcyBlc3RhcmlhbiBiaWVuIGVuIGxhIHBlbmluc3VsYSBpYmVyaWNhIHkgc29uIHBvciB0YW50byBwb3RlbmNpYWxlcyBpbnZhc29yZXM/DQoNCsK/TGFzIGVzcGVjaWVzIGludmFzb3JhcyBhY3R1YWxlcyBlbiBsYSBwZW5pbnN1bGEgaWJlcmljYSBjdW1wbGVuIGVzYSBoaXBvdGVzaXMgZGUgY29pbmNpZGVuY2lhIGRlbCBjbGltYT8NClNpIGxhcyBjb25kaWNpb25lcyBjbGltYXRpY2FzIGVuIGxhIHBlbmluc3VsYSBjYW1iaWFzZW4gZW4gZWwgY29udGV4dG8gZGVsIGNhbWJpbyBjbGltYXRpY28sIMK/ZWwgbnVtZXJvIGRlIGVzcGVjaWVzIHBvdGVuY2lhbG1lbnRlIGludmFzb3JhcyBzZXJpYSBtYXlvciwgbWVub3IgbyBpZ3VhbD8gwr9FbCBjYW1iaW8gY2xpbWF0aWNvIHBvZHJpYSBwb3RlbmNpYXIgbGEgYW1lbmF6YSBpbnZhc29yYT8NCg0KVGVuaWVuZG8gZW4gY3VlbnRhIGVsIG9yaWdlbiBkZSBsYXMgZXNwZWNpZXMgcG90ZW5jaWFsbWVudGUgaW52YXNvcmFzIHkgbG9zIG1vdmltaWVudG9zIGdsb2JhbGVzIGRlIG1lcmNhbmNpYXMgeSBwZXJzb25hcywgwr9RdWUgaW52YXNpb25lcyBzb24gbWFzIHByb2JhYmxlcz8gwr9Db24gcXVlIHBhaXNlcyBkZWJlcmlhbW9zIGVuZHVyZWNlciBsYXMgcG9saXRpY2FzIGRlIGNvbWVyY2lvIGRlIGVzcGVjaWVzPw0KDQrCv1BvciBxdWUgc3VwZXJmaWNpZSBzZSBleHRlbmRlcmlhbiBsYXMgZXNwZWNpZXMgcG90ZW5jaWFsbWVudGUgaW52YXNvcmFzIGVuIGxhIHBlbmluc3VsYT8gwr9DdWFudG8gZXMgc3UgZGHDsW8gcG90ZW5jaWFsPw0KDQpUZW5pZW5kbyBlbiBjdWVudGEgbGFzIGNvbmRpY2lvbmVzIGNsaW3DoXRpY2FzIGVuIGxhIHBlbsOtbnN1bGEsIMK/cXVlIG90cm9zIHBhw61zZXMgZGUgRXVyb3BhIHB1ZWRlbiBzZXIgc3VzY2VwdGlibGVzIGEgbGEgaW52YXNpw7NuIGRlYmlkbyBhIHNpbWlsYXJpZGFkZXMgY29uIGVsIG1hcmNvIGNsaW3DoXRpY28gZGUgRXNwYcOxYSBpIFBvcnR1Z2FsPw0KDQojIDEuMi4gRGVmaW5pY2lvbmVzDQpNYXJjbyBjbGltYXRpY28gSWLDqXJpY286IGVzcGFjaW8gbXVsdGlkaW1lbnNpb25hbCBkZWZpbmlkbyBwb3IgbG9zIHZhbG9yZXMgZGUgZGlmZXJlbnRlcyB2YXJpYWJsZXMgYmlvY2xpbcOhdGljYXMgZ2VvcmVmZXJlbmNpYWRvcyBkZW50cm8gZGUgbGEgUGVuaW5zdWxhIEliw6lyaWNhLg0KDQpWYXJpYWJsZSBiaW9jbGltw6F0aWNhOiBWYXJpYWJsZSBkZXNjcmlwdG9yYSBhbWJpZW50YWwgY29uc2lkZXJhZGEgZGV0ZXJtaW5hbnRlIHBhcmEgZWwgY3JlY2ltaWVudG8sIGRlc2Fycm9sbG8geSByZXByb2R1Y2Npw7NuIGRlIGxhIGJpb3NmZXJhLg0KDQpOaWNobyBjbGltw6F0aWNvOiBlc3BhY2lvIG11bHRpZGltZW5zaW9uYWwgZGVmaW5pZG8gcG9yIGxvcyB2YWxvcmVzIGRlIGRpZmVyZW50ZXMgdmFyaWFibGVzIGJpb2NsaW3DoXRpY2FzIGRlIGxvcyBwdW50b3MgZGUgcHJlc2VuY2lhIGRlIHVuYSBlc3BlY2llLg0KDQpFc3BlY2llIHBvdGVuY2lhbG1lbnRlIGludmFzb3JhIGVuIGxhIFBlbmluc3VsYSBJYmVyaWNhOiBlc3BlY2llIGN1eW8gbmljaG8gY2xpbcOhdGljbyBlc3TDoSBjb21wcmVuZGlkbyBkZW50cm8gZGVsIE1hcmNvIGNsaW3DoXRpY28gSWLDqXJpY28uDQoNCiMgMi4gUEFRVUVURVMgTkVDRVNBUklPUw0KYGBge3J9DQppbnN0YWxsLnBhY2thZ2VzKCJyYXN0ZXIiKQ0KbGlicmFyeSgicmFzdGVyIikNCmxpYnJhcnkoc3ApDQppbnN0YWxsLnBhY2thZ2VzKCJkaXNtbyIpDQpsaWJyYXJ5KCJkaXNtbyIpDQpsaWJyYXJ5KHJlYWRyKQ0KbGlicmFyeShnZ3Bsb3QyKQ0KaW5zdGFsbC5wYWNrYWdlcygicGxvdGx5IikNCmxpYnJhcnkocGxvdGx5KQ0KbGlicmFyeShNQVNTKQ0KcmVxdWlyZShNQVNTKQ0KaW5zdGFsbC5wYWNrYWdlcygiZm1zYiIpDQpsaWJyYXJ5KGZtc2IpDQpsaWJyYXJ5KGRldnRvb2xzKQ0KaW5zdGFsbF9naXRodWIoImdnYmlwbG90IiwgInZxdiIpDQpsaWJyYXJ5KGdnYmlwbG90KQ0KaW5zdGFsbC5wYWNrYWdlcygiZmFjdG9leHRyYSIpDQpsaWJyYXJ5KGZhY3RvZXh0cmEpDQoNCiMgc2V0d2QoIkM6L1VzZXJzL0Rlc2t0b3AvRGF0YVNjaWVuY2VQbGFudHNFU1RFU0kiKSANCg0KYGBgDQoNCiMgMy4gREVMSU1JVEFDScOTTiBERUwgTUFSQ08gQ0xJTcOBVElDTyBJQsOJUklDTw0KRW4gcHJpbWVyIGx1Z2FyIGRlc2NhcmdhbW9zIGxvcyBkYXRvcyBkZSBsYSBiYXNlIGRlIGRhdG9zIGdsb2JhbGVzIFdvcmxkQ2xpbSAoaHR0cDovL3dvcmxkY2xpbS5vcmcvKS4gRGVzY2FyZ2Ftb3MgbGFzIDE5IHZhcmlhYmxlcyBiaW9jbGltw6F0aWNhcyBjb24gdW5hIHJlc29sdWNpw7NuIGRlIDIuNSBxdWUgc29uICJtaW51dGVzIG9mIGEgZGVncmVlIi4gRWwgYXJndW1lbnRvIHZhciA9IGJpbyByZWNsYW1hIGxhcyAxOSB2YXJpYWJsZXMgYmlvY2xpbWF0aWNhcywgZGVzY3JpdGFzIGFxdcOtOiAoaHR0cDovL3dvcmxkY2xpbS5vcmcvYmlvY2xpbSkuIEVzdGUgbWlzbW8gcG9ydGFsIGluY2x1eWUgdmFyaWFibGVzIGNsaW1hdGljYXMgdGVuaWVuZG8gZW4gY3VlbnRhIHVuIGNvbnRleHRvIGRlIGNhbWJpbyBjbGltYXRpY28uIE3DoXMgYWRlbGFudGUgc2UgcHVlZGVuIHRlc3RlYXIgbGFzIGRpZmVyZW5jaWFzLiBMYXMgdmFyaWFibGVzIHJlZmVyZW50ZXMgYSBsYSB0ZW1wZXJhdHVyYSBlc3RhbiBtdWx0aXBsaWNhZGFzIHBvciBkaWV6Lg0KDQpgYGB7cn0NCiNEb3dubG9hZCB0aGUgV29ybGRDbGltIERhdGENCndvcmxkYXRhIDwtIGdldERhdGEoIndvcmxkY2xpbSIsdmFyPSJiaW8iLCByZXM9Mi41KQ0KYGBgDQoNCkxvcyBkYXRvcyBzZSBkZXNjYXJnYW4gZW4gZm9ybWF0byByYXN0ZXIuIEFob3JhIGhheSBxdWUgc2VsZWNjaW9uYXIgbG9zIGRhdG9zIGNvcnJlc3BvbmRpZW50ZXMgYSBsYSBwZW5pbnN1bGEgSWJlcmljYS4gUmVhbGl6YW1vcyBsYSBzZWxlY2Npw7NuIHJlY29ydGFuZG8gZWwgY3VhZHJhZG8gZW4gZWwgY3VhbCBzZSBjb21wcmVuZGUgbGEgcGVuaW5zdWxhLiANCmBgYHtyfQ0KI1JlY29ydGFtb3MgY29uIGV4dGVudCBsb3MgZ3JhZG9zIGRlIGxvbmdpdHVkIHkgbGF0aXR1ZCBxdWUgZW1hcmNhbiBsYSBwZW5pbnN1bGEgaWJlcmljYQ0KZSA8LSBleHRlbnQoLTEwLDQsMzYsNDQpICNkZWZpbmltb3MgZWwgbWFyY28NCnMuY3JvcCA8LSBjcm9wKHdvcmxkYXRhLCBlKSAjUmVjb3J0YW1vcyBlbCB3b3JsZGRhdGEgY29uIGVsIGV4dGVudA0KcGxvdCAocy5jcm9wJGJpbzEpDQpgYGANCg0KUGFyYSBzYWNhciBsb3MgdmFsb3JlcyBkZW50cm8gZGVsIGFyY2hpdm8gcy5jcm9wIHF1ZSBlc3RhIGVuIHJhc3RlciwgdXNhbW9zIGxhIGZ1bmNpb24gYXMubWF0cml4IGRlbCBwYXF1ZXRlIHJhc3RlciBxdWUgc2FjYSB0b2RvcyBsb3MgdmFsb3JlcyB5IGRlc3B1ZXMgbG8gY29udmVydGltb3MgZW4gZGF0YSBmcmFtZSwgZGVmaW5pZW5kbyBsb3Mgbm9tYnJlcyBkZSBsYXMgdmFyaWFibGVzOg0KDQpgYGB7cn0NCmE8LWFzLm1hdHJpeChzLmNyb3ApICNFcyB1bmEgbWF0cml6IGRlIDE5IHZhcmlhYmxlcywgbm9zIGZhbHRhbiBsYXMgY29vcmRlbmFkYXMgZGUgY2FkYSBwdW50bywgYXVucXVlIG5vIHNvbiBlc2VuY2lhbGVzLiANCm1hcmNvY2xpbSA8LSBhcy5kYXRhLmZyYW1lKGEpDQpuYW1lcyhtYXJjb2NsaW0pIDwtIGMoIkJJTzEiLCJCSU8yIiwiQklPMyIsIkJJTzQiLCAiQklPNSIsICJCSU82IiwgIkJJTzciLCAiQklPOCIsICJCSU85IiwNCiAgICAgICAgICAgICAgICAgIkJJTzEwIiwiQklPMTEiLCJCSU8xMiIsIkJJTzEzIiwgIkJJTzE0IiwgIkJJTzE1IiwgIkJJTzE2IiwgIkJJTzE3IiwgIkJJTzE4IiwgIkJJTzE5IikNCmBgYA0KDQpFeHBvcnRhbW9zIGxvcyBkYXRvcw0KDQpgYGB7cn0NCndyaXRlLmNzdihtYXJjb2NsaW0sIGZpbGU9IlNwYW5pc2hSaXNrQXNzZXNtZW50L0RhdG9zL01hcmNvQ2xpbTIuNS5jc3YiKSAjR3VhcmRhbW9zIGxvcyBkYXRvcw0KYGBgDQoNCiEhISEhISEhISBQQVJBIFJFRU1QUkVOREVSIERFUyBERSBBUVXDjSwgQ0FSR0EgTE9TIERBVE9TOiAhISEhISEhISEhIQ0KDQojIDQuIERFU0NBUlRBUiBWQVJJQUJMRVMgTVVZIENPUlJFTEFDSU9OQURBUyAob3BjaW9uYWwpDQpBbCB0cmFiYWphciBjb24gMTkgdmFyYWlibGVzLCBhbGd1bmFzIHByb2R1Y3RvIGxpbmVhbCBkZSBvdHJhcywgZXN0YW1vcyB0cmFiYWphbmRvIGNvbiBpbmZvcm1hY2nDs24gcmVkdW5kYW50ZS4gUG9kZW1vcyBiYXNhcm5vcyBlbiBlbCBjcml0ZXJpbyBWSUYgcGFyYSBkZXNjYXJ0YXIgYWxndW5hcyB5IHByb2JhciBlbCBtb2RlbG8gbWFzIGFkZWxhbnRlIGNvbiB0b2RhcyBsYXMgdmFyaWFibGVzIHkgY29uIHNvbG8gbGFzIHNlbGVjY2lvbmFkYXMuIA0KDQpFc3RvIHNlIGRlc2NyaWJlIGVuIDogaHR0cHM6Ly93d3cuci1ibG9nZ2Vycy5jb20vY29sbGluZWFyaXR5LWFuZC1zdGVwd2lzZS12aWYtc2VsZWN0aW9uLw0KDQpEZWZuaW1vcyBsYSBmdW5jaW9uIGRlIGNhbGN1bG8geSBzZWxlY2Npb24gZGUgdmFyaWFibGVzIGNvbiBlbCBWSUYNCmBgYHtyfQ0KdmlmX2Z1bmM8LWZ1bmN0aW9uKGluX2ZyYW1lLHRocmVzaD0xMCx0cmFjZT1ULC4uLil7DQogIA0KICBsaWJyYXJ5KGZtc2IpDQogIA0KICBpZihhbnkoISdkYXRhLmZyYW1lJyAlaW4lIGNsYXNzKGluX2ZyYW1lKSkpIGluX2ZyYW1lPC1kYXRhLmZyYW1lKGluX2ZyYW1lKQ0KICANCiAgI2dldCBpbml0aWFsIHZpZiB2YWx1ZSBmb3IgYWxsIGNvbXBhcmlzb25zIG9mIHZhcmlhYmxlcw0KICB2aWZfaW5pdDwtTlVMTA0KICB2YXJfbmFtZXMgPC0gbmFtZXMoaW5fZnJhbWUpDQogIGZvcih2YWwgaW4gdmFyX25hbWVzKXsNCiAgICByZWdyZXNzb3JzIDwtIHZhcl9uYW1lc1std2hpY2godmFyX25hbWVzID09IHZhbCldDQogICAgZm9ybSA8LSBwYXN0ZShyZWdyZXNzb3JzLCBjb2xsYXBzZSA9ICcrJykNCiAgICBmb3JtX2luIDwtIGZvcm11bGEocGFzdGUodmFsLCAnficsIGZvcm0pKQ0KICAgIHZpZl9pbml0PC1yYmluZCh2aWZfaW5pdCwgYyh2YWwsIFZJRihsbShmb3JtX2luLCBkYXRhID0gaW5fZnJhbWUsIC4uLikpKSkNCiAgfQ0KICB2aWZfbWF4PC1tYXgoYXMubnVtZXJpYyh2aWZfaW5pdFssMl0pLCBuYS5ybSA9IFRSVUUpDQogIA0KICBpZih2aWZfbWF4IDwgdGhyZXNoKXsNCiAgICBpZih0cmFjZT09VCl7ICNwcmludCBvdXRwdXQgb2YgZWFjaCBpdGVyYXRpb24NCiAgICAgIHBybWF0cml4KHZpZl9pbml0LGNvbGxhYj1jKCd2YXInLCd2aWYnKSxyb3dsYWI9cmVwKCcnLG5yb3codmlmX2luaXQpKSxxdW90ZT1GKQ0KICAgICAgY2F0KCdcbicpDQogICAgICBjYXQocGFzdGUoJ0FsbCB2YXJpYWJsZXMgaGF2ZSBWSUYgPCAnLCB0aHJlc2gsJywgbWF4IFZJRiAnLHJvdW5kKHZpZl9tYXgsMiksIHNlcD0nJyksJ1xuXG4nKQ0KICAgIH0NCiAgICByZXR1cm4odmFyX25hbWVzKQ0KICB9DQogIGVsc2V7DQogICAgDQogICAgaW5fZGF0PC1pbl9mcmFtZQ0KICAgIA0KICAgICNiYWNrd2FyZHMgc2VsZWN0aW9uIG9mIGV4cGxhbmF0b3J5IHZhcmlhYmxlcywgc3RvcHMgd2hlbiBhbGwgVklGIHZhbHVlcyBhcmUgYmVsb3cgJ3RocmVzaCcNCiAgICB3aGlsZSh2aWZfbWF4ID49IHRocmVzaCl7DQogICAgICANCiAgICAgIHZpZl92YWxzPC1OVUxMDQogICAgICB2YXJfbmFtZXMgPC0gbmFtZXMoaW5fZGF0KQ0KICAgICAgDQogICAgICBmb3IodmFsIGluIHZhcl9uYW1lcyl7DQogICAgICAgIHJlZ3Jlc3NvcnMgPC0gdmFyX25hbWVzWy13aGljaCh2YXJfbmFtZXMgPT0gdmFsKV0NCiAgICAgICAgZm9ybSA8LSBwYXN0ZShyZWdyZXNzb3JzLCBjb2xsYXBzZSA9ICcrJykNCiAgICAgICAgZm9ybV9pbiA8LSBmb3JtdWxhKHBhc3RlKHZhbCwgJ34nLCBmb3JtKSkNCiAgICAgICAgdmlmX2FkZDwtVklGKGxtKGZvcm1faW4sIGRhdGEgPSBpbl9kYXQsIC4uLikpDQogICAgICAgIHZpZl92YWxzPC1yYmluZCh2aWZfdmFscyxjKHZhbCx2aWZfYWRkKSkNCiAgICAgIH0NCiAgICAgIG1heF9yb3c8LXdoaWNoKHZpZl92YWxzWywyXSA9PSBtYXgoYXMubnVtZXJpYyh2aWZfdmFsc1ssMl0pLCBuYS5ybSA9IFRSVUUpKVsxXQ0KICAgICAgDQogICAgICB2aWZfbWF4PC1hcy5udW1lcmljKHZpZl92YWxzW21heF9yb3csMl0pDQogICAgICANCiAgICAgIGlmKHZpZl9tYXg8dGhyZXNoKSBicmVhaw0KICAgICAgDQogICAgICBpZih0cmFjZT09VCl7ICNwcmludCBvdXRwdXQgb2YgZWFjaCBpdGVyYXRpb24NCiAgICAgICAgcHJtYXRyaXgodmlmX3ZhbHMsY29sbGFiPWMoJ3ZhcicsJ3ZpZicpLHJvd2xhYj1yZXAoJycsbnJvdyh2aWZfdmFscykpLHF1b3RlPUYpDQogICAgICAgIGNhdCgnXG4nKQ0KICAgICAgICBjYXQoJ3JlbW92ZWQ6ICcsdmlmX3ZhbHNbbWF4X3JvdywxXSx2aWZfbWF4LCdcblxuJykNCiAgICAgICAgZmx1c2guY29uc29sZSgpDQogICAgICB9DQogICAgICANCiAgICAgIGluX2RhdDwtaW5fZGF0WywhbmFtZXMoaW5fZGF0KSAlaW4lIHZpZl92YWxzW21heF9yb3csMV1dDQogICAgICANCiAgICB9DQogICAgDQogICAgcmV0dXJuKG5hbWVzKGluX2RhdCkpDQogICAgDQogIH0NCiAgDQp9DQpgYGANCg0KQXBsaWNhbW9zIGxhIGZ1bmNpb24gYSBsb3MgZGF0b3MNCmBgYHtyfQ0KdmlmX2Z1bmMoaW5fZnJhbWU9bWFyY29jbGltMSx0aHJlc2g9NSx0cmFjZT1UKSAjIExhIGZ1bmNpb24gdmEgY2FsY3VsYW5kbyBsb3MgVklGIGNhZGEgdmV6IHF1ZSBxdWl0YSBlbCBxdWUgdGllbmUgbWF5b3IgdmFsb3IgaGFzdGEgcXVlZGFybm9zIGNvbiB2YWxvcmVzIGRlIFZJRiBwb3IgZGViYWpvIGRlbCB1bWJyYWwgKGhlbW9zIHB1ZXN0byA1LCBwZXJvIHBvZHJpYSBzZXIgb3RybykNCmBgYA0KDQoNCiMgNS4gUkVEVUNDScOTTiBERSBESU1FTlNJT05FUyBQT1IgUENBDQpQQXJhIGRlc2NyaWJpciBkZSBmb3JtYSByZWR1Y2lkYSBlbCBtYXJjbyBjbGltw6F0aWNvIEliw6lyaWNvIHJlYWxpemFtb3MgdW5hIHJlZHVjY2nDs24gZGUgZGltZW5zaW9uZXMgcG9yIEFuYWxpc2lzIGRlIENvbXBvbmVudGVzIHByaW5jaXBhbGVzOg0KDQpDYXJnYW1vcyBsb3MgZGF0b3MNCmBgYHtyfQ0KbWFyY29jbGltPC0gcmVhZF9jc3YoIlNwYW5pc2hSaXNrQXNzZXNtZW50L0RhdG9zL01hcmNvQ2xpbTIuNS5jc3YiLCANCiAgICBjb2xfdHlwZXMgPSBjb2xzKFgxID0gY29sX3NraXAoKSkpDQpWaWV3KG1hcmNvY2xpbSkNCg0KYGBgDQoNClBDQSBjb24gdG9kb3MgbG9zIGRhdG9zOg0KYGBge3J9DQpwY2FjbGltIDwtIHByY29tcChtYXJjb2NsaW0sIGNlbnRlciA9IFRSVUUsIHNjYWxlLiA9IFRSVUUpIA0KcHJpbnQocGNhY2xpbSkNCnBsb3QocGNhY2xpbSwgdHlwZSA9ICJsIikNCnN1bW1hcnkocGNhY2xpbSkNCnBsb3QocGNhY2xpbSR4WywxXSxwY2FjbGltJHhbLDJdKQ0KYGBgDQoNClBDQSBzb2xvIGNvbiBsYXMgdmFyaWFibGVzIHF1ZSBWSUYgPCA1DQpgYGB7cn0NCm1hcmNvY2xpbVZJRiA8LSBtYXJjb2NsaW1bLGMoMiwzLDgsOSwxMywxNSldDQoNCnBjYWNsaW0yIDwtIHByY29tcChtYXJjb2NsaW1WSUYsIGNlbnRlciA9IFRSVUUsIHNjYWxlLiA9IFRSVUUpIA0KcHJpbnQocGNhY2xpbTIpDQpwbG90KHBjYWNsaW0yLCB0eXBlID0gImwiKQ0Kc3VtbWFyeShwY2FjbGltMikNCmBgYA0KDQoNClBsb3RlYW1vcyBsb3MgZG9zIHByaW1lcm9zIGNvbXBvbmVudGVzIHByaW5jaXBhbGVzOg0KYGBge3J9DQpwbG90KHBjYWNsaW0yJHhbLDFdLHBjYWNsaW0yJHhbLDJdKQ0KYGBgDQoNCk90cm9zIHBsb3RzDQpgYGB7cn0NCmZ2aXpfcGNhX3ZhcihwY2FjbGltLA0KICAgICAgICAgICAgIGNvbC52YXIgPSAiY29udHJpYiIsICMgQ29sb3IgYnkgY29udHJpYnV0aW9ucyB0byB0aGUgUEMNCiAgICAgICAgICAgICBncmFkaWVudC5jb2xzID0gYygiIzAwQUZCQiIsICIjRTdCODAwIiwgIiNGQzRFMDciKSwNCiAgICAgICAgICAgICByZXBlbCA9IFRSVUUgICAgICMgQXZvaWQgdGV4dCBvdmVybGFwcGluZw0KKSAgIyNGdW5jacOzbiBwYXJhIHZlciBsYSBjb250cmlidWNpw7NuIGRlIGNhZGEgdmFyaWFibGUgZW4gZXN0YSBQQ0ENCg0KIyMgTWFuZXJhIGRlIHJlcHJlc2VudGFyIGxhIFBDQSBleHRyYcOtZG8gZGUgaHR0cHM6Ly90Z21zdGF0LndvcmRwcmVzcy5jb20vMjAxMy8xMS8yOC9jb21wdXRpbmctYW5kLXZpc3VhbGl6aW5nLXBjYS1pbi1yLw0KDQpnIDwtIGdnYmlwbG90KHBjYWNsaW0sIG9icy5zY2FsZSA9IDEsIHZhci5zY2FsZSA9IDEsIA0KICAgICAgICAgICAgICAgZWxsaXBzZSA9IFRSVUUsIGFscGhhPTAuMSwgDQogICAgICAgICAgICAgIGNpcmNsZSA9IFRSVUUpDQpnIDwtIGcgKyBzY2FsZV9jb2xvcl9kaXNjcmV0ZShuYW1lID0gJycpDQpnIDwtIGcgKyB0aGVtZShsZWdlbmQuZGlyZWN0aW9uID0gJ2hvcml6b250YWwnLCANCiAgICAgICAgICAgICAgIGxlZ2VuZC5wb3NpdGlvbiA9ICd0b3AnKQ0KcHJpbnQoZykNCmBgYA0KDQoNCiMgNi4gT0JURU5DScOTTiBERSBEQVRPUyBERSBPVFJPUyBQQUlTRVMgWSBQUk9ZRUNDScOTTiBTT0JSRSBFTCBNQVJDTyBDTElNw4FUSUNPIElCw4lSSUNPDQpDYXJnYW1vcyBsb3MgZGF0b3MgZGVsIG1hcmNvIGNsaW1hdGljbyBpYsOpcmljbzoNCmBgYHtyfQ0KbWFyY29jbGltPC0gcmVhZF9jc3YoIlNwYW5pc2hSaXNrQXNzZXNtZW50L0RhdG9zL01hcmNvQ2xpbTIuNS5jc3YiLCANCiAgICBjb2xfdHlwZXMgPSBjb2xzKFgxID0gY29sX3NraXAoKSkpDQpWaWV3KG1hcmNvY2xpbSkNCg0KYGBgDQoNCg0KRGVzY2FyZ2Ftb3MgbG9zIGRhdG9zIGRlbCBXb3JkQ2xpbSAoeWEgaGVjaG8gcHJldmlhbWVudGUgZW4gZWwgIzMpDQpgYGB7cn0NCiNEb3dubG9hZCB0aGUgV29ybGRDbGltIERhdGENCndvcmxkYXRhIDwtIGdldERhdGEoIndvcmxkY2xpbSIsdmFyPSJiaW8iLCByZXM9Mi41KQ0KYGBgDQoNCkVuOiBodHRwczovL3d3dy5naXMtYmxvZy5jb20vci1yYXN0ZXItZGF0YS1hY3F1aXNpdGlvbiwgZW5jb250cmFtb3MgY29tbyBzZSByZWFsaXphIGxhIGRlc2NhcmdhIHkgcmVjb3J0ZSBkZSBsb3MgcGFpc2VzLiBQYXJhIGxsYW1hciBhIHVuIHBhaXMgY29uY3JldG8gc2UgdXNhIGxhIG5vbWVuY2xhdHVyYSBkZSB0cmVzIGxldHJhcyBkZWZpbmlkYSBlbjogaHR0cDovL2tpcnN0ZS51c2VycGFnZS5mdS1iZXJsaW4uZGUvZGl2ZXJzZS9kb2MvSVNPXzMxNjYuaHRtbC5IYXkgdW5hIGJhc2UgZGUgZGF0b3MgY29uIGxvcyBub21icmVzIHkgY29kaWdvcyBkZSBsb3MgMjQxIHBhaXNlcyBxdWUgaW5jbHV5ZSBsYSBsaXN0YS4gUG9kZW1vcyBpbXBvcnRhciBlc29zIGRhdG9zOg0KYGBge3J9DQpDb3VudHJ5Q29kZXMgPC0gcmVhZF9kZWxpbSgiU3BhbmlzaFJpc2tBc3Nlc21lbnQvRGF0b3MvQ291bnRyeUNvZGVzLmNzdiIsIA0KICAgICI7IiwgZXNjYXBlX2RvdWJsZSA9IEZBTFNFLCB0cmltX3dzID0gVFJVRSkNCg0KI0EzIHNvbiBsb3MgY29kaWdvcyBwYXJhIGRlc2NhcmdhciBlbCBwYWlzDQpgYGANCg0KRGVzY2FyZ2Ftb3MgbG9zIGxpbWl0ZXMgcG9saXRpY29zIGRlIHVuIHBhaXMgY29uIGxhIGZ1bmNpw7NuOg0KYGBge3J9DQpkZW5tYXJrIDwtIGdldERhdGEoJ0dBRE0nLCBjb3VudHJ5PSdETksnLCBsZXZlbD0wKQ0KcGxvdChkZW5tYXJrKQ0KczwtIGNyb3Aod29ybGRhdGEsIGRlbm1hcmspDQpzMiA8LSBtYXNrKHMsIGRlbm1hcmspDQpzMjwtYXMubWF0cml4KHMyKQ0KbWFyY29jbGltLmRlbm1hcmsgPC0gYXMuZGF0YS5mcmFtZShzMikNCm5hbWVzKG1hcmNvY2xpbS5kZW5tYXJrKSA8LSBjKCJCSU8xIiwiQklPMiIsIkJJTzMiLCJCSU80IiwgIkJJTzUiLCAiQklPNiIsICJCSU83IiwgIkJJTzgiLCAiQklPOSIsDQogICAgICAgICAgICAgICAgICJCSU8xMCIsIkJJTzExIiwiQklPMTIiLCJCSU8xMyIsICJCSU8xNCIsICJCSU8xNSIsICJCSU8xNiIsICJCSU8xNyIsICJCSU8xOCIsICJCSU8xOSIpDQoNCnBsb3QgKG1hcmNvY2xpbS5kZW5tYXJrJGJpbzEpDQpgYGANCg0KDQpQcm95ZWN0YW1vcyBlc3RvcyB2YWxvcmVzIHNvYnJlIGVsIFBDQSBkZWwgbWFyY28gY2xpbWF0aWNvIGliw6lyaWNvDQpgYGB7cn0NCmkgPC0gcHJlZGljdCAocGNhY2xpbSwgbmV3ZGF0YSA9IG1hcmNvY2xpbS5kZW5tYXJrKQ0KaSBbLDE6NF0NCg0KYGBg</div>
 
 
 
