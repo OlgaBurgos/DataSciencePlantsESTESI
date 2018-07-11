@@ -111,12 +111,12 @@ View(marcoclim)
 
 Podemos graficar los datos obtenidos:
 ```{r, fig.cap=Temperatura y Precipitación en la Península Ibérica}
-plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitaci?n Anual (mm)", ylab="Temperatura anual media (ºC x10)") #ploteamos temperatura media anual y precipitacion anual)
+plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitacion Anual (mm)", ylab="Temperatura anual media (ºC x10)") #ploteamos temperatura media anual y precipitacion anual)
 
 ```
 
-Para generar un gráfico de denidad:
-```{r, fig.cap= Grafico de denisdad de Temperatura y Precipitación en la Península Ibérica}
+Para generar un gráfico de densidad:
+```{r, fig.cap= Grafico de densidad de Temperatura y Precipitación en la Península Ibérica}
 str(marcoclim)
 plot(marcoclim$BIO12 ~ marcoclim$BIO1, col = "blue")
 d <- density(marcoclim$BIO1) # returns the density data 
@@ -126,14 +126,14 @@ dens <- kde2d(marcoclim$BIO1, marcoclim$BIO12, n=300, lims = c(0,200,0,1400))
 image(dens)
 filled.contour(dens,
                color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
-               xlab= "Annual Mean Temperature (?C)",
+               xlab= "Annual Mean Temperature (ºC)",
                ylab= "Annual Precipitation (mm)", main = "Marco Climático Ibérico")
 
 ```
 
 
 # 4. DESCARTAR VARIABLES MUY CORRELACIONADAS (opcional)
-Al trabajar con 19 varaibles, algunas producto lineal de otras, estamos trabajando con información redundante. Podemos basarnos en el criterio VIF para descartar algunas y probar el modelo mas adelante con todas las variables y con solo las seleccionadas. 
+Al trabajar con 19 varaibles, algunas producto lineal de otras, estamos trabajando con información redundante. Podemos basarnos en el criterio VIF (factores de inflación de varianza), un enfoque simple para identificar la colinealidad entre las variables explicativas para descartar algunas y probar el modelo mas adelante con todas las variables y con solo las seleccionadas. 
 
 Esto se describe en : https://www.r-bloggers.com/collinearity-and-stepwise-vif-selection/
 
@@ -283,13 +283,14 @@ Descargamos los datos del WordClim (ya hecho previamente en el #3)
 worldata <- getData("worldclim",var="bio", res=2.5)
 ```
 
-En: https://www.gis-blog.com/r-raster-data-acquisition, encontramos como se realiza la descarga y recorte de los paises. Para llamar a un pais concreto se usa la nomenclatura de tres letras definida en: http://kirste.userpage.fu-berlin.de/diverse/doc/ISO_3166.html.Hay una base de datos con los nombres y codigos de los 241 paises que incluye la lista. Podemos importar esos datos:
+En: https://www.gis-blog.com/r-raster-data-acquisition, encontramos como se realiza la descarga y recorte de los paises. Para llamar a un pais concreto se usa la nomenclatura de tres letras definida en: http://kirste.userpage.fu-berlin.de/diverse/doc/ISO_3166.html. Hay una base de datos con los nombres y codigos de los 241 paises que incluye la lista. Podemos importar esos datos:
 ```{r}
 CountryCodes <- read_delim("SpanishRiskAssesment/Datos/CountryCodes.csv", 
     ";", escape_double = FALSE, trim_ws = TRUE)
 
 #A3 son los codigos para descargar el pais
 ```
+
 
 Descargamos los limites politicos de un pais con la función:
 ```{r}
@@ -313,3 +314,4 @@ i [,1:4]
 
 ```
 
+Pretendemos evaluar país por país, si sus condiciones climáticas se parecen a las de la península ibérica, con el fin de determinar después especies que podrían encontrar condiciones favorables en nuestro país actuando como invasoras. Por eso proyectamos los datos de marco climático de estos países sobre el nuestro.
