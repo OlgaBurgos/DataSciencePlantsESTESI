@@ -1,0 +1,17 @@
+<!--This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License (https://creativecommons.org/licenses/by-nc-sa/3.0/) The data presented in this file MAY NOT include all records shown on the datasheet. This occurs when we are unable to match a territory name to geographical coordinates in an authoritative manner.-->
+
+Region,Latitude,Longitude,Extent,Last Reported,Origin,First Reported,Invasiveness,References,Notes
+"Madagascar","-20","47","Present","-","Introduced","-","-","USDA-ARS (2011)","-"
+"Mauritius","-20.3","57.58333","Present","-","Introduced","-","-","USDA-ARS (2011)","-"
+"Reunion","-21.1","55.6","Present","-","Introduced","-","-","USDA-ARS (2011)","-"
+"Comunidad Autonoma de Canarias","28","-15.5","Present","-","Introduced","-","-","USDA-ARS (2011)","-"
+"Asia","29.84064","89.29688","Present","-","-","-","-","USDA-ARS (2011)","-"
+"Cuba","22","-79.5","Present","-","Introduced","-","-","USDA-ARS (2011)","-"
+"Jamaica","18.25","-77.5","Present","-","Introduced","-","-","USDA-ARS (2011)","-"
+"Spain","40","-4","Present","-","-","-","-","-","Present based on regional distribution."
+"Mexico","23","-102","Present","-","Introduced","-","-","USDA-ARS (2011)","-"
+"United States","39.76","-98.5","Present","-","-","-","-","-","Present based on regional distribution."
+"Hawaii","20.75028","-156.50028","Present","-","Introduced","-","Invasive","USDA-NRCS (2011); USDA-ARS (2011)","-"
+"Australia","-25","135","Present","-","Introduced","-","-","USDA-ARS (2011)","-"
+"New Zealand","-42","174","Present","-","Introduced","-","-","USDA-ARS (2011)","-"
+"Peru","-10","-76","Present","-","Introduced","-","-","USDA-ARS (2011)","-"
