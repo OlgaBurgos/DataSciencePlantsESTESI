@@ -330,6 +330,7 @@ Pretendemos evaluar país por país, si sus condiciones climáticas se parecen a
 
 #7 OBTENCION DATOS DE ESPECIES INVASORAS MUNDIALES.ORIGEN Y PRESENCIA
 
-consultamos este artículo de Turbelin et al. 2017, donde utilizan datos de http://www.iucngisd.org/gisd/ y de https://www.cabi.org/isc/. para determinar los patrones de distribucion de especies invasoras,
+Turbelin et al. 2017, utilizan datos de http://www.iucngisd.org/gisd/ y de https://www.cabi.org/isc/. para determinar los patrones de distribucion de especies invasoras, en CABI existen datasets de cada una de las especies exóticas invasoras. Descargamos estos datos para una lista de plantas, recogen país donde la planta está presente, latitud longitud, si es nativa o introducida, etc.  Los uniremos entre si? . 
 
-Interesante!!! tambien mapean vias de introduccion de invasoras!
+
+Interesante!!! tambien mapean vias de introduccion de invasoras! aun nose como!!!
