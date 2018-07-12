@@ -48,3 +48,9 @@ print(pcaclim2)
 plot(pcaclim2, type = "l")
 summary(pcaclim2)
 plot(pcaclim2$x[,1],pcaclim2$x[,2])
+
+### Como podemos ver si encajan en el marco climático las nuevas espécies?
+solapamiento <- predict(pcaclim, newdata = "datos de la sp")
+solapamiento [, 1:4] #(viendo las CP de la 1 a la 4 )
+#Quizas si hacemos data wrangling eliminando otuliers(puntos aislados) y puntos donde haya
+#alta concentración debido a la gran ocurrencia de gente; podríamos realizarlo sin demorarnos tanto.
