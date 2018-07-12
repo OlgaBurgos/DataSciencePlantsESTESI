@@ -110,13 +110,13 @@ View(marcoclim)
 ```
 
 Podemos graficar los datos obtenidos:
-```{r, fig.cap=Temperatura y Precipitación en la Península Ibérica}
+```{r, fig.cap="Temperatura y Precipitación en la Península Ibérica"}
 plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitaci?n Anual (mm)", ylab="Temperatura anual media (ºC x10)") #ploteamos temperatura media anual y precipitacion anual)
 
 ```
 
 Para generar un gráfico de denidad:
-```{r, fig.cap= Grafico de denisdad de Temperatura y Precipitación en la Península Ibérica}
+```{r, fig.cap= "Grafico de denisdad de Temperatura y Precipitación en la Península Ibérica"}
 str(marcoclim)
 plot(marcoclim$BIO12 ~ marcoclim$BIO1, col = "blue")
 d <- density(marcoclim$BIO1) # returns the density data 
