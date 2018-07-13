@@ -11,13 +11,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Assesoramiento del riesgo invasor en la Península Iberica.
 
-# INDICE DE CONTENIDOS
-# 1. PREGUNTAS Y DEFINICIONES INICIALES
-# 2. PAQUETES NECESARIOS
-# 3. DELIMITACIÓN DEL MARCO CLIMÁTICO IBÉRICO
-# 4. DESCARTAR VARIABLES MUY CORRELACIONADAS
-# 5. REDUCCIÓN DE DIMENSIONES POR PCA
-# 6. OBTENCIÓN DE DATOS DE OTROS PAISES Y PROYECCIÓN SOBRE EL MARCO CLIMÁTICO IBÉRICO 
+### INDICE DE CONTENIDOS
+### 1. PREGUNTAS Y DEFINICIONES INICIALES
+### 2. PAQUETES NECESARIOS
+### 3. DELIMITACIÓN DEL MARCO CLIMÁTICO IBÉRICO
+### 4. DESCARTAR VARIABLES MUY CORRELACIONADAS
+### 5. REDUCCIÓN DE DIMENSIONES POR PCA
+### 6. OBTENCIÓN DE DATOS DE OTROS PAISES Y PROYECCIÓN SOBRE EL MARCO CLIMÁTICO IBÉRICO 
 
 
 
@@ -64,6 +64,8 @@ library(ggbiplot)
 install.packages("factoextra")
 library(factoextra)
 
+library(readr)
+
 # setwd("C:/Users/Desktop/DataSciencePlantsESTESI") 
 
 ```
@@ -105,20 +107,20 @@ write.csv(marcoclim, file="SpanishRiskAssesment/Datos/MarcoClim2.5.csv") #Guarda
 ```{r}
 marcoclim<- read_csv("SpanishRiskAssesment/Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
+
 View(marcoclim)
+marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA
 
 ```
 
 Podemos graficar los datos obtenidos:
-<<<<<<< HEAD
 ```{r, fig.cap="Temperatura y Precipitación en la Península Ibérica"}
 plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitaci?n Anual (mm)", ylab="Temperatura anual media (ºC x10)") #ploteamos temperatura media anual y precipitacion anual)
 
 ```
 
-Para generar un gráfico de denidad:
-```{r, fig.cap= "Grafico de denisdad de Temperatura y Precipitación en la Península Ibérica"}
-=======
+Para generar un gráfico de densidad:
+
 ```{r, fig.cap=Temperatura y Precipitación en la Península Ibérica}
 plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitacion Anual (mm)", ylab="Temperatura anual media (ºC x10)") #ploteamos temperatura media anual y precipitacion anual)
 
@@ -126,7 +128,6 @@ plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitacio
 
 Para generar un gráfico de densidad:
 ```{r, fig.cap= Grafico de densidad de Temperatura y Precipitación en la Península Ibérica}
->>>>>>> 5d7e07ae8456d98649e25bdc7ac30cf905849868
 str(marcoclim)
 plot(marcoclim$BIO12 ~ marcoclim$BIO1, col = "blue")
 d <- density(marcoclim$BIO1) # returns the density data 
@@ -228,7 +229,9 @@ Cargamos los datos
 ```{r}
 marcoclim<- read_csv("SpanishRiskAssesment/Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
+
 View(marcoclim)
+marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA
 
 ```
 
@@ -238,7 +241,7 @@ pcaclim <- prcomp(marcoclim, center = TRUE, scale. = TRUE)
 print(pcaclim)
 plot(pcaclim, type = "l")
 summary(pcaclim)
-plot(pcaclim$x[,1],pcaclim$x[,2])
+plot(pcaclim$x[,1],pcaclim$x[,2], col = "lightblue")
 ```
 
 PCA solo con las variables que VIF < 5
@@ -278,13 +281,25 @@ print(g)
 
 
 # 6. OBTENCIÓN DE DATOS DE OTROS PAISES Y PROYECCIÓN SOBRE EL MARCO CLIMÁTICO IBÉRICO
+Pretendemos evaluar país por país, si sus condiciones climáticas se parecen a las de la península ibérica, con el fin de determinar después especies que podrían encontrar condiciones favorables en nuestro país actuando como invasoras. Por eso proyectamos los datos de marco climático de estos países sobre el nuestro.
+
 Cargamos los datos del marco climatico ibérico:
 ```{r}
 marcoclim<- read_csv("SpanishRiskAssesment/Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
+
 View(marcoclim)
+marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA
 
 ```
+
+Preparamos los datos de españa de los dos primeros componentes:
+```{r}
+e <- pcaclim$x[,1:2]
+edf <- as.data.frame(e)
+edf$pais <- "Spain" #Añadimos una varaible de Pais, con todas las etiquetes "Spain"
+```
+
 
 
 Descargamos los datos del WordClim (ya hecho previamente en el #3)
@@ -313,22 +328,96 @@ marcoclim.denmark <- as.data.frame(s2)
 names(marcoclim.denmark) <- c("BIO1","BIO2","BIO3","BIO4", "BIO5", "BIO6", "BIO7", "BIO8", "BIO9",
                  "BIO10","BIO11","BIO12","BIO13", "BIO14", "BIO15", "BIO16", "BIO17", "BIO18", "BIO19")
 
+marcoclim.denmark <- marcoclim.denmark[complete.cases(marcoclim.denmark),]
+
 plot (marcoclim.denmark$bio1)
+
 ```
 
 
 Proyectamos estos valores sobre el PCA del marco climatico ibérico
 ```{r}
-i <- predict (pcaclim, newdata = marcoclim.denmark)
-i [,1:4]
+i <- predict (pcaclim, newdata = marcoclim.denmark) i <- i[,1:2]
+
+idf <- as.data.frame(i) 
+idf$pais <- "Din" #Generamos la variable pais, con el nombre de la etiqueta del mismo.
+
+df <- rbind(edf,idf) #Combinamos los dos data frames, con los datos de PC1 y 2 de españa y el pais seleccionado
 
 ```
 
-Pretendemos evaluar país por país, si sus condiciones climáticas se parecen a las de la península ibérica, con el fin de determinar después especies que podrían encontrar condiciones favorables en nuestro país actuando como invasoras. Por eso proyectamos los datos de marco climático de estos países sobre el nuestro.
+
+Generamos un gráfico para visualizar el grado de solapamiento de ambas nubes de puntos:
+
+```{r}
+ggplot(df, aes(x=PC1, y=PC2, col=pais)) + geom_point()
+
+```
+
+Solapamos dos gráficos de densidad para visualizar el grado de solapamiento de ambas nubes de puntos:
+```{r}
+# PARA HACER UN SOLO GRAFICO DE DENSIDAD CON TODOS LOS DATOS SERIA ASÍ
+dens <- kde2d(df$PC1, fd$PC2, n=300, lims = c(-10,10,-10,10))
+image(dens)
+filled.contour(dens,
+               color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
+               xlab= "PC1",
+               ylab= "PC2", main = "Contraste de marcos climaticos")
+
+# AHORA SOLO ESPAÑA:
+dense <- kde2d(edf$PC1, fd$PC2, n=300, lims = c(-10,10,-10,10))
+image(dense)
+filled.contour(dense,
+               color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
+               xlab= "PC1",
+               ylab= "PC2", main = "Marco climático Ibérico")
+
+#AHORA SOLO EL PAIS PROYECTADO:
+densi <- kde2d(idf$PC1, fd$PC2, n=300, lims = c(-10,10,-10,10))
+image(densi)
+filled.contour(densi,
+               color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
+               xlab= "PC1",
+               ylab= "PC2", main = "Marco climático Ibérico del pais proyectado")
+
+
+#Como se ponen los dos juntos??
+
+
+```
 
 
 
-#7 OBTENCION DATOS DE ESPECIES INVASORAS MUNDIALES.ORIGEN Y PRESENCIA
+
+
+
+# 7. DETERMINACIÓN DEL RIESGO INVASOR
+Queremos cuantificar el grado de solapamiento de las nubes de puntos descritas por los puntos de los dos paises, el receptor (España) y el proyectado.
+Hay que crear ciertos metricos para la determinación de el grado de riesgo de invasión. 
+
+# 7.1. Significación por Bootstraping
+Realizar una ANOVA con permutaciones por Bootstraping: contraste de la distribución de etiquetas a l'azar con la distribución real de etiquetas. ¿La assignación podria haber sido al azar?
+Si el resultado resulta significativo, hay diferenciación del espacio climatico y por lo tanto las especies del pais proyectado no podrian sobrevivir en España. 
+
+COMO HACERLO EN R??  PENDIENTE
+
+
+
+# 7.2. Grado de solapamiento desde el receptor y desde el proyectado
+
+PENDIENTE
+
+
+# 7.3. Otros?
+
+PENDIENTE
+
+
+
+
+
+
+# 8. OBTENCION DATOS DE ESPECIES INVASORAS MUNDIALES. ORIGEN Y PRESENCIA
 
 Turbelin et al. 2017, utilizan datos de http://www.iucngisd.org/gisd/ y de https://www.cabi.org/isc/. para determinar los patrones de distribucion de especies invasoras, en CABI existen datasets de cada una de las especies exóticas invasoras. Descargamos estos datos para una lista de plantas, recogen país donde la planta está presente, latitud longitud, si es nativa o introducida, etc.  Los uniremos entre si? . 
 
