@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Assesoramiento del riesgo invasor en la Península Iberica.
+# Assesoramiento del riesgo invasor en la Península Iberica.
 
 ### INDICE DE CONTENIDOS
 ### 1. PREGUNTAS Y DEFINICIONES INICIALES
@@ -79,6 +79,7 @@ En primer lugar descargamos los datos de la base de datos globales WorldClim (ht
 #Download the WorldClim Data
 worldata <- getData("worldclim",var="bio", res=2.5)
 ```
+![Gráfico mundial con la temperatura media](./Plots/Bio1Worldata.png)
 
 Los datos se descargan en formato raster. Ahora hay que seleccionar los datos correspondientes a la peninsula Iberica. Realizamos la selección recortando el cuadrado en el cual se comprende la peninsula. 
 ```{r}
@@ -87,6 +88,7 @@ e <- extent(-10,4,36,44) #definimos el marco
 s.crop <- crop(worldata, e) #Recortamos el worlddata con el extent
 plot (s.crop$bio1)
 ```
+![Gráfico](./Plots/MarcoIbericoMapaBIO1.png)
 
 Para sacar los valores dentro del archivo s.crop que esta en raster, usamos la funcion as.matrix del paquete raster que saca todos los valores y despues lo convertimos en data frame, definiendo los nombres de las variables:
 
@@ -120,12 +122,13 @@ plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitaci?
 
 ```
 
-Para generar un gráfico de densidad:
+Para generar un gráfico con temperatura y precipitacion
 
 ```{r, fig.cap=Temperatura y Precipitación en la Península Ibérica}
 plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitacion Anual (mm)", ylab="Temperatura anual media (ºC x10)") #ploteamos temperatura media anual y precipitacion anual)
 
 ```
+![Gráfico](./Plots/ScatterplotMarcoclim.png)
 
 Para generar un gráfico de densidad:
 ```{r, fig.cap= Grafico de densidad de Temperatura y Precipitación en la Península Ibérica}
@@ -142,6 +145,8 @@ filled.contour(dens,
                ylab= "Annual Precipitation (mm)", main = "Marco Climático Ibérico")
 
 ```
+![Gráfico](./Plots/MarcoClimaticoIberico.png)
+
 
 
 # 4. DESCARTAR VARIABLES MUY CORRELACIONADAS (opcional)
@@ -244,6 +249,7 @@ plot(pcaclim, type = "l")
 summary(pcaclim)
 plot(pcaclim$x[,1],pcaclim$x[,2], col = "lightblue")
 ```
+![Gráfico](./Plots/ScatterplotPCA.png)
 
 PCA solo con las variables que VIF < 5
 ```{r}
@@ -253,12 +259,6 @@ pcaclim2 <- prcomp(marcoclimVIF, center = TRUE, scale. = TRUE)
 print(pcaclim2)
 plot(pcaclim2, type = "l")
 summary(pcaclim2)
-```
-
-
-Ploteamos los dos primeros componentes principales:
-```{r}
-plot(pcaclim2$x[,1],pcaclim2$x[,2])
 ```
 
 Otros plots
@@ -302,7 +302,6 @@ edf$pais <- "Spain" #Añadimos una varaible de Pais, con todas las etiquetes "Sp
 ```
 
 
-
 Descargamos los datos del WordClim (ya hecho previamente en el #3)
 ```{r}
 #Download the WorldClim Data
@@ -332,8 +331,8 @@ names(marcoclim.denmark) <- c("BIO1","BIO2","BIO3","BIO4", "BIO5", "BIO6", "BIO7
 
 marcoclim.denmark <- marcoclim.denmark[complete.cases(marcoclim.denmark),]
 
-
 ```
+![Gráfico](./Plots/MapaDinamarca.png)
 
 
 Proyectamos estos valores sobre el PCA del marco climatico ibérico
@@ -355,6 +354,7 @@ Generamos un gráfico para visualizar el grado de solapamiento de ambas nubes de
 ggplot(df, aes(x=PC1, y=PC2, col=pais)) + geom_point()
 
 ```
+![Gráfico](./Plots/GgplotContrastePaises.png)
 
 Solapamos dos gráficos de densidad para visualizar el grado de solapamiento de ambas nubes de puntos:
 ```{r}
@@ -388,7 +388,8 @@ filled.contour(densi,
 
 
 ```
-
+![Gráfico](./Plots/PCAMarcoClimIberico.png)
+![Gráfico](./Plots/PCAdensityDinamarca.png)
 
 
 
