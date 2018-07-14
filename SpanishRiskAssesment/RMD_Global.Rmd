@@ -63,7 +63,8 @@ install_github("ggbiplot", "vqv")
 library(ggbiplot)
 install.packages("factoextra")
 library(factoextra)
-
+install.packages("MASS")
+library("MASS")
 library(readr)
 
 # setwd("C:/Users/Desktop/DataSciencePlantsESTESI") 
@@ -293,7 +294,7 @@ marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA
 
 ```
 
-Preparamos los datos de españa de los dos primeros componentes:
+Preparamos los datos de la Peninsula Ibérica de los dos primeros componentes:
 ```{r}
 e <- pcaclim$x[,1:2]
 edf <- as.data.frame(e)
@@ -306,6 +307,7 @@ Descargamos los datos del WordClim (ya hecho previamente en el #3)
 ```{r}
 #Download the WorldClim Data
 worldata <- getData("worldclim",var="bio", res=2.5)
+plot(worldata$bio1, main =  "Temperatura media anual mundial (ºC x10)")
 ```
 
 En: https://www.gis-blog.com/r-raster-data-acquisition, encontramos como se realiza la descarga y recorte de los paises. Para llamar a un pais concreto se usa la nomenclatura de tres letras definida en: http://kirste.userpage.fu-berlin.de/diverse/doc/ISO_3166.html. Hay una base de datos con los nombres y codigos de los 241 paises que incluye la lista. Podemos importar esos datos:
@@ -330,14 +332,14 @@ names(marcoclim.denmark) <- c("BIO1","BIO2","BIO3","BIO4", "BIO5", "BIO6", "BIO7
 
 marcoclim.denmark <- marcoclim.denmark[complete.cases(marcoclim.denmark),]
 
-plot (marcoclim.denmark$bio1)
 
 ```
 
 
 Proyectamos estos valores sobre el PCA del marco climatico ibérico
 ```{r}
-i <- predict (pcaclim, newdata = marcoclim.denmark) i <- i[,1:2]
+i <- predict (pcaclim, newdata = marcoclim.denmark) 
+i <- i[,1:2]
 
 idf <- as.data.frame(i) 
 idf$pais <- "Din" #Generamos la variable pais, con el nombre de la etiqueta del mismo.
@@ -357,7 +359,7 @@ ggplot(df, aes(x=PC1, y=PC2, col=pais)) + geom_point()
 Solapamos dos gráficos de densidad para visualizar el grado de solapamiento de ambas nubes de puntos:
 ```{r}
 # PARA HACER UN SOLO GRAFICO DE DENSIDAD CON TODOS LOS DATOS SERIA ASÍ
-dens <- kde2d(df$PC1, fd$PC2, n=300, lims = c(-10,10,-10,10))
+dens <- kde2d(df$PC1, df$PC2, n=300, lims = c(-20,10,-10,10))
 image(dens)
 filled.contour(dens,
                color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
@@ -365,7 +367,7 @@ filled.contour(dens,
                ylab= "PC2", main = "Contraste de marcos climaticos")
 
 # AHORA SOLO ESPAÑA:
-dense <- kde2d(edf$PC1, fd$PC2, n=300, lims = c(-10,10,-10,10))
+dense <- kde2d(edf$PC1, edf$PC2, n=300, lims = c(-12,7,-10,10))
 image(dense)
 filled.contour(dense,
                color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
@@ -373,12 +375,13 @@ filled.contour(dense,
                ylab= "PC2", main = "Marco climático Ibérico")
 
 #AHORA SOLO EL PAIS PROYECTADO:
-densi <- kde2d(idf$PC1, fd$PC2, n=300, lims = c(-10,10,-10,10))
+densi <- kde2d(idf$PC1, idf$PC2, n=300, lims = c(-12,7,-10,10))
 image(densi)
 filled.contour(densi,
                color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
                xlab= "PC1",
                ylab= "PC2", main = "Marco climático Ibérico del pais proyectado")
+
 
 
 #Como se ponen los dos juntos??
@@ -389,11 +392,10 @@ filled.contour(densi,
 
 
 
-
-
 # 7. DETERMINACIÓN DEL RIESGO INVASOR
 Queremos cuantificar el grado de solapamiento de las nubes de puntos descritas por los puntos de los dos paises, el receptor (España) y el proyectado.
 Hay que crear ciertos metricos para la determinación de el grado de riesgo de invasión. 
+
 
 # 7.1. Significación por Bootstraping
 Realizar una ANOVA con permutaciones por Bootstraping: contraste de la distribución de etiquetas a l'azar con la distribución real de etiquetas. ¿La assignación podria haber sido al azar?
@@ -402,13 +404,14 @@ Si el resultado resulta significativo, hay diferenciación del espacio climatico
 COMO HACERLO EN R??  PENDIENTE
 
 
+# 7.2.Significación por Test de Permutación
 
-# 7.2. Grado de solapamiento desde el receptor y desde el proyectado
+# 7.3. Grado de solapamiento desde el receptor y desde el proyectado
 
 PENDIENTE
 
 
-# 7.3. Otros?
+# 7.4. Otros?
 
 PENDIENTE
 
