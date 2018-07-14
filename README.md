@@ -1,11 +1,5 @@
 # DataSciencePlants
-Project for the course Data Science UB
-
-En la carpeta [Spanish Risk Assesment](SpanishRiskAssesment/) hay:
-- [Preguntas y hipotesis iniciales](SpanishRiskAssesment/00_PreguntasyDefiniciones)
-- Así como diferentes [Rscripts](SpanishRiskAssesment/): codigos de R de la realizacion del trabajo
-     
-NEW!!! He añadido un nuevo [dataset derivado del Catalogo Español de Especies exoticas](SpanishRiskAssesment/especies_invasoras_catalogo_tcm30-70022.xls). Hay que completarlo definiendo pais o paises de origen. 
+[IR DIRECTAMENTE AL RMD GLOBAL](/SpanishRiskAssesment/RMD_Global.Rmd)
        
           
 ## NEXT STEPS:
