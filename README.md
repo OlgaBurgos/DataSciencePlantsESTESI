@@ -14,3 +14,7 @@ Opcional: **Descargar WorldClim para clima futuro** para realizar el mismo anali
 
 
 Como poner formato en GitHub: https://help.github.com/articles/basic-writing-and-formatting-syntax/
+
+
+
+https://stackoverflow.com/questions/31272695/calculate-probability-of-point-on-2d-density-surface
