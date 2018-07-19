@@ -252,6 +252,9 @@ plot(pcaclim$x[,1],pcaclim$x[,2], col = "lightblue")
 ```
 ![Gráfico](./Plots/ScatterplotPCA.png)
 
+Se explica un 75,42% de la variabilidad con el componente principal 1 y 2. Nos parece suficiente para continuar. 
+
+
 PCA solo con las variables que VIF < 5
 ```{r}
 marcoclimVIF <- marcoclim[,c(2,3,8,9,13,15)]
@@ -438,7 +441,10 @@ https://www.gis-blog.com/r-raster-data-acquisition http://kirste.userpage.fu-ber
 https://stackoverflow.com/questions/31272695/calculate-probability-of-point-on-2d-density-surface
 https://rstudio-pubs-static.s3.amazonaws.com/330387_5a40ca72c3b14824acedceb7d34618d1.html
 
-##ARTICULOS
+https://stats.stackexchange.com/questions/63447/integrating-kernel-density-estimator-in-2d
+##ARTICULOS Y LIBROS
 
 Turbelin, Anna J., Malamud, Bruce D., Francis, Robert A.Mapping the global state of invasive alien species: patterns of invasion and policy responses.*Global Ecology & Biogeography*, September 2016.
+
+Davison, A. C. & Hinkley, D. V. (1997) Bootstrap Methods and Their Applications. Cambridge University Press, Cambridge. ISBN 0-521-57391-2
 
