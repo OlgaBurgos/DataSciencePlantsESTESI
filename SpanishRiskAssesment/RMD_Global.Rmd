@@ -18,8 +18,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ### 4. DESCARTAR VARIABLES MUY CORRELACIONADAS
 ### 5. REDUCCIÓN DE DIMENSIONES POR PCA
 ### 6. OBTENCIÓN DE DATOS DE OTROS PAISES Y PROYECCIÓN SOBRE EL MARCO CLIMÁTICO IBÉRICO 
-
-
+### 7. DETERMINACIÓN DEL RIESGO INVASOR
+### 8. OBTENCION DATOS DE ESPECIES INVASORAS MUNDIALES. ORIGEN Y PRESENCIA
+### 9. BIBLIOGRAFÍA
 
 # 1. PREGUNTAS Y DEFINICIONES INICIALES
 # 1.1 Preguntas
@@ -425,5 +426,19 @@ PENDIENTE
 
 Turbelin et al. 2017, utilizan datos de http://www.iucngisd.org/gisd/ y de https://www.cabi.org/isc/. para determinar los patrones de distribucion de especies invasoras, en CABI existen datasets de cada una de las especies exóticas invasoras. Descargamos estos datos para una lista de plantas, recogen país donde la planta está presente, latitud longitud, si es nativa o introducida, etc.  Los uniremos entre si? . 
 
+# 9. BIBLIOGRAFÍA
 
-Interesante!!! tambien mapean vias de introduccion de invasoras! aun nose como!!!
+##SITIOS WEB
+
+https://worldclim.org/bioclim
+https://www.cabi.org/isc/.
+https://www.r-bloggers.com/collinearity-and-stepwise-vif-selection/
+https://tgmstat.wordpress.com/2013/11/28/computing-and-visualizing-pca-in-r/
+https://www.gis-blog.com/r-raster-data-acquisition http://kirste.userpage.fu-berlin.de/diverse/doc/ISO_3166.html.
+https://stackoverflow.com/questions/31272695/calculate-probability-of-point-on-2d-density-surface
+https://rstudio-pubs-static.s3.amazonaws.com/330387_5a40ca72c3b14824acedceb7d34618d1.html
+
+##ARTICULOS
+
+Turbelin, Anna J., Malamud, Bruce D., Francis, Robert A.Mapping the global state of invasive alien species: patterns of invasion and policy responses.*Global Ecology & Biogeography*, September 2016.
+
