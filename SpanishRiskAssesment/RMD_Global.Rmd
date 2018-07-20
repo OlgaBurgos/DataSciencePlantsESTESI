@@ -33,7 +33,7 @@ Teniendo en cuenta el origen de las especies potencialmente invasoras y los movi
 
 ¿Por que superficie se extenderian las especies potencialmente invasoras en la peninsula? ¿Cuanto es su daño potencial?
 
-Teniendo en cuenta las condiciones climáticas en la península, ¿que otros países de Europa pueden ser susceptibles a la invasión debido a similaridades con el marco climático de España i Portugal?
+Teniendo en cuenta las condiciones climáticas en la península, ¿que otros países de Europa pueden ser susceptibles a la invasión debido a similaridades con el marco climático de España y Portugal?
 
 # 1.2. Definiciones
 Marco climatico Ibérico: espacio multidimensional definido por los valores de diferentes variables bioclimáticas georeferenciados dentro de la Peninsula Ibérica.
@@ -46,6 +46,7 @@ Especie potencialmente invasora en la Peninsula Iberica: especie cuyo nicho clim
 
 # 2. PAQUETES NECESARIOS
 ```{r}
+install.packages("DataExplorer")
 install.packages("raster")
 library("raster")
 library(sp)
@@ -82,7 +83,7 @@ worldata <- getData("worldclim",var="bio", res=2.5)
 ```
 ![Gráfico mundial con la temperatura media](./Plots/Bio1Worldata.png)
 
-Los datos se descargan en formato raster. Ahora hay que seleccionar los datos correspondientes a la peninsula Iberica. Realizamos la selección recortando el cuadrado en el cual se comprende la peninsula. 
+Los datos se descargan en formato raster. Ahora hay que seleccionar los datos correspondientes a la península Ibérica. Realizamos la selección recortando el cuadrado en el cual se comprende la peninsula. 
 ```{r}
 #Recortamos con extent los grados de longitud y latitud que emarcan la peninsula iberica
 e <- extent(-10,4,36,44) #definimos el marco
@@ -107,21 +108,28 @@ write.csv(marcoclim, file="SpanishRiskAssesment/Datos/MarcoClim2.5.csv") #Guarda
 ```
 
 
-!!!!!!!!! PARA REEMPRENDER DES DE AQUÍ, CARGA LOS DATOS: !!!!!!!!!!!
+!!!!!!!!! PARA REEMPRENDER DESDE AQUÍ, CARGA LOS DATOS !!!!!!!!!!!
 ```{r}
 marcoclim<- read_csv("SpanishRiskAssesment/Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
 
 View(marcoclim)
+```
+
+Antes de continuar trabajando, necesitamos hacernos una idea de cómo son los datos, para ello realizamos un pequeño análisis exploratorio y data wrangling
+```{r}
+library(DataExplorer)
 marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA
-
+summary(marcoclim) #resumen de cada variable
+plot_str(marcoclim) #estructura de los datos
+plot_histogram(marcoclim) 
+cor(marcoclim) # Idea de la correlacion de unas variables con otras
+plot_correlation(marcoclim) #para visualizar mejor la correlación.
 ```
+![Gráfico](./Plots/correlationplot.png)
 
-Podemos graficar los datos obtenidos:
-```{r, fig.cap="Temperatura y Precipitación en la Península Ibérica"}
-plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitaci?n Anual (mm)", ylab="Temperatura anual media (ºC x10)") #ploteamos temperatura media anual y precipitacion anual)
 
-```
+Ahora, Podemos graficar los datos obtenidos, dependiendo de las variables que nos interesa representar:
 
 Para generar un gráfico con temperatura y precipitacion
 
@@ -265,7 +273,7 @@ plot(pcaclim2, type = "l")
 summary(pcaclim2)
 ```
 
-Otros plots
+Otro plot interesante, es por ejemplo, la contribucion de cada una de las variables en el análisis de componentes principales.
 ```{r}
 fviz_pca_var(pcaclim,
              col.var = "contrib", # Color by contributions to the PC
@@ -283,7 +291,7 @@ g <- g + theme(legend.direction = 'horizontal',
                legend.position = 'top')
 print(g)
 ```
-
+![Gráfico](./Plots/ContributionPCA.png)
 
 # 6. OBTENCIÓN DE DATOS DE OTROS PAISES Y PROYECCIÓN SOBRE EL MARCO CLIMÁTICO IBÉRICO
 Pretendemos evaluar país por país, si sus condiciones climáticas se parecen a las de la península ibérica, con el fin de determinar después especies que podrían encontrar condiciones favorables en nuestro país actuando como invasoras. Por eso proyectamos los datos de marco climático de estos países sobre el nuestro.
