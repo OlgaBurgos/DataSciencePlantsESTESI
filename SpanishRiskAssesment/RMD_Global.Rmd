@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Valoración del riesgo invasor en la Península Iberica.
+# Valoración del riesgo invasor en la Pen�?nsula Iberica.
 
 ### INDICE DE CONTENIDOS
 ### 1. PREGUNTAS Y DEFINICIONES INICIALES
@@ -24,16 +24,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # 1. PREGUNTAS Y DEFINICIONES INICIALES
 # 1.1 Preguntas
-Si las invasiones son exitosas por en coincidencia del clima, ¿qué especies estarían bien en la península ibérica y son por tanto potencialmente invasoras?
+Si las invasiones son exitosas por en coincidencia del clima, ¿qué especies estar�?an bien en la pen�?nsula ibérica y son por tanto potencialmente invasoras?
 
-¿Las especies invasoras actuales en la península ibérica cumplen esa hipótesis de coincidencia del clima?
-Si las condiciones climáticas en la península cambiasen en el contexto del cambio climático, ¿el numero de especies potencialmente invasoras sería mayor, menor o igual? ¿El cambio climático podría potenciar la amenaza invasora?
+¿Las especies invasoras actuales en la pen�?nsula ibérica cumplen esa hipótesis de coincidencia del clima?
+Si las condiciones climáticas en la pen�?nsula cambiasen en el contexto del cambio climático, ¿el numero de especies potencialmente invasoras ser�?a mayor, menor o igual? ¿El cambio climático podr�?a potenciar la amenaza invasora?
 
-Teniendo en cuenta el origen de las especies potencialmente invasoras y los movimientos globales de mercancías y personas, ¿qué invasiones son mas probables? ¿Con qué paises deberíamos endurecer las políticas de comercio de especies?
+Teniendo en cuenta el origen de las especies potencialmente invasoras y los movimientos globales de mercanc�?as y personas, ¿qué invasiones son mas probables? ¿Con qué paises deber�?amos endurecer las pol�?ticas de comercio de especies?
 
-¿Por qué superficie se extenderían las especies potencialmente invasoras en la península? ¿Cuánto es su daño potencial?
+¿Por qué superficie se extender�?an las especies potencialmente invasoras en la pen�?nsula? ¿Cuánto es su daño potencial?
 
-Teniendo en cuenta las condiciones climáticas en la península, ¿qué otros países de Europa podrían ser susceptibles a la invasión debido a similaridades con el marco climático de España y Portugal?
+Teniendo en cuenta las condiciones climáticas en la pen�?nsula, ¿qué otros pa�?ses de Europa podr�?an ser susceptibles a la invasión debido a similaridades con el marco climático de España y Portugal?
 
 # 1.2. Definiciones
 Marco climatico Ibérico: espacio multidimensional definido por los valores de diferentes variables bioclimáticas georeferenciados dentro de la Peninsula Ibérica.
@@ -75,7 +75,7 @@ library(readr)
 
 
 # 3. DELIMITACIÓN DEL MARCO CLIMÁTICO IBÉRICO
-En primer lugar descargamos los datos de la base de datos globales WorldClim (http://worldclim.org/). Elegimo las 19 variables bioclimáticas con una resolución de 2.5' (minutos de grado). El argumento var = bio reclama las 19 variables bioclimáticas, descritas aquí: (http://worldclim.org/bioclim). Este mismo portal incluye variables climáticas teniendo en cuenta un contexto de cambio climático. Más adelante se pueden testear las diferencias. Las variables referentes a la temperatura estan multiplicadas por diez.
+En primer lugar descargamos los datos de la base de datos globales WorldClim (http://worldclim.org/). Elegimo las 19 variables bioclimáticas con una resolución de 2.5' (minutos de grado). El argumento var = bio reclama las 19 variables bioclimáticas, descritas aqu�?: (http://worldclim.org/bioclim). Este mismo portal incluye variables climáticas teniendo en cuenta un contexto de cambio climático. Más adelante se pueden testear las diferencias. Las variables referentes a la temperatura estan multiplicadas por diez.
 
 ```{r}
 #Download the WorldClim Data
@@ -83,13 +83,13 @@ worldata <- getData("worldclim",var="bio", res=2.5)
 ```
 ![Gráfico mundial con la temperatura media](./Plots/Bio1Worldata.png)
 
-Los datos se descargan en formato raster. Ahora hay que seleccionar los datos correspondientes a la Península Ibérica. Realizamos la selección recortando el cuadrado en el cual se comprende la peninsula. 
+Los datos se descargan en formato raster. Ahora hay que seleccionar los datos correspondientes a la Pen�?nsula Ibérica. Realizamos la selección recortando el cuadrado en el cual se comprende la peninsula. 
 ```{r}
 #Recortamos con extent los grados de longitud y latitud que emarcan la peninsula iberica
 e <- extent(-10,4,36,44) #definimos el marco
 s.crop <- crop(worldata, e) #Recortamos el worlddata con el extent
 plot (s.crop$bio1,
-   main = "Mapa de la variable BIO1 en la Península Ibérica",
+   main = "Mapa de la variable BIO1 en la Pen�?nsula Ibérica",
    xlab = "Longitud (�C)",
    ylab = "Latitud (�C)")
 ```
@@ -116,7 +116,7 @@ write.csv(marcoclim, file="Datos/MarcoClim2.5.csv") #Guardamos los datos
 marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
 
-View(marcoclim)
+#View(marcoclim)
 ```
 
 Antes de continuar trabajando, necesitamos hacernos una idea de cómo son los datos, para ello realizamos un pequeño análisis exploratorio y data wrangling
@@ -136,14 +136,14 @@ Ahora, podemos representar los datos obtenidos, dependiendo de las variables que
 
 Para generar un gráfico con temperatura y precipitación
 
-```{r, fig.cap= "Temperatura y Precipitación en la Península Ibérica"}
+```{r, fig.cap= "Temperatura y Precipitación en la Pen�?nsula Ibérica"}
 plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitacion Anual (mm)", ylab="Temperatura anual media (ºC x10)") #ploteamos temperatura media anual y precipitacion anual)
 
 ```
 ![Gráfico](./Plots/ScatterplotMarcoclim.png)
 
 Para generar un gráfico de densidad:
-```{r, fig.cap = "Grafico de densidad de Temperatura y Precipitación en la Península Ibérica"}
+```{r, fig.cap = "Grafico de densidad de Temperatura y Precipitación en la Pen�?nsula Ibérica"}
 str(marcoclim)
 plot(marcoclim$BIO12 ~ marcoclim$BIO1, col = "blue")
 d <- density(marcoclim$BIO1) # returns the density data 
@@ -236,7 +236,7 @@ vif_func<-function(in_frame,thresh=10,trace=T,...){
 
 Aplicamos la funcion a los datos
 ```{r}
-vif_func(in_frame=marcoclim1,thresh=5,trace=T) # La funcion va calculando los VIF cada vez que quita el que tiene mayor valor hasta quedarnos con valores de VIF por debajo del umbral (hemos puesto 5, pero podria ser otro)
+vif_func(in_frame=marcoclim,thresh=5,trace=T) # La funcion va calculando los VIF cada vez que quita el que tiene mayor valor hasta quedarnos con valores de VIF por debajo del umbral (hemos puesto 5, pero podria ser otro)
 ```
 
 
@@ -245,10 +245,10 @@ PAra describir de forma reducida el marco climático Ibérico realizamos una red
 
 Cargamos los datos
 ```{r}
-marcoclim<- read_csv("SpanishRiskAssesment/Datos/MarcoClim2.5.csv", 
+marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
 
-View(marcoclim)
+#View(marcoclim)
 marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA
 
 ```
@@ -284,7 +284,7 @@ fviz_pca_var(pcaclim,
              repel = TRUE     # Avoid text overlapping
 )  ##Función para ver la contribución de cada variable en esta PCA
 
-## Manera de representar la PCA extraído de https://tgmstat.wordpress.com/2013/11/28/computing-and-visualizing-pca-in-r/
+## Manera de representar la PCA extra�?do de https://tgmstat.wordpress.com/2013/11/28/computing-and-visualizing-pca-in-r/
 
 g <- ggbiplot(pcaclim, obs.scale = 1, var.scale = 1, 
                ellipse = TRUE, alpha=0.1, 
@@ -297,14 +297,14 @@ print(g)
 ![Gráfico](./Plots/ContributionPCA.png)
 
 # 6. OBTENCIÓN DE DATOS DE OTROS PAISES Y PROYECCIÓN SOBRE EL MARCO CLIMÁTICO IBÉRICO
-Pretendemos evaluar país por país, si sus condiciones climáticas se parecen a las de la península ibérica, con el fin de determinar después especies que podrían encontrar condiciones favorables en nuestro país actuando como invasoras. Por eso proyectamos los datos de marco climático de estos países sobre el nuestro.
+Pretendemos evaluar pa�?s por pa�?s, si sus condiciones climáticas se parecen a las de la pen�?nsula ibérica, con el fin de determinar después especies que podr�?an encontrar condiciones favorables en nuestro pa�?s actuando como invasoras. Por eso proyectamos los datos de marco climático de estos pa�?ses sobre el nuestro.
 
 Cargamos los datos del marco climatico ibérico:
 ```{r}
-marcoclim<- read_csv("SpanishRiskAssesment/Datos/MarcoClim2.5.csv", 
+marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
 
-View(marcoclim)
+#View(marcoclim)
 marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA
 
 ```
@@ -326,7 +326,7 @@ plot(worldata$bio1, main =  "Temperatura media anual mundial (ºC x10)")
 
 En: https://www.gis-blog.com/r-raster-data-acquisition, encontramos como se realiza la descarga y recorte de los paises. Para llamar a un pais concreto se usa la nomenclatura de tres letras definida en: http://kirste.userpage.fu-berlin.de/diverse/doc/ISO_3166.html. Hay una base de datos con los nombres y codigos de los 241 paises que incluye la lista. Podemos importar esos datos:
 ```{r}
-CountryCodes <- read_delim("SpanishRiskAssesment/Datos/CountryCodes.csv", 
+CountryCodes <- read_delim("Datos/CountryCodes.csv", 
     ";", escape_double = FALSE, trim_ws = TRUE)
 
 #A3 son los codigos para descargar el pais
@@ -438,7 +438,7 @@ PENDIENTE
 
 # 8. OBTENCION DATOS DE ESPECIES INVASORAS MUNDIALES. ORIGEN Y PRESENCIA
 
-Turbelin et al. 2017, utilizan datos de http://www.iucngisd.org/gisd/ y de https://www.cabi.org/isc/. para determinar los patrones de distribucion de especies invasoras, en CABI existen datasets de cada una de las especies exóticas invasoras. Descargamos estos datos para una lista de plantas, recogen país donde la planta está presente, latitud longitud, si es nativa o introducida, etc.  Los uniremos entre si? . 
+Turbelin et al. 2017, utilizan datos de http://www.iucngisd.org/gisd/ y de https://www.cabi.org/isc/. para determinar los patrones de distribucion de especies invasoras, en CABI existen datasets de cada una de las especies exóticas invasoras. Descargamos estos datos para una lista de plantas, recogen pa�?s donde la planta está presente, latitud longitud, si es nativa o introducida, etc.  Los uniremos entre si? . 
 
 # 9. BIBLIOGRAFÍA
 
