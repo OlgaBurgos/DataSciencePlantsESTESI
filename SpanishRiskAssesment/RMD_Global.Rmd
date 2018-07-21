@@ -448,7 +448,7 @@ Turbelin et al. 2017, utilizan datos de http://www.iucngisd.org/gisd/ y de https
 
 # 9. BIBLIOGRAF?A
 
-###SITIOS WEB
+#SITIOS WEB
 
 https://worldclim.org/bioclim
 https://www.cabi.org/isc/.
@@ -460,7 +460,7 @@ https://rstudio-pubs-static.s3.amazonaws.com/330387_5a40ca72c3b14824acedceb7d346
 
 https://stats.stackexchange.com/questions/63447/integrating-kernel-density-estimator-in-2d
 
-###ARTICULOS Y LIBROS
+#ARTICULOS Y LIBROS
 
 Turbelin, Anna J., Malamud, Bruce D., Francis, Robert A.Mapping the global state of invasive alien species: patterns of invasion and policy responses.*Global Ecology & Biogeography*, September 2016.
 
