@@ -2,47 +2,52 @@
 title: "RMDGlobal"
 author: "DSTeam"
 date: "July 10, 2018"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+options(Encoding="UTF-8")
+options(tikzDefaultEngine = "xetex")
 ```
 
-# Valoraci√≥n del riesgo invasor en la Pen√?nsula Iberica.
+# ValoraciÛn del riesgo invasor en la PenÌnsula IbÈrica.
 
-### INDICE DE CONTENIDOS
+### ÕNDICE DE CONTENIDOS
 ### 1. PREGUNTAS Y DEFINICIONES INICIALES
 ### 2. PAQUETES NECESARIOS
-### 3. DELIMITACI√ìN DEL MARCO CLIM√ÅTICO IB√âRICO
+### 3. DELIMITACI”N DEL MARCO CLIM¡TICO IB…RICO
 ### 4. DESCARTAR VARIABLES MUY CORRELACIONADAS
-### 5. REDUCCI√ìN DE DIMENSIONES POR PCA
-### 6. OBTENCI√ìN DE DATOS DE OTROS PAISES Y PROYECCI√ìN SOBRE EL MARCO CLIM√ÅTICO IB√âRICO 
-### 7. DETERMINACI√ìN DEL RIESGO INVASOR
+### 5. REDUCCI”N DE DIMENSIONES POR PCA
+### 6. OBTENCIÛN DE DATOS DE OTROS PAISES Y PROYECCI”N SOBRE EL MARCO CLIM¡TICO IB…RICO 
+### 7. DETERMINACI”N DEL RIESGO INVASOR
 ### 8. OBTENCION DATOS DE ESPECIES INVASORAS MUNDIALES. ORIGEN Y PRESENCIA
-### 9. BIBLIOGRAF√çA
+### 9. BIBLIOGRAFÕA
 
 # 1. PREGUNTAS Y DEFINICIONES INICIALES
 # 1.1 Preguntas
-Si las invasiones son exitosas por en coincidencia del clima, ¬øqu√© especies estar√?an bien en la pen√?nsula ib√©rica y son por tanto potencialmente invasoras?
+Si las invasiones son exitosas por en coincidencia del clima, ¬øquÈ especies estar√?an bien en la pen√?nsula ibÈrica y son por tanto potencialmente invasoras?
 
-¬øLas especies invasoras actuales en la pen√?nsula ib√©rica cumplen esa hip√≥tesis de coincidencia del clima?
+¬øLas especies invasoras actuales en la pen√?nsula ibÈrica cumplen esa hip√≥tesis de coincidencia del clima?
 Si las condiciones clim√°ticas en la pen√?nsula cambiasen en el contexto del cambio clim√°tico, ¬øel numero de especies potencialmente invasoras ser√?a mayor, menor o igual? ¬øEl cambio clim√°tico podr√?a potenciar la amenaza invasora?
 
-Teniendo en cuenta el origen de las especies potencialmente invasoras y los movimientos globales de mercanc√?as y personas, ¬øqu√© invasiones son mas probables? ¬øCon qu√© paises deber√?amos endurecer las pol√?ticas de comercio de especies?
+Teniendo en cuenta el origen de las especies potencialmente invasoras y los movimientos globales de mercanc√?as y personas, ¬øquÈ invasiones son mas probables? ¬øCon quÈ paises deber√?amos endurecer las pol√?ticas de comercio de especies?
 
-¬øPor qu√© superficie se extender√?an las especies potencialmente invasoras en la pen√?nsula? ¬øCu√°nto es su da√±o potencial?
+¬øPor quÈ superficie se extender√?an las especies potencialmente invasoras en la pen√?nsula? ¬øCu√°nto es su da√±o potencial?
 
-Teniendo en cuenta las condiciones clim√°ticas en la pen√?nsula, ¬øqu√© otros pa√?ses de Europa podr√?an ser susceptibles a la invasi√≥n debido a similaridades con el marco clim√°tico de Espa√±a y Portugal?
+Teniendo en cuenta las condiciones clim√°ticas en la pen√?nsula, ¬øquÈ otros pa√?ses de Europa podr√?an ser susceptibles a la invasi√≥n debido a similaridades con el marco clim√°tico de Espa√±a y Portugal?
 
 # 1.2. Definiciones
-Marco climatico Ib√©rico: espacio multidimensional definido por los valores de diferentes variables bioclim√°ticas georeferenciados dentro de la Peninsula Ib√©rica.
+Marco climatico IbÈrico: espacio multidimensional definido por los valores de diferentes variables bioclim√°ticas georeferenciados dentro de la Peninsula IbÈrica.
 
 Variable bioclim√°tica: Variable descriptora ambiental considerada determinante para el crecimiento, desarrollo y reproducci√≥n de la biosfera.
 
 Nicho clim√°tico: espacio multidimensional definido por los valores de diferentes variables bioclim√°ticas de los puntos de presencia de una especie.
 
-Especie potencialmente invasora en la Peninsula Ib√©rica: especie cuyo nicho clim√°tico est√° comprendido dentro del Marco clim√°tico Ib√©rico.
+Especie potencialmente invasora en la Peninsula IbÈrica: especie cuyo nicho clim√°tico est√° comprendido dentro del Marco clim√°tico IbÈrico.
 
 # 2. PAQUETES NECESARIOS
 ```{r}
@@ -74,7 +79,7 @@ library(readr)
 ```
 
 
-# 3. DELIMITACI√ìN DEL MARCO CLIM√ÅTICO IB√âRICO
+# 3. DELIMITACIÛN DEL MARCO CLIM·TICO IBÈRICO
 En primer lugar descargamos los datos de la base de datos globales WorldClim (http://worldclim.org/). Elegimo las 19 variables bioclim√°ticas con una resoluci√≥n de 2.5' (minutos de grado). El argumento var = bio reclama las 19 variables bioclim√°ticas, descritas aqu√?: (http://worldclim.org/bioclim). Este mismo portal incluye variables clim√°ticas teniendo en cuenta un contexto de cambio clim√°tico. M√°s adelante se pueden testear las diferencias. Las variables referentes a la temperatura estan multiplicadas por diez.
 
 ```{r}
@@ -83,13 +88,13 @@ worldata <- getData("worldclim",var="bio", res=2.5)
 ```
 ![Gr√°fico mundial con la temperatura media](./Plots/Bio1Worldata.png)
 
-Los datos se descargan en formato raster. Ahora hay que seleccionar los datos correspondientes a la Pen√?nsula Ib√©rica. Realizamos la selecci√≥n recortando el cuadrado en el cual se comprende la peninsula. 
+Los datos se descargan en formato raster. Ahora hay que seleccionar los datos correspondientes a la Pen√?nsula IbÈrica. Realizamos la selecci√≥n recortando el cuadrado en el cual se comprende la peninsula. 
 ```{r}
 #Recortamos con extent los grados de longitud y latitud que emarcan la peninsula iberica
 e <- extent(-10,4,36,44) #definimos el marco
 s.crop <- crop(worldata, e) #Recortamos el worlddata con el extent
 plot (s.crop$bio1,
-   main = "Mapa de la variable BIO1 en la Pen√?nsula Ib√©rica",
+   main = "Mapa de la variable BIO1 en la Pen√?nsula IbÈrica",
    xlab = "Longitud (∫C)",
    ylab = "Latitud (∫C)")
 ```
@@ -111,7 +116,7 @@ write.csv(marcoclim, file="Datos/MarcoClim2.5.csv") #Guardamos los datos
 ```
 
 
-!!!!!!!!! PARA REEMPRENDER DESDE AQU√ç, CARGA LOS DATOS !!!!!!!!!!!
+!!!!!!!!! PARA REEMPRENDER DESDE AQUÕ, CARGA LOS DATOS !!!!!!!!!!!
 ```{r}
 marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
@@ -136,14 +141,14 @@ Ahora, podemos representar los datos obtenidos, dependiendo de las variables que
 
 Para generar un gr√°fico con temperatura y precipitaci√≥n
 
-```{r, fig.cap= "Temperatura y Precipitaci√≥n en la Pen√?nsula Ib√©rica"}
+```{r, fig.cap= "Temperatura y Precipitaci√≥n en la Pen√?nsula IbÈrica"}
 plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitacion Anual (mm)", ylab="Temperatura anual media (¬∫C x10)") #ploteamos temperatura media anual y precipitacion anual)
 
 ```
 ![Gr√°fico](./Plots/ScatterplotMarcoclim.png)
 
 Para generar un gr√°fico de densidad:
-```{r, fig.cap = "Grafico de densidad de Temperatura y Precipitaci√≥n en la Pen√?nsula Ib√©rica"}
+```{r, fig.cap = "Grafico de densidad de Temperatura y Precipitaci√≥n en la Pen√?nsula IbÈrica"}
 str(marcoclim)
 plot(marcoclim$BIO12 ~ marcoclim$BIO1, col = "blue")
 d <- density(marcoclim$BIO1) # returns the density data 
@@ -154,7 +159,7 @@ image(dens)
 filled.contour(dens,
                color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
                xlab= "Annual Mean Temperature (¬∫C)",
-               ylab= "Annual Precipitation (mm)", main = "Marco Clim√°tico Ib√©rico")
+               ylab= "Annual Precipitation (mm)", main = "Marco Clim√°tico IbÈrico")
 
 ```
 ![Gr√°fico](./Plots/MarcoClimaticoIberico.png)
@@ -240,8 +245,8 @@ vif_func(in_frame=marcoclim,thresh=5,trace=T) # La funcion va calculando los VIF
 ```
 
 
-# 5. REDUCCI√ìN DE DIMENSIONES POR PCA
-PAra describir de forma reducida el marco clim√°tico Ib√©rico realizamos una reducci√≥n de dimensiones por Analisis de Componentes principales:
+# 5. REDUCCIÛN DE DIMENSIONES POR PCA
+PAra describir de forma reducida el marco clim√°tico IbÈrico realizamos una reducci√≥n de dimensiones por Analisis de Componentes principales:
 
 Cargamos los datos
 ```{r}
@@ -296,10 +301,10 @@ print(g)
 ```
 ![Gr√°fico](./Plots/ContributionPCA.png)
 
-# 6. OBTENCI√ìN DE DATOS DE OTROS PAISES Y PROYECCI√ìN SOBRE EL MARCO CLIM√ÅTICO IB√âRICO
-Pretendemos evaluar pa√?s por pa√?s, si sus condiciones clim√°ticas se parecen a las de la pen√?nsula ib√©rica, con el fin de determinar despu√©s especies que podr√?an encontrar condiciones favorables en nuestro pa√?s actuando como invasoras. Por eso proyectamos los datos de marco clim√°tico de estos pa√?ses sobre el nuestro.
+# 6. OBTENCIÛN DE DATOS DE OTROS PAISES Y PROYECCIÛN SOBRE EL MARCO CLIM·TICO IBÈRICO
+Pretendemos evaluar pa√?s por pa√?s, si sus condiciones clim√°ticas se parecen a las de la pen√?nsula ibÈrica, con el fin de determinar despuÈs especies que podr√?an encontrar condiciones favorables en nuestro pa√?s actuando como invasoras. Por eso proyectamos los datos de marco clim√°tico de estos pa√?ses sobre el nuestro.
 
-Cargamos los datos del marco climatico ib√©rico:
+Cargamos los datos del marco climatico ibÈrico:
 ```{r}
 marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
@@ -309,7 +314,7 @@ marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA
 
 ```
 
-Preparamos los datos de la Peninsula Ib√©rica de los dos primeros componentes:
+Preparamos los datos de la Peninsula IbÈrica de los dos primeros componentes:
 ```{r}
 e <- pcaclim$x[,1:2]
 edf <- as.data.frame(e)
@@ -350,7 +355,7 @@ marcoclim.denmark <- marcoclim.denmark[complete.cases(marcoclim.denmark),]
 ![Gr√°fico](./Plots/MapaDinamarca.png)
 
 
-Proyectamos estos valores sobre el PCA del marco climatico ib√©rico
+Proyectamos estos valores sobre el PCA del marco climatico ibÈrico
 ```{r}
 i <- predict (pcaclim, newdata = marcoclim.denmark) 
 i <- i[,1:2]
@@ -373,7 +378,7 @@ ggplot(df, aes(x=PC1, y=PC2, col=pais)) + geom_point()
 
 Solapamos dos gr√°ficos de densidad para visualizar el grado de solapamiento de ambas nubes de puntos:
 ```{r}
-# PARA HACER UN SOLO GRAFICO DE DENSIDAD CON TODOS LOS DATOS SERIA AS√ç
+# PARA HACER UN SOLO GRAFICO DE DENSIDAD CON TODOS LOS DATOS SERIA ASÕ
 dens <- kde2d(df$PC1, df$PC2, n=300, lims = c(-20,10,-10,10))
 image(dens)
 filled.contour(dens,
@@ -387,7 +392,7 @@ image(dense)
 filled.contour(dense,
                color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
                xlab= "PC1",
-               ylab= "PC2", main = "Marco clim√°tico Ib√©rico")
+               ylab= "PC2", main = "Marco clim√°tico IbÈrico")
 
 #AHORA SOLO EL PAIS PROYECTADO:
 densi <- kde2d(idf$PC1, idf$PC2, n=300, lims = c(-12,7,-10,10))
@@ -395,7 +400,7 @@ image(densi)
 filled.contour(densi,
                color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
                xlab= "PC1",
-               ylab= "PC2", main = "Marco clim√°tico Ib√©rico del pais proyectado")
+               ylab= "PC2", main = "Marco clim√°tico IbÈrico del pais proyectado")
 
 
 
@@ -408,7 +413,7 @@ filled.contour(densi,
 
 
 
-# 7. DETERMINACI√ìN DEL RIESGO INVASOR
+# 7. DETERMINACIÛN DEL RIESGO INVASOR
 Queremos cuantificar el grado de solapamiento de las nubes de puntos descritas por los puntos de los dos paises, el receptor (Espa√±a) y el proyectado.
 Hay que crear ciertos metricos para la determinaci√≥n de el grado de riesgo de invasi√≥n. 
 
@@ -440,7 +445,7 @@ PENDIENTE
 
 Turbelin et al. 2017, utilizan datos de http://www.iucngisd.org/gisd/ y de https://www.cabi.org/isc/. para determinar los patrones de distribucion de especies invasoras, en CABI existen datasets de cada una de las especies ex√≥ticas invasoras. Descargamos estos datos para una lista de plantas, recogen pa√?s donde la planta est√° presente, latitud longitud, si es nativa o introducida, etc.  Los uniremos entre si? . 
 
-# 9. BIBLIOGRAF√çA
+# 9. BIBLIOGRAFÕA
 
 ##SITIOS WEB
 
