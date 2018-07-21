@@ -75,7 +75,7 @@ library(readr)
 
 
 # 3. DELIMITACIÓN DEL MARCO CLIMÁTICO IBÉRICO
-En primer lugar descargamos los datos de la base de datos globales WorldClim (http://worldclim.org/). Descargamos las 19 variables bioclimáticas con una resolución de 2.5 que son "minutes of a degree". El argumento var = bio reclama las 19 variables bioclimaticas, descritas aquí: (http://worldclim.org/bioclim). Este mismo portal incluye variables climaticas teniendo en cuenta un contexto de cambio climatico. Más adelante se pueden testear las diferencias. Las variables referentes a la temperatura estan multiplicadas por diez.
+En primer lugar descargamos los datos de la base de datos globales WorldClim (http://worldclim.org/). Elegimo las 19 variables bioclimáticas con una resolución de 2.5' (minutos de grado). El argumento var = bio reclama las 19 variables bioclimáticas, descritas aquí: (http://worldclim.org/bioclim). Este mismo portal incluye variables climáticas teniendo en cuenta un contexto de cambio climático. Más adelante se pueden testear las diferencias. Las variables referentes a la temperatura estan multiplicadas por diez.
 
 ```{r}
 #Download the WorldClim Data
@@ -83,12 +83,15 @@ worldata <- getData("worldclim",var="bio", res=2.5)
 ```
 ![Gráfico mundial con la temperatura media](./Plots/Bio1Worldata.png)
 
-Los datos se descargan en formato raster. Ahora hay que seleccionar los datos correspondientes a la península Ibérica. Realizamos la selección recortando el cuadrado en el cual se comprende la peninsula. 
+Los datos se descargan en formato raster. Ahora hay que seleccionar los datos correspondientes a la Península Ibérica. Realizamos la selección recortando el cuadrado en el cual se comprende la peninsula. 
 ```{r}
 #Recortamos con extent los grados de longitud y latitud que emarcan la peninsula iberica
 e <- extent(-10,4,36,44) #definimos el marco
 s.crop <- crop(worldata, e) #Recortamos el worlddata con el extent
-plot (s.crop$bio1)
+plot (s.crop$bio1,
+   main = "Mapa de la variable BIO1 en la Península Ibérica",
+   xlab = "Longitud (º)",
+   ylab = "Latitud (º)")
 ```
 ![Gráfico](./Plots/MarcoIbericoMapaBIO1.png)
 
