@@ -107,13 +107,13 @@ names(marcoclim) <- c("BIO1", "BIO2", "BIO3", "BIO4", "BIO5", "BIO6", "BIO7", "B
 Exportamos los datos
 
 ```{r}
-write.csv(marcoclim, file="SpanishRiskAssesment/Datos/MarcoClim2.5.csv") #Guardamos los datos
+write.csv(marcoclim, file="Datos/MarcoClim2.5.csv") #Guardamos los datos
 ```
 
 
 !!!!!!!!! PARA REEMPRENDER DESDE AQUÍ, CARGA LOS DATOS !!!!!!!!!!!
 ```{r}
-marcoclim<- read_csv("SpanishRiskAssesment/Datos/MarcoClim2.5.csv", 
+marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
 
 View(marcoclim)
