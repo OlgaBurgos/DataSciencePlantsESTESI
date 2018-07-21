@@ -46,26 +46,26 @@ Especie potencialmente invasora en la Peninsula Ibérica: especie cuyo nicho cli
 
 # 2. PAQUETES NECESARIOS
 ```{r}
-install.packages("DataExplorer")
-install.packages("raster")
+#install.packages("DataExplorer")
+#install.packages("raster")
 library("raster")
 library(sp)
-install.packages("dismo")
+#install.packages("dismo")
 library("dismo")
 library(readr)
 library(ggplot2)
-install.packages("plotly")
+#install.packages("plotly")
 library(plotly)
 library(MASS)
 require(MASS)
-install.packages("fmsb")
+#install.packages("fmsb")
 library(fmsb)
 library(devtools)
 install_github("ggbiplot", "vqv")
 library(ggbiplot)
-install.packages("factoextra")
+#install.packages("factoextra")
 library(factoextra)
-install.packages("MASS")
+#install.packages("MASS")
 library("MASS")
 library(readr)
 
@@ -90,18 +90,18 @@ e <- extent(-10,4,36,44) #definimos el marco
 s.crop <- crop(worldata, e) #Recortamos el worlddata con el extent
 plot (s.crop$bio1,
    main = "Mapa de la variable BIO1 en la Península Ibérica",
-   xlab = "Longitud (º)",
-   ylab = "Latitud (º)")
+   xlab = "Longitud (�C)",
+   ylab = "Latitud (�C)")
 ```
 ![Gráfico](./Plots/MarcoIbericoMapaBIO1.png)
 
-Para sacar los valores dentro del archivo s.crop que esta en raster, usamos la funcion as.matrix del paquete raster que saca todos los valores y despues lo convertimos en data frame, definiendo los nombres de las variables:
+Para sacar los valores dentro del archivo `s.crop` que esta en raster, usamos la funcion as.matrix del paquete raster que saca todos los valores y despues lo convertimos en data frame, definiendo los nombres de las variables:
 
 ```{r}
 a<-as.matrix(s.crop) #Es una matriz de 19 variables, nos faltan las coordenadas de cada punto, aunque no son esenciales. 
 marcoclim <- as.data.frame(a)
-names(marcoclim) <- c("BIO1","BIO2","BIO3","BIO4", "BIO5", "BIO6", "BIO7", "BIO8", "BIO9",
-                 "BIO10","BIO11","BIO12","BIO13", "BIO14", "BIO15", "BIO16", "BIO17", "BIO18", "BIO19")
+names(marcoclim) <- c("BIO1", "BIO2", "BIO3", "BIO4", "BIO5", "BIO6", "BIO7", "BIO8", "BIO9",
+                 "BIO10", "BIO11", "BIO12", "BIO13", "BIO14", "BIO15", "BIO16", "BIO17", "BIO18", "BIO19")
 ```
 
 Exportamos los datos
@@ -132,18 +132,18 @@ plot_correlation(marcoclim) #para visualizar mejor la correlación.
 ![Gráfico](./Plots/correlationplot.png)
 
 
-Ahora, Podemos graficar los datos obtenidos, dependiendo de las variables que nos interesa representar:
+Ahora, podemos representar los datos obtenidos, dependiendo de las variables que nos interesa mostrar:
 
-Para generar un gráfico con temperatura y precipitacion
+Para generar un gráfico con temperatura y precipitación
 
-```{r, fig.cap=Temperatura y Precipitación en la Península Ibérica}
+```{r, fig.cap= "Temperatura y Precipitación en la Península Ibérica"}
 plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitacion Anual (mm)", ylab="Temperatura anual media (ºC x10)") #ploteamos temperatura media anual y precipitacion anual)
 
 ```
 ![Gráfico](./Plots/ScatterplotMarcoclim.png)
 
 Para generar un gráfico de densidad:
-```{r, fig.cap= Grafico de densidad de Temperatura y Precipitación en la Península Ibérica}
+```{r, fig.cap = "Grafico de densidad de Temperatura y Precipitación en la Península Ibérica"}
 str(marcoclim)
 plot(marcoclim$BIO12 ~ marcoclim$BIO1, col = "blue")
 d <- density(marcoclim$BIO1) # returns the density data 
