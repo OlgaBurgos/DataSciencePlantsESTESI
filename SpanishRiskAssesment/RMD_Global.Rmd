@@ -3,9 +3,12 @@ title: "Valoración del riesgo invasor en la Península Ibérica"
 author: "Erola APELLIDO, Olga Burgos, Gianluca Arauz, Ramón APELLIDO"
 date: "July 10, 2018"
 output:
-  html_document: default
+  html_document:
+    toc: true
+    number_sections: true
   pdf_document: default
   word_document: default
+  
 ---
 
 ```{r setup, include=FALSE}
@@ -13,10 +16,11 @@ knitr::opts_chunk$set(echo = TRUE)
 options(Encoding="UTF-8")
 options(tikzDefaultEngine = "xetex")
 ```
-# Índice de contenidos
+# 0. Índice de contenidos
 1. Preguntas y definiciones iniciales
 1. Paquetes necesarios
 1. Delimitación del marco climático ibérico
+1. Análisis exploratorio
 1. Descarte de variables correlacionadas
 1. Reducción de dimensión por Análisis de Componentes Principales (PCA)
 1. Obtención de datos de otros paises y proyección sobre el marco climático ibérico
@@ -81,7 +85,7 @@ library(readr)
 # 3. Delimitación del marco climático ibérico
 En primer lugar descargaremos los datos de la base de datos globales [WorldClim](http://worldclim.org/). Elegiremos las [19 variables bioclimáticas](http://worldclim.org/bioclim) con una resolución geográfica de 2.5' (minutos de grado). El argumento `var = "bio"` de la función `getData()` reclama dichas variables bioclimáticas. El portal WorldClim incluye variables climáticas teniendo en cuenta un contexto de cambio climático. Más adelante se pueden testear las diferencias. Las variables referentes a la temperatura estan multiplicadas por 10.
 
-```{r}
+```{r,fig.align='center',out.extra='angle=90', echo=FALSE}
 worldata <- getData("worldclim",var="bio", res=2.5)
 
 plot (worldata$bio1,
@@ -92,7 +96,7 @@ plot (worldata$bio1,
 
 Los datos de `worldata` se encuentran en formato rasterizado. Ahora debemos seleccionar la extensión correspondiente a la Península Ibérica. Pasaremos la ventana de latitudes y longitudes que emarcan la Península Ibérica a la función `extent()`: (-10ºW, 4ºE) y (36ºN, 44ºN). Seguidamente, recortaremos la extensión `e` sobre los datos `worldata` utilizando la funsión `crop()`.
 
-```{r}
+```{r,fig.align='center',out.extra='angle=90', echo=FALSE}
 e <- extent(-10, 4, 36, 44)
 s.crop <- crop(worldata, e)
 
@@ -121,12 +125,12 @@ names(marcoclim) <- BIOs
 #summary(marcoclim)
 ```
 
-Exportamos los datos
-
+Finalmente, exportamos el *dataframe* `marcoclim` en formato `*.csv`.
 ```{r}
 write.csv(marcoclim, file="Datos/MarcoClim2.5.csv")
 ```
 
+# X. Análisis exploratorio
 
 !!!!!!!!! PARA REEMPRENDER DESDE AQU?, CARGA LOS DATOS !!!!!!!!!!!
 ```{r}
