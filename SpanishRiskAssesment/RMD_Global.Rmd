@@ -15,55 +15,39 @@ knitr::opts_chunk$set(echo = TRUE)
 options(Encoding="UTF-8")
 options(tikzDefaultEngine = "xetex")
 ```
-# Índice de contenidos
-1. Introducción
-1. Preguntas y definiciones iniciales
-1. Paquetes necesarios
-1. Delimitación del marco climático ibérico (MCI)
-1. Análisis exploratorio
-1. Descarte de variables correlacionadas
-1. Reducción de dimensión por Análisis de Componentes Principales (PCA)
-1. Obtención de datos de otros paises y proyección sobre el MCI
-1. Determinación del riergo invasor.
-1. Oobtención de datos de especies invasoras mundiales: origen y presencia
-1. Biliografía
 
-# Especies invasoras - Un problema global
-Las especies invasoras suponen una amenaza muy importante para la biodiversidad. De hecho se consideran la segunda mayor amenaza a esta,
-después de la perdida de hábitat. Una especie invasora según la ICN, las especies invasoras son:
+# Especies invasoras - Un problema global {.tabset}
+-Las especies invasoras suponen una problema muy importante para la biodiversidad. De hecho, se consideran la segunda mayor amenaza a la biodiversidad, después de la pérdida de hábitat. Según la ICN (GIAN -> Qué es la ICN? Primero decir qué és y luego poner las siglas), las especies invasoras son:
 
 >“Especie exótica invasora”: especie exótica que se establece en un ecosistema o hábitat natural o seminatural; es un agente de cambio y amenaza la diversidad biológica nativa. (UICN, 2000)
 
-
 ##¿Por qué son invasoras?
-Hay diversas hipótesis que tratan de entender los motivos por los cuales algunas especies se convierten en invasoras. La hipótesis mayoritaria es que la falta de enemigos naturales en el nuevo habitat donde la invasora llega, le permiten crecer sin control invirtiendo menos en compuestos y estrategias defensivas. Esta es la *Enemy Release Hypothesis*.
+Existen diversas hipótesis que tratan de explicar los motivos por los cuales algunas especies se convierten en invasoras. La hipótesis mayoritaria es que la falta de enemigos naturales en el nuevo habitat donde la invasora llega, le permite crecer sin control invirtiendo menos en compuestos y estrategias defensivas. Esta es la *Enemy Release Hypothesis*.
 
-Otros autores postulan la regla del 10. De diez especies exóicas que llegan a un nuevo terreno, una se convierte en invasora. Esta hipótesis se basa en el azar y el hecho de que algunas comunidades son mas fáciles de ser invadidas que otras.
+Otros autores postulan la regla del 10. De diez especies exóticas que llegan a un nuevo terreno, una se convierte en invasora. Esta hipótesis se basa en el azar y el hecho de que algunas comunidades son mas fáciles de ser invadidas que otras.
 
-Una tercera corriente de autores postula que hay ciertos rasgos que proporcionan a las especies invasoras mayores posibilidades para serlo. Por ejemplo, grandes inversiones en dispersión de semillas, ciclos de vida cortos o crecimiento clonal son algunos de los rasgos propuestos, como los que definen a un "buen invasor".
+Una tercera corriente postula que hay ciertos rasgos que proporcionan a las especies invasoras mayores posibilidades para serlo. Por ejemplo, grandes inversiones en dispersión de semillas, ciclos de vida cortos o crecimiento clonal son algunos de los rasgos propuestos, como los que definen a un "buen invasor".
 
-En realidad ninguna de estas hipótesis son exluyentes y lo que determina el exito invasor podría ser una combinación de aspectos de las tres corrientes. Lo que esta claro es que poder disponer de la información de que factores determinan o condicionan si una especie se convierte en invasora o no podría ser muy útil para las politicas conservación de la biodiversidad, pues la prevención es la acción mas barata para erradicar una especie invasora.
+Ninguna de estas hipótesis és excluyente, por lo que los factores determinantes del éxito invasor podría ser una combinación de aspectos de las tres corrientes. En cualquier caso, resulta evidente que un mejor conocimiento de los factores que determinan si una especie podría convertirse en invasora, sería vital para las políticas de conservación de la biodiversidad, pues la prevención es la acción más económica para erradicar una especie invasora.
 
-Por eso nosotros queremos comprobar hasta que punto la similutd con el marco climático de una región, en nuestro caso España, puede favorecer o no a la invasión biológica y de ésta manera deducir en que países o regiones, debido a este solapamiento, se deben implementar unas medidas de prevención mayores. 
-# Preguntas y definiciones iniciales {.tabset}
+Por eso nosotros queremos comprobar hasta qué punto la similitud con el marco climático de una región, en nuestro caso la Península Íbérica, puede favorecer a la invasión biológica y de esta manera deducir en qué países o regiones, debido a este solapamiento, deben implementarse medidas de prevención mayores.
 
-Gian -> Creo que deber?amos escribir una un introducci?n corta (tipo  abstract) para situar un poco el tema del trabajo.
-
+# Preguntas de partida y definiciones iniciales {.tabset}
 
 ## Preguntas
-Si las invasiones son exitosas por coincidencia del clima, ¿qué especies estarían bien en la península ibérica y son por tanto potencialmente invasoras?
+Si las invasiones son exitosas por coincidencia del clima, ¿qué especies podrían aclimatarse en la península ibérica y son por tanto potencialmente invasoras?
 
 ¿Las especies invasoras actuales en la península ibérica cumplen esa hipótesis de coincidencia del clima?
-Si las condiciones climáticas en la península cambiasen en el contexto del cambio climático, ¿el número de especies potencialmente invasoras sería mayor, menor o igual? ?El cambio climático podría potenciar la amenaza invasora?
+Si las condiciones climáticas en la península cambiasen en el contexto del cambio climático, ¿el número de especies potencialmente invasoras sería mayor, menor o igual? ¿El cambio climático podría potenciar la amenaza invasora?
 
-Teniendo en cuenta el origen de las especies potencialmente invasoras y los movimientos globales de mercancías y personas, ¿qué invasiones son mas probables? ?Con qué paises deberíamos endurecer las políticas de comercio de especies?
+Teniendo en cuenta el origen de las especies potencialmente invasoras y los movimientos globales de mercancías y personas, ¿qué invasiones son mas probables? ¿Con qué países deberíamos endurecer las políticas de comercio de especies?
 
 ¿Por qué superficie se extenderían las especies potencialmente invasoras en la península? ¿Cuánto es su daño potencial?
 
-Teniendo en cuenta las condiciones climáticas en la península, ¿qué otros países de Europa podrían ser susceptibles a la invasión debido a similaridades con el marco climático de España y Portugal?
+Teniendo en cuenta las condiciones climáticas en la península, ¿qué otros países de Europa podrían ser susceptibles a la invasión debido a similitudes con el marco climático de España y Portugal?
 
 ## Definiciones
-**Marco climatico Ibérico**: Espacio multidimensional definido por los valores de diferentes variables bioclimáticas georreferenciados dentro de la Peninsula Ibérica.
+**Marco climatico Ibérico**: Espacio multidimensional definido por los valores de diferentes variables bioclimáticas georreferenciados dentro de la Península Ibérica.
 
 **Variable bioclimática**: Variable descriptora ambiental considerada determinante para el crecimiento, desarrollo y reproducción de la biosfera.
 
@@ -73,7 +57,7 @@ Teniendo en cuenta las condiciones climáticas en la península, ¿qué otros pa
 
 # Paquetes necesarios {.tabset}
 Antes de empezar, instalaremos los paquetes necesarios a lo largo del documento.
-```{r results='hide', message=FALSE, warning=FALSE} 
+```{r echo=3:5, results='hide', message=FALSE, warning=FALSE} 
 # GIAN -> El " results='hide', message=FALSE, warning=FALSE " sirve para que este chunk no nos escriba el output de cargar la librerias en el HTML. Cosa que no aporta nada y queda feillo en el HTML.
 list.of.packages <- c("DataExplorer", "raster", "dismo", "plotly", "fmsb", "factoextra", "MASS")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -81,7 +65,8 @@ if(length(new.packages)) install.packages(new.packages)
 ```
 
 Una vez disponibles todos los paquetes, podemos cargar las respectivas librerías.
-```{r results='hide', message=FALSE, warning=FALSE} 
+```{r echo=2:, results='hide', message=FALSE, warning=FALSE}
+# setwd("C:/Users/Desktop/DataSciencePlantsESTESI") 
 library("raster")
 library(sp)
 library("dismo")
@@ -97,11 +82,10 @@ library(ggbiplot)
 library(factoextra)
 library("MASS")
 library(readr)
-# setwd("C:/Users/Desktop/DataSciencePlantsESTESI") 
 ```
 
 # Delimitación del MCI {.tabset}
-En primer lugar descargaremos los datos de la base de datos globales [WorldClim](http://worldclim.org/). Elegiremos las [19 variables bioclimáticas](http://worldclim.org/bioclim) con una resolución geográfica de 2.5' (minutos de grado). El argumento `var = "bio"` de la función `getData()` reclama dichas variables bioclimáticas. El portal WorldClim incluye variables climáticas teniendo en cuenta un contexto de cambio climático. Más adelante se pueden testear las diferencias. Las variables referentes a la temperatura están multiplicadas por 10.
+En primer lugar descargaremos el *dataset* de la base de datos globales [WorldClim](http://worldclim.org/). Elegiremos las [19 variables bioclimáticas](http://worldclim.org/bioclim) con una resolución geográfica de 2.5' (minutos de grado). El argumento `var = "bio"` de la función `getData()` reclama dichas variables bioclimáticas. El portal WorldClim incluye variables climáticas teniendo en cuenta un contexto de cambio climático. Más adelante se pueden testear las diferencias. Las variables referentes a la temperatura están multiplicadas por 10.
 
 ```{r,fig.align='center',out.extra='angle=90'}
 worldata <- getData("worldclim",var="bio", res=2.5)
@@ -112,9 +96,9 @@ plot (worldata$bio1,
    ylab = "Latitud (ºC)")
 ```
 
-Los datos de `worldata` se encuentran en formato rasterizado. Ahora debemos seleccionar la extensión correspondiente a la Península Ibérica. Pasaremos la ventana de latitudes y longitudes que emarcan la Península Ibérica a la función `extent()`: (-10?W, 4?E) y (36?N, 44?N). Seguidamente, recortaremos la extensión `e` sobre los datos `worldata` utilizando la función `crop()`.
+Los datos de `worldata` se encuentran en formato rasterizado. Ahora debemos seleccionar la extensión correspondiente a la Península Ibérica. Pasaremos la ventana de latitudes y longitudes que enmarcan la Península Ibérica a la función `extent()`: $(-10^\circ W, 4^\circ E)$ y $(36^\circ N, 44^\circ N)$. Seguidamente, recortaremos la extensión `e` sobre los datos `worldata` utilizando la función `crop()`.
 
-```{r,fig.align='center',out.extra='angle=90'}
+```{r, fig.align='center', out.extra='angle=90'}
 e <- extent(-10, 4, 36, 44)
 s.crop <- crop(worldata, e)
 
@@ -123,7 +107,7 @@ plot (s.crop$bio1,
    xlab = "Longitud (ºC)",
    ylab = "Latitud (ºC)")
 ```
-El archivo `s.crop` también se encuentra en formato rasterizado. Para trabajar más comodamente, construiremos un *dataframe* llamado `marcoclim`, definiendo los nombres de las variables bioclimáticas:
+El archivo `s.crop` también se encuentra en formato rasterizado. Para trabajar más cómodamente, construiremos un *dataframe* llamado `marcoclim`, definiendo los nombres de las variables bioclimáticas:
 
 ```{r}
 #Es una matriz de 19 variables, nos faltan las coordenadas de cada punto, aunque no son esenciales.
@@ -133,9 +117,6 @@ El archivo `s.crop` también se encuentra en formato rasterizado. Para trabajar 
 #marcoclim <- as.data.frame(a)
 
 marcoclim <- as.data.frame(s.crop)
-
-# GIAN -> Hago un drop de NANs. Creo que los NANs son los datos correspondientes al mar. As???tenemos un dataframe m???s ligero y bonito.
-marcoclim <- na.omit(marcoclim)
 
 BIOs <- paste('BIO', (1:19), sep = '')
 names(marcoclim) <- BIOs
@@ -150,7 +131,7 @@ write.csv(marcoclim, file="Datos/MarcoClim2.5.csv")
 
 # Análisis exploratorio {.tabset}
 
-!!!!!!!!! PARA REEMPRENDER DESDE AQU?, CARGA LOS DATOS !!!!!!!!!!!
+!!!!!!!!! PARA REEMPRENDER DESDE AQUí, CARGA LOS DATOS !!!!!!!!!!!
 ```{r}
 marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
@@ -158,10 +139,11 @@ marcoclim<- read_csv("Datos/MarcoClim2.5.csv",
 #View(marcoclim)
 ```
 
-Antes de continuar trabajando, necesitamos hacernos una idea de cómo son los datos, para ello realizamos un pequeño análisis exploratorio y data wrangling
+Antes de continuar trabajando, necesitamos hacernos una idea de cómo son los datos, para ello realizamos un pequeño análisis exploratorio y *data wrangling*.
 ```{r}
 library(DataExplorer)
-marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA
+marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA. Los NANs son los datos correspondientes al mar? 
+marcoclim <- na.omit(marcoclim)
 summary(marcoclim) #resumen de cada variable
 plot_str(marcoclim) #estructura de los datos
 plot_histogram(marcoclim) 
@@ -173,11 +155,12 @@ Ahora, podemos representar los datos obtenidos, dependiendo de las variables que
 
 Para generar un gráfico con temperatura y precipitación
 
-```{r, fig.cap= "Temperatura y Precipitaci?n en la Pen?nsula Ib?rica"}
-plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitacion Anual (mm)", ylab="Temperatura anual media (ºC x10)") #ploteamos temperatura media anual y precipitacion anual)
+
+```{r, fig.cap= "Temperatura y Precipitación en la Península Ibérica"}
+plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitación Anual (mm)", ylab="Temperatura anual media (ºC x10)") #ploteamos temperatura media anual y precipitacion anual)
 
 ```
-![Gr?fico](./Plots/ScatterplotMarcoclim.png)
+![Gráfico](./Plots/ScatterplotMarcoclim.png)
 
 Para generar un gráfico de densidad:
 ```{r, fig.cap = "Grafico de densidad de Temperatura y Precipitación en la Península Ibérica"}
@@ -194,10 +177,10 @@ filled.contour(dens,
                ylab= "Annual Precipitation (mm)", main = "Marco Climático Ibérico")
 
 ```
-![Gr?fico](./Plots/MarcoClimaticoIberico.png)
+![Gráfico](./Plots/MarcoClimaticoIberico.png)
 
 # DESCARTAR VARIABLES MUY CORRELACIONADAS (opcional) {.tabset}
-Al trabajar con 19 varaibles, algunas producto lineal de otras, estamos trabajando con información redundante. Podemos basarnos en el criterio VIF (factores de inflación de varianza), un enfoque simple para identificar la colinealidad entre las variables explicativas para descartar algunas y probar el modelo mas adelante con todas las variables y con solo las seleccionadas. 
+Al trabajar con 19 variables, algunas producto lineal de otras, estamos trabajando con información redundante. Podemos basarnos en el criterio VIF (factores de inflación de varianza), un enfoque simple para identificar la colinealidad entre las variables explicativas para descartar algunas y probar el modelo mas adelante con todas las variables y con solo las seleccionadas. 
 
 Esto se describe en : https://www.r-bloggers.com/collinearity-and-stepwise-vif-selection/
 
