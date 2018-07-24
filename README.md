@@ -1,7 +1,8 @@
 # DataSciencePlants
 [IR DIRECTAMENTE AL RMD GLOBAL](/SpanishRiskAssesment/RMD_Global.Rmd)
        
-# NUEVO!!  hay un nuevo script  para trabajar con hypervolume (/, y añadiendo otras posibles opciones para determinar la interseccion, union, de nuestros graficos de densidad..
+# NUEVO!! 
+hay un nuevo script  para trabajar con [hypervolume] (/SpanishRiskAssesment/hyperolume.R), y añadiendo otras posibles opciones para determinar la interseccion, union, de nuestros graficos de densidad..
 
 ## NEXT STEPS:
 He colgado un script que permite [recortar WorldClim del pais que queramos](SpanishRiskAssesment/02_CortarWorldClimPorPaises.R), teniendo en cuenta las fronteras exactas y un csv con los [codigos para recortar por cada uno de los 241 paises](SpanishRiskAssesment/CountryCodes.csv) que existen.
