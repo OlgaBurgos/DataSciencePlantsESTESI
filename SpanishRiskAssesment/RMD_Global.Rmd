@@ -65,7 +65,7 @@ if(length(new.packages)) install.packages(new.packages)
 ```
 
 Una vez disponibles todos los paquetes, podemos cargar las respectivas librerías.
-```{r echo=2:, results='hide', message=FALSE, warning=FALSE}
+```{r echo=2, results='hide', message=FALSE, warning=FALSE}
 # setwd("C:/Users/Desktop/DataSciencePlantsESTESI") 
 library(raster)
 library(sp)
