@@ -31,7 +31,10 @@ plot(hv1sp)
 
 CountryCodesSum <- read.csv("C:/Users/Gian/GitHub_Projects/DataSciencePlantsESTESI/SumCountryCodes.csv", header=FALSE, sep=";", skip = 1)
 
-my_df <- data.frame(stringsAsFactors = FALSE)
+my_df <- data.frame()
+
+counter=1
+
 for(ID_cntry in CountryCodesSum$V2) {
   print(ID_cntry)
 
@@ -62,11 +65,15 @@ dist<- hypervolume_distance(hv1sp, hv2dn, type='centroid')
 values <- c(volumes, overl, dist)
 #plot(hv2dn)
 
-my_df <- rbind(my_df, c(ID_cntry, values) )
+my_df <- rbind(my_df, values)
+my_df[counter, "Country"] <- ID_cntry
+
+counter = counter + 1
 
 print(my_df)
 
 }
 
+rm(counter)
 
 
