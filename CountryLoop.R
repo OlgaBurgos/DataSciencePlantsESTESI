@@ -29,13 +29,14 @@ edf$pais <- "Spain"
 hv1sp = hypervolume_gaussian(data=edf[1:nrow(edf), 1:2])
 plot(hv1sp)
 
-CountryCodesSum <- read.csv("C:/Users/Gian/GitHub_Projects/DataSciencePlantsESTESI/SumCountryCodes.csv", header=FALSE, sep=";", skip = 1)
+#CountryCodesSum <- read.csv("C:/Users/garauz/Dropbox/DataSciencePlantsESTESI/DataSciencePlantsESTESI/SumCountryCodes.csv", header=FALSE, sep=";", skip = 1)
+CountryCodesSum <- read.csv("C:/Users/garauz/Dropbox/DataSciencePlantsESTESI/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/CountryCodes - Copy.csv", header=FALSE, sep=";", skip = 1)
 
 my_df <- data.frame()
 
 counter=1
 
-for(ID_cntry in CountryCodesSum$V2) {
+for(ID_cntry in CountryCodesSum$V3) {
   print(ID_cntry)
 
 # DINAMIC ENVIRONMENT
@@ -55,7 +56,7 @@ idf$pais <- ID_label
 df <- rbind(edf,idf)
 
 hv2dn = hypervolume_gaussian(data = subset(df,pais == ID_label)[1:nrow(idf), 1:2]) 
-setH <-hypervolume_set(hv1sp, hv2dn, check.memory = FALSE) #Genereamos valores estadÃ?sticos
+setH <-hypervolume_set(hv1sp, hv2dn, check.memory = FALSE) #Genereamos valores estad??sticos
 volumes<-get_volume(setH)
 overl<- hypervolume_overlap_statistics(setH)
 dist<- hypervolume_distance(hv1sp, hv2dn, type='centroid')
@@ -75,5 +76,3 @@ print(my_df)
 }
 
 rm(counter)
-
-
