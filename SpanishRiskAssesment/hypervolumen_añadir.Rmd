@@ -1,0 +1,81 @@
+
+# Determinación del riesgo invasor {.tabset}
+##Coincidencia climática versus MCI 
+Con el fin de determinar el grado de solapamiento climático de un país cualquiera respecto a España, creamos hipervolúmenes a partir de los dos primeros componentes principales, que explican un 75% de la varianza, y los comparamos, obteniendo así el volumen compartido y otros índices de similitud.
+
+Para ello, utilizaremos el paquete `hypervolume`(Bibliografia--> 3 artículos!!!)
+
+
+# DEFINE THE STATIC ENVIRONMENT
+Una vez obtenidos los datos del marco climático español, realizado el análisis de componentes principales y creado un data frame con los resultados de ésta, definiremos el primer hipervolumen.
+Seguidamente recordamos la forma de realizar los pasos mencionados.
+
+
+```{r}
+worldata <- getData("worldclim",var="bio", res=10)
+e <- extent(-10,4,36,44)
+s.crop <- crop(worldata, e)
+a<-as.matrix(s.crop)
+marcoclim <- as.data.frame(a)
+names(marcoclim) <- c("BIO1", "BIO2", "BIO3", "BIO4", "BIO5", "BIO6", "BIO7", "BIO8", "BIO9",
+                      "BIO10", "BIO11", "BIO12", "BIO13", "BIO14", "BIO15", "BIO16", "BIO17", "BIO18", "BIO19")
+marcoclim <- marcoclim[complete.cases(marcoclim),]
+pcaclim <- prcomp(marcoclim, center = TRUE, scale. = TRUE) 
+e <- pcaclim$x[,1:2]
+edf <- as.data.frame(e)
+edf$pais <- "Spain"
+
+```
+
+El hipervolumen de n-dimensiones es una medida que generaliza el concepto de volumen a espacios de dimensión superior a tres. 
+En nuestro caso, utilizaremos un Gaussian KDE(kernel density estimation) en el que todos los puntos contribuyen a la densidad de la probabilidad global.
+
+En la función "hypervolume_gaussian", por defecto se le asigna un umbral del 95% asegurando la máxima probabilidad en la estimación de la densidad.
+Además generaremos un plot para visualizar el hipervolumen en el que se genera un centroide.
+
+```{r}
+hv1sp = hypervolume_gaussian(data=subset(df,pais=="Spain")[1:2730, 1:2])
+plot(hv1sp,show.contour=TRUE,contour.kde.level=0.01)
+
+```
+
+## DINAMIC ENVIRONMENT
+El siguiente paso será generar un hipervolumen para cada uno de los países que testaremos frente el marco climático ibérico español. Por ejemplo creando un hipervolúmen con los datos de Dinamarca.
+
+```{r}
+hv2dn = hypervolume_gaussian(data=subset(df,pais=="Din")[1:238, 1:2])
+plot(hv2dn,show.contour=TRUE,contour.kde.level=0.01)
+```
+
+Una vez obtenidos los dos hipervolúmenes, utilizaremos la función "hypervolume_set" y "hypervolume_overlap_statistics".
+La primera genera valores estadísticos computando la intersección, la unión y los componentes únicos(diferencia) de los hipervolúmenes, que podemos observar llamando la función "get_volume"
+
+La segunda función calcula los métricos de superposición para los dos hipervolúmenes.Printa directamente índices de similitus entre los dos volúmenes:
+  -accard Jaccard similarity (volume of intersection of 1 and 2 divided by volume of union of 1 and 2)
+-sorensen Sorensen similarity (twice the volume of intersection of 1 and 2 divided by volume of 1 plus volume of 2)
+-frac_unique_1 Unique fraction 1 (volume of unique component of 1 divided by volume of 1))
+-frac_unique_2 Unique fraction 2 (volume of unique component of 2 divided by volume of 2))
+
+Además calcularemos la distancia entre centroides usando la función "hypervolume_distance"
+
+```{r}
+setH <-hypervolume_set(hv1sp, hv2dn, check.memory = FALSE)
+volumes<-get_volume(setH)
+overl<- hypervolume_overlap_statistics(setH)
+
+dist<- hypervolume_distance(hv1sp, hv2dn, type='centroid')
+```
+
+##OUTPUTS
+Con los datos estadísticos obtenidos anteriormente, podemos generar una lista para facilitar la visualización. 
+```{r}
+values <- c(volumes, overl, dist)
+```
+## COUNTRY LOOPING
+En este punto, crearemos un algoritmo para poder testear la similitud del marco climático de cada país más agilmente respecto al de España.
+El marco climático español será un valor fijo en este algoritmo, mientras que los inputs seran los datos climáticos de los diferentes países a testear. 
+
+
+
+Queremos cuantificar el grado de solapamiento de las nubes de puntos descritas por los puntos de los dos países, el receptor (España) y el proyectado.
+Hay que crear ciertos metricos para la determinación de el grado de riesgo de invasión.
