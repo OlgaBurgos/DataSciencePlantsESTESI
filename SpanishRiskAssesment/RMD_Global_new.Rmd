@@ -8,6 +8,7 @@ output:
     number_sections: true
   pdf_document: default
   word_document: default
+bibliography: bibliography.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -38,7 +39,7 @@ knit_hooks$set(output = function(x, options) {
 ```
 
 # Especies invasoras - Un problema global {.tabset}
-Las especies invasoras suponen una problema muy importante para la biodiversidad. De hecho, se consideran la segunda mayor amenaza a la biodiversidad, después de la pérdida de hábitat. Según la ICN (GIAN -> Qué es la ICN? Primero decir qué és y luego poner las siglas), las especies invasoras son:
+Las especies invasoras suponen una problema muy importante para la biodiversidad (@ArauzGarofalo2014). De hecho, se consideran la segunda mayor amenaza a la biodiversidad, después de la pérdida de hábitat. Según la ICN (GIAN -> Qué es la ICN? Primero decir qué és y luego poner las siglas), las especies invasoras son:
 
 >“Especie exótica invasora”: especie exótica que se establece en un ecosistema o hábitat natural o seminatural; es un agente de cambio y amenaza la diversidad biológica nativa. (UICN, 2000)
 
@@ -487,3 +488,6 @@ https://stats.stackexchange.com/questions/63447/integrating-kernel-density-estim
 Turbelin, Anna J., Malamud, Bruce D., Francis, Robert A.Mapping the global state of invasive alien species: patterns of invasion and policy responses.*Global Ecology & Biogeography*, September 2016.
 
 Davison, A. C. & Hinkley, D. V. (1997) Bootstrap Methods and Their Applications. Cambridge University Press, Cambridge. ISBN 0-521-57391-2
+
+# References
+
