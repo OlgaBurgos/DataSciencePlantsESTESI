@@ -29,8 +29,14 @@ edf$pais <- "Spain"
 hv1sp = hypervolume_gaussian(data=edf[1:nrow(edf), 1:2])
 plot(hv1sp)
 
-#CountryCodesSum <- read.csv("C:/Users/garauz/Dropbox/DataSciencePlantsESTESI/DataSciencePlantsESTESI/SumCountryCodes.csv", header=FALSE, sep=";", skip = 1)
-CountryCodesSum <- read.csv("C:/Users/garauz/Dropbox/DataSciencePlantsESTESI/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/CountryCodes - Copy.csv", header=FALSE, sep=";", skip = 1)
+CountryCodes <- read.csv("C:/Users/garauz/Dropbox/DataSciencePlantsESTESI/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/CountryCodes.csv", header=FALSE, sep=";", skip = 1)
+#CountryCodesSum <- read.csv("C:/Users/garauz/Dropbox/DataSciencePlantsESTESI/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/CountryCodes - Copy.csv", header=FALSE, sep=";", skip = 1)
+
+# GIAN -> Eliminando los paises chungos
+black_list = list('ASM', 'AIA', 'ATA', 'ABW', 'BMU', 'BVT', 'IOT', 'CYM', 'CXR', 'CCK', 'GIB', 'GRD', 'KIR', 'LIE', 'MAC', 'MDV', 'MLT', 'MHL', 'FSM', 'MCO', 'MSR', 'NRU', 'ANT', 'NIU', 'NFK', 'MNP', 'PCN', 'RUS', 'SHN', 'KNA', 'LCA', 'SPM', 'VCT', 'SMR', 'SCG', 'SYC', 'TKL', 'TUV', 'UMI', 'VAT', 'VGB', 'WLF')
+
+CountryCodesSum <- CountryCodes[ ! CountryCodes$V3 %in% black_list, ]
+
 
 my_df <- data.frame()
 
@@ -76,3 +82,5 @@ print(my_df)
 }
 
 rm(counter)
+
+write.csv(my_df, file = "C:/Users/garauz/Dropbox/DataSciencePlantsESTESI/DataSciencePlantsESTESI/my_df_Gian.csv")
