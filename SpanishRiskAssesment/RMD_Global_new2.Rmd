@@ -1,0 +1,468 @@
+---
+title: "Valoración del riesgo invasor en la Península Ibérica"
+author: "Erola Fenollosa, Olga Burgos, Gianluca Arauz, Ramon Diaz"
+date: "July 10, 2018"
+output:
+  html_document:
+    toc: true
+    number_sections: true
+  pdf_document: default
+  word_document: default
+bibliography: bibliography.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(Encoding="UTF-8")
+options(tikzDefaultEngine = "xetex")
+library(knitr)
+hook_output <- knit_hooks$get("output")
+knit_hooks$set(output = function(x, options) {
+  lines <- options$output.lines
+  if (is.null(lines)) {
+    return(hook_output(x, options))  # pass to default hook
+  }
+  x <- unlist(strsplit(x, "\n"))
+  more <- "..."
+  if (length(lines)==1) {        # first n lines
+    if (length(x) > lines) {
+      # truncate the output, but add ....
+      x <- c(head(x, lines), more)
+    }
+  } else {
+    x <- c(more, x[lines], more)
+  }
+  # paste these lines together
+  x <- paste(c(x, ""), collapse = "\n")
+  hook_output(x, options)
+})
+```
+
+# Especies invasoras - Un problema global {.tabset}
+Las especies invasoras suponen una problema muy importante para la biodiversidad (@ArauzGarofalo2014). De hecho, se consideran la segunda mayor amenaza a la biodiversidad, después de la pérdida de hábitat. Según la Unión Internacional
+para la Conservación de la naturaleza (UICN), las especies invasoras son:
+
+>“Especie exótica invasora”: especie exótica que se establece en un ecosistema o hábitat natural o seminatural; es un agente de cambio y amenaza la diversidad biológica nativa. (UICN, 2000)
+
+##¿Por qué son invasoras?
+Existen diversas hipótesis que tratan de explicar los motivos por los cuales algunas especies se convierten en invasoras. La hipótesis mayoritaria es que la falta de enemigos naturales en el nuevo habitat donde la invasora llega, le permite crecer sin control invirtiendo menos en compuestos y estrategias defensivas. Esta es la *Enemy Release Hypothesis*.
+
+Otros autores postulan la regla del 10. De diez especies exóticas que llegan a un nuevo terreno, una se convierte en invasora. Esta hipótesis se basa en el azar y el hecho de que algunas comunidades son mas fáciles de ser invadidas que otras.
+
+Una tercera corriente postula que hay ciertos rasgos que proporcionan a las especies invasoras mayores posibilidades para serlo. Por ejemplo, grandes inversiones en dispersión de semillas, ciclos de vida cortos o crecimiento clonal son algunos de los rasgos propuestos, como los que definen a un "buen invasor".
+
+Ninguna de estas hipótesis és excluyente, por lo que los factores determinantes del éxito invasor podría ser una combinación de aspectos de las tres corrientes. En cualquier caso, resulta evidente que un mejor conocimiento de los factores que determinan si una especie podría convertirse en invasora, sería vital para las políticas de conservación de la biodiversidad, pues la prevención es la acción más económica para erradicar una especie invasora.
+
+Por eso nosotros queremos comprobar hasta qué punto la similitud con el marco climático de una región, en nuestro caso la Península Íbérica, puede favorecer a la invasión biológica y de esta manera deducir en qué países o regiones, debido a este solapamiento, deben implementarse medidas de prevención mayores.
+
+# Preguntas de partida y definiciones iniciales {.tabset}
+
+## Preguntas
+-Si las invasiones son exitosas por coincidencia del clima, ¿qué especies podrían aclimatarse en la península ibérica y son por tanto potencialmente invasoras?
+
+-¿Las especies invasoras actuales en la península ibérica cumplen esa hipótesis de coincidencia del clima?
+-Si las condiciones climáticas en la península cambiasen en el contexto del cambio climático, ¿el número de especies potencialmente invasoras sería mayor, menor o igual? ¿El cambio climático podría potenciar la amenaza invasora?
+
+-Teniendo en cuenta el origen de las especies potencialmente invasoras y los movimientos globales de mercancías y personas, ¿qué invasiones son mas probables? ¿Con qué países deberíamos endurecer las políticas de comercio de especies?
+
+-¿Por qué superficie se extenderían las especies potencialmente invasoras en la península? ¿Cuánto es su daño potencial?
+
+-Teniendo en cuenta las condiciones climáticas en la península, ¿qué otros países de Europa podrían ser susceptibles a la invasión debido a similitudes con el marco climático de España y Portugal?
+
+## Definiciones
+**Marco climatico Ibérico**: Espacio multidimensional definido por los valores de diferentes variables bioclimáticas georreferenciados dentro de la Península Ibérica.
+
+**Variable bioclimática**: Variable descriptora ambiental considerada determinante para el crecimiento, desarrollo y reproducción de la biosfera.
+
+**Nicho climático**: Espacio multidimensional definido por los valores de diferentes variables bioclimáticas de los puntos de presencia de una especie.
+
+**Especie potencialmente invasora en la Peninsula Ibérica**: Especie cuyo nicho climático está comprendido dentro del MCI.
+
+# Paquetes necesarios {.tabset}
+Antes de empezar, instalaremos los paquetes necesarios a lo largo del documento.
+```{r echo=TRUE, results='hide', message=FALSE, warning=FALSE} 
+list.of.packages <- c("DataExplorer", "raster", "dismo", "plotly", "fmsb", "factoextra", "MASS","hypervolume","alphahull")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+```
+
+Una vez disponibles todos los paquetes, podemos cargar las respectivas librerías.
+```{r echo=2:17, results='hide', message=FALSE, warning=FALSE}
+# setwd("C:/Users/Desktop/DataSciencePlantsESTESI") 
+library(raster)
+library(sp)
+library(dismo)
+library(readr)
+library(ggplot2)
+library(plotly)
+library(MASS)
+require(MASS)
+library(fmsb)
+library(devtools)
+install_github("ggbiplot","vqv")
+library(ggbiplot)
+library(factoextra)
+library(readr)
+library(hypervolume)
+library(alphahull)
+```
+
+# Delimitación del MCI {.tabset}
+En primer lugar descargaremos el *dataset* de la base de datos globales [WorldClim](http://worldclim.org/). Elegiremos las [19 variables bioclimáticas](http://worldclim.org/bioclim) con una resolución geográfica de 2.5' (minutos de grado). El argumento `var = "bio"` de la función `getData()` reclama dichas variables bioclimáticas. El portal WorldClim incluye variables climáticas teniendo en cuenta un contexto de cambio climático. Más adelante se pueden testear las diferencias. Las variables referentes a la temperatura están multiplicadas por 10.
+
+```{r,fig.align='center',out.extra='angle=90'}
+worldata <- getData("worldclim",var="bio", res=2.5)
+
+plot (worldata$bio1,
+   main = "Mapa de la temperatura media (BIO1) global",
+   xlab = "Longitud (ºC)",
+   ylab = "Latitud (ºC)")
+```
+
+Los datos de `worldata` se encuentran en formato rasterizado. Ahora debemos seleccionar la extensión correspondiente a la Península Ibérica. Pasaremos la ventana de latitudes y longitudes que enmarcan la Península Ibérica a la función `extent()`: $(-10º W, 4ºE)$ y $(36ºN, 44ºN)$. Seguidamente, recortaremos la extensión `e` sobre los datos `worldata` utilizando la función `crop()`.
+
+```{r, fig.align='center', out.extra='angle=90'}
+e <- extent(-10, 4, 36, 44)
+s.crop <- crop(worldata, e)
+
+plot (s.crop$bio1,
+   main = "Mapa de la temperatura media (BIO1) en la Península Ibérica",
+   xlab = "Longitud (ºC)",
+   ylab = "Latitud (ºC)")
+```
+El archivo `s.crop` también se encuentra en formato rasterizado. Para trabajar más cómodamente, construiremos un *dataframe* llamado `marcoclim`, definiendo los nombres de las variables bioclimáticas:
+
+```{r}
+
+marcoclim <- as.data.frame(s.crop)
+
+BIOs <- paste('BIO', (1:19), sep = '')
+names(marcoclim) <- BIOs
+
+```
+
+Finalmente, exportamos el *dataframe* `marcoclim` en formato `*.csv`.
+```{r}
+write.csv(marcoclim, file="Datos/MarcoClim2.5.csv")
+```
+
+# Análisis exploratorio {.tabset}
+Para no perder tiempo descargando cada vez los datos del marcoclim y preparandolos, cargamos directamente el csv generado:
+```{r warning=FALSE}
+marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
+    col_types = cols(X1 = col_skip()))
+
+head(marcoclim)
+```
+
+Antes de continuar trabajando, necesitamos hacernos una idea de cómo son los datos, para ello realizamos un pequeño **análisis exploratorio** y **data wrangling**.
+```{r}
+library(DataExplorer)
+str(marcoclim)
+marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA's.
+marcoclim <- na.omit(marcoclim)
+summary(marcoclim) #resumen de cada variable
+plot_str(marcoclim) #estructura de los datos
+plot_histogram(marcoclim) 
+```
+
+```{r output.lines=20}
+cor(marcoclim) # Idea de la correlación de unas variables con otras.
+plot_correlation(marcoclim) #para visualizar mejor la correlación
+```
+
+
+Ahora, podemos representar los datos obtenidos, dependiendo de las variables que nos interesa mostrar:
+
+Para generar un gráfico con temperatura y precipitación
+
+
+```{r}
+plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitación Anual (mm)", ylab="Temperatura anual media (ºC x10)",main="Temperatura y Precipitación en la Península Ibérica")  
+
+```
+
+Para generar un gráfico de densidad con estas mismas variables usamos la función `kde2d`(kernel density two dimensions) del paquete `MASS`
+```{r }
+plot(marcoclim$BIO12 ~ marcoclim$BIO1, col = "blue")
+d <- density(marcoclim$BIO1) # devuelve los datos de densidad 
+plot(d)
+
+dens <- kde2d(marcoclim$BIO1, marcoclim$BIO12, n=300, lims = c(0,200,0,1400))
+image(dens)
+filled.contour(dens,
+               color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
+               xlab= "Annual Mean Temperature (ºC)",
+               ylab= "Annual Precipitation (mm)", main = "Marco Climático Ibérico")
+
+```
+
+
+# Descartar variables muy correlacionadas (opcional) {.tabset}
+Al trabajar con 19 variables, algunas producto lineal de otras como hemos visto en el gráfico de correlación, estamos trabajando con información redundante. Podemos basarnos en el criterio `VIF` (factores de inflación de varianza), un enfoque simple para identificar la colinealidad entre las variables explicativas para descartar algunas y probar el modelo mas adelante con todas las variables y con solo las seleccionadas. 
+
+Esto se describe en este [blog](https://www.r-bloggers.com/collinearity-and-stepwise-vif-selection/)
+
+Definimos la función de cálculo y selección de variables con el `VIF`
+```{r warning=FALSE}
+vif_func<-function(in_frame,thresh=10,trace=T,...){
+  
+  library(fmsb)
+  
+  if(any(!'data.frame' %in% class(in_frame))) in_frame<-data.frame(in_frame)
+  
+  #get initial vif value for all comparisons of variables
+  vif_init<-NULL
+  var_names <- names(in_frame)
+  for(val in var_names){
+    regressors <- var_names[-which(var_names == val)]
+    form <- paste(regressors, collapse = '+')
+    form_in <- formula(paste(val, '~', form))
+    vif_init<-rbind(vif_init, c(val, VIF(lm(form_in, data = in_frame, ...))))
+  }
+  vif_max<-max(as.numeric(vif_init[,2]), na.rm = TRUE)
+  
+  if(vif_max < thresh){
+    if(trace==T){ #print output of each iteration
+      prmatrix(vif_init,collab=c('var','vif'),rowlab=rep('',nrow(vif_init)),quote=F)
+      cat('\n')
+      cat(paste('All variables have VIF < ', thresh,', max VIF ',round(vif_max,2), sep=''),'\n\n')
+    }
+    return(var_names)
+  }
+  else{
+    
+    in_dat<-in_frame
+    
+    #backwards selection of explanatory variables, stops when all VIF values are below 'thresh'
+    while(vif_max >= thresh){
+      
+      vif_vals<-NULL
+      var_names <- names(in_dat)
+      
+      for(val in var_names){
+        regressors <- var_names[-which(var_names == val)]
+        form <- paste(regressors, collapse = '+')
+        form_in <- formula(paste(val, '~', form))
+        vif_add<-VIF(lm(form_in, data = in_dat, ...))
+        vif_vals<-rbind(vif_vals,c(val,vif_add))
+      }
+      max_row<-which(vif_vals[,2] == max(as.numeric(vif_vals[,2]), na.rm = TRUE))[1]
+      
+      vif_max<-as.numeric(vif_vals[max_row,2])
+      
+      if(vif_max<thresh) break
+      
+      if(trace==T){ #print output of each iteration
+        prmatrix(vif_vals,collab=c('var','vif'),rowlab=rep('',nrow(vif_vals)),quote=F)
+        cat('\n')
+        cat('removed: ',vif_vals[max_row,1],vif_max,'\n\n')
+        flush.console()
+      }
+      
+      in_dat<-in_dat[,!names(in_dat) %in% vif_vals[max_row,1]]
+      
+    }
+    
+    return(names(in_dat))
+    
+  }
+  
+}
+```
+
+Aplicamos la función a nuestros datos. Ésta va calculando los `VIF`, y en cada cálculo quita el que tiene mayor valor hasta quedarse con valores de VIF por debajo del umbral (en nuestro caso hasta quedarnos con 5 valores)
+```{r warning=FALSE, output.lines=22}
+vif_func(in_frame=marcoclim,thresh=5,trace=T) 
+```
+
+
+# Reducción de dimensionalidad mediante PCA {.tabset}
+Para describir de forma reducida el marco climático Ibérico realizamos una reducción de dimensiones mediante un `Análisis de Componentes principales`:
+
+Si los datos no están cargados podemos llamarlos:
+```{r warning=FALSE}
+marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
+    col_types = cols(X1 = col_skip()))
+
+
+marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA's
+
+```
+
+Realizamos la `PCA` con los dos datos utilizando la función `prcomp` que R ya tiene interna.
+```{r output.lines=27}
+pcaclim <- prcomp(marcoclim, center = TRUE, scale. = TRUE) 
+print(pcaclim)
+
+```
+
+```{r}
+plot(pcaclim, type = "l")
+summary(pcaclim)
+plot(pcaclim$x[,1],pcaclim$x[,2], col = "lightblue")
+```
+
+Obtenemos la desviación estándar y la proporción de la varianza de cada una de los componentes principales basándose en las 19 componentes climáticas.
+Con el compontente principal 1 y 2 se explica un **75,44%** de la variabilidad, suficiente para continuar trabajando.
+
+Además, podemos calcular el peso de cada variable bioclimática para cada componente principal, con `pca$rotation`
+```{r}
+pcaclim$rotation[,1]
+pcaclim$rotation[,2]
+```
+
+Para facilitar el entendimiento de la contribución de cada una de las variables en el análisis de componentes principales, Podemos generar plots con las funciones:
+-`fviz_pca_var`
+-`ggbiplot`
+
+
+```{r}
+fviz_pca_var(pcaclim,
+             col.var = "contrib", # Color by contributions to the PC
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE     # Avoid text overlapping
+)  
+
+
+
+g <- ggbiplot(pcaclim, obs.scale = 1, var.scale = 1, 
+               ellipse = TRUE, alpha=0.1, 
+              circle = TRUE)
+g <- g + scale_color_discrete(name = '')
+g <- g + theme(legend.direction = 'horizontal', 
+               legend.position = 'top')
+print(g)
+```
+
+También podríamos realizar una `PCA` solo con las variables que `VIF` < 5(opcional)
+```{r}
+marcoclimVIF <- marcoclim[,c(2,3,8,9,13,15)]
+
+pcaclim2 <- prcomp(marcoclimVIF, center = TRUE, scale. = TRUE) 
+print(pcaclim2)
+plot(pcaclim2, type = "l")
+summary(pcaclim2)
+```
+
+
+# Obtención de datos de países y proyección sobre el MCI {.tabset}
+Llegados a este punto, pretendemos evaluar si las condiciones climáticas de los diferentes países del mundo se parecen a las de España. Así se podrá
+determinar después qué especies podrían encontrar condiciones favorables en nuestro país actuando como invasoras y qué especies españolas podrían serlo para otros países.
+Con estas evidencias se controlarían mejor la entrada y salida de especies invasoras, mejorando las políticas de comercio y transporte por ejemplo.
+Por eso proyectamos los datos del marco climático de estos países sobre el nuestro.
+
+
+Cargamos los datos del marco climatico ibérico:
+```{r warning=FALSE}
+marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
+    col_types = cols(X1 = col_skip()))
+
+marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA's
+
+```
+
+Preparamos los datos de la Península Ibérica de los dos primeros componentes:
+```{r}
+e <- pcaclim$x[,1:2]
+edf <- as.data.frame(e)
+edf$pais <- "Spain" #Añadimos una varaible de Pais, con todas las etiquetes "Spain"
+head(edf)
+```
+
+
+Descargamos los datos del WordClim (ya hecho previamente)
+```{r}
+#Download the WorldClim Data
+worldata <- getData("worldclim",var="bio", res=2.5)
+plot(worldata$bio1, main =  "Temperatura media anual mundial (ºC x10)")
+```
+
+En este [blog](https://www.gis-blog.com/r-raster-data-acquisition), encontramos como se realiza la descarga y recorte de los paises. Para llamar a un pais concreto se usa la nomenclatura de tres letras definida [aquí](http://kirste.userpage.fu-berlin.de/diverse/doc/ISO_3166.html). Hay una base de datos con los nombres y codigos de los 241 paises que incluye la lista. Podemos importar esos datos:
+```{r results=FALSE}
+CountryCodes <- read_delim("Datos/CountryCodes.csv", 
+    ";", escape_double = FALSE, trim_ws = TRUE)
+
+```
+A3 son los codigos para descargar el país.
+
+Descargamos los límites políticos de un país, por ejemplo Dinamarca, de la siguiente forma:
+
+```{r}
+denmark <- getData('GADM', country='DNK', level=0)
+plot(denmark)
+s<- crop(worldata, denmark)
+s2 <- mask(s, denmark)
+s2<-as.matrix(s2)
+marcoclim.denmark <- as.data.frame(s2)
+names(marcoclim.denmark) <- c("BIO1","BIO2","BIO3","BIO4", "BIO5", "BIO6", "BIO7", "BIO8", "BIO9",
+                 "BIO10","BIO11","BIO12","BIO13", "BIO14", "BIO15", "BIO16", "BIO17", "BIO18", "BIO19")
+
+marcoclim.denmark <- marcoclim.denmark[complete.cases(marcoclim.denmark),]
+
+```
+Así, obtenemos un `dataframe` con las variables bioclimáticas de este país.
+
+Proyectamos estos valores sobre el `PCA` del marco climático ibérico. Generamos la variable país, con el nombre de la etiqueta del mismo. Además combinamos los dos data frames, con los datos de PC1 y PC2 de España y el país seleccionado.
+```{r}
+i <- predict (pcaclim, newdata = marcoclim.denmark) 
+i <- i[,1:2]
+
+idf <- as.data.frame(i) 
+idf$pais <- "Din" 
+
+df <- rbind(edf,idf) 
+
+```
+
+
+Generamos un gráfico para visualizar el grado de solapamiento de ambas nubes de puntos usando la función 
+`ggplot`
+```{r}
+ggplot(df, aes(x=PC1, y=PC2, col=pais)) + geom_point()
+
+```
+
+
+A continuación, pretendemos unir dos gráficos de densidad para visualizar el grado de solapamiento de ambas nubes de puntos:
+
+```{r}
+#Para hacer un gráfico de densidad con todos los datos:
+dens <- kde2d(df$PC1, df$PC2, n=300, lims = c(-20,10,-10,10))
+image(dens)
+filled.contour(dens,
+               color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
+               xlab= "PC1",
+               ylab= "PC2", main = "Contraste de marcos climaticos")
+```
+
+
+```{r}
+
+#Ahora solo con los datos de España:
+dense <- kde2d(edf$PC1, edf$PC2, n=300, lims = c(-12,7,-10,10))
+image(dense)
+filled.contour(dense,
+               color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
+               xlab= "PC1",
+               ylab= "PC2", main = "Marco climático Ibérico")
+
+```
+
+
+```{r}
+#Ahora solo del país proyectado:
+densi <- kde2d(idf$PC1, idf$PC2, n=300, lims = c(-12,7,-10,10))
+image(densi)
+filled.contour(densi,
+               color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
+               xlab= "PC1",
+               ylab= "PC2", main = "Marco climático Ibérico del pais proyectado")
+
+```
+
+Pero, ¿Cómo podemos determinar el grado de solapamiento, teniendo en cuenta la densidad de los datos?
+```{r}
+#OlGA->Comienza aquí el apartado de Hypervolumenes. yo borraría ya esto que continuaba aquí....(bootstraping en adelante)
+```
