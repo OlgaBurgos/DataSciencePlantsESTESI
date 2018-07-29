@@ -7,7 +7,7 @@ Para ello, utilizaremos el paquete `hypervolume` (@Blonder2017)(@BlonderB2017)
 
 
 
-# DEFINE THE STATIC ENVIRONMENT
+##Definiendo el marco climático estático 
 Una vez obtenidos los datos del marco climático español, realizado el análisis de componentes principales y creado un data frame con los resultados de ésta, definiremos el primer hipervolumen.
 Seguidamente recordamos la forma de realizar los pasos mencionados.
 
@@ -29,9 +29,9 @@ edf$pais <- "Spain"
 ```
 
 El hipervolumen de n-dimensiones es una medida que generaliza el concepto de volumen a espacios de dimensión superior a tres. 
-En nuestro caso, utilizaremos un Gaussian KDE(kernel density estimation) en el que todos los puntos contribuyen a la densidad de la probabilidad global.
+En nuestro caso utilizaremos un `Gaussian KDE`(kernel density estimation) en el que todos los puntos contribuyen a la densidad de la probabilidad global.
 
-En la función "hypervolume_gaussian", por defecto se le asigna un umbral del 95% asegurando la máxima probabilidad en la estimación de la densidad.
+En la función `hypervolume_gaussian` por defecto, se le asigna un umbral del 95% asegurando la máxima probabilidad en la estimación de la densidad.
 Además generaremos un plot para visualizar el hipervolumen en el que se genera un centroide.
 
 ```{r}
@@ -40,7 +40,7 @@ plot(hv1sp,show.contour=TRUE,contour.kde.level=0.01)
 
 ```
 
-## DINAMIC ENVIRONMENT
+## Definiendo el marco climático dinámico
 El siguiente paso será generar un hipervolumen para cada uno de los países que testaremos frente el marco climático ibérico español. Por ejemplo creando un hipervolúmen con los datos de Dinamarca.
 
 ```{r}
@@ -48,16 +48,17 @@ hv2dn = hypervolume_gaussian(data=subset(df,pais=="Din")[1:238, 1:2])
 plot(hv2dn,show.contour=TRUE,contour.kde.level=0.01)
 ```
 
-Una vez obtenidos los dos hipervolúmenes, utilizaremos la función "hypervolume_set" y "hypervolume_overlap_statistics".
-La primera genera valores estadísticos computando la intersección, la unión y los componentes únicos(diferencia) de los hipervolúmenes, que podemos observar llamando la función "get_volume"
+Una vez obtenidos los dos hipervolúmenes, utilizaremos la función `hypervolume_set` y `hypervolume_overlap_statistics`.
+La primera genera valores estadísticos computando la intersección, la unión y los componentes únicos(diferencia) de los hipervolúmenes, que podemos observar llamando la función `get_volume`
 
-La segunda función calcula los métricos de superposición para los dos hipervolúmenes.Printa directamente índices de similitus entre los dos volúmenes:
-  -accard Jaccard similarity (volume of intersection of 1 and 2 divided by volume of union of 1 and 2)
--sorensen Sorensen similarity (twice the volume of intersection of 1 and 2 divided by volume of 1 plus volume of 2)
--frac_unique_1 Unique fraction 1 (volume of unique component of 1 divided by volume of 1))
--frac_unique_2 Unique fraction 2 (volume of unique component of 2 divided by volume of 2))
+La segunda función calcula los métricos de superposición para los dos hipervolúmenes.Printa directamente índices de similitud entre los dos volúmenes:
 
-Además calcularemos la distancia entre centroides usando la función "hypervolume_distance"
+>Jaccard similarity (volumen de la intersección de un país respeto al otro, dividido por el volumen de la unión de estos países)
+>Sorensen similarity (dos veces el volumen de la interesección de un país sobre el otro, dividido por la suma del volumen de ambos países)
+>Unique fraction 1 (volumen del componente único del primer país dividido por el volumen total de éste)
+>Unique fraction 2 (volumen del componente único del segundo país dividido por el volumen total de éste))
+
+Además calcularemos la distancia entre centroides usando la función `hypervolume_distance`
 
 ```{r}
 setH <-hypervolume_set(hv1sp, hv2dn, check.memory = FALSE)
@@ -67,16 +68,18 @@ overl<- hypervolume_overlap_statistics(setH)
 dist<- hypervolume_distance(hv1sp, hv2dn, type='centroid')
 ```
 
-##OUTPUTS
-Con los datos estadísticos obtenidos anteriormente, podemos generar una lista para facilitar la visualización. 
+##*Outputs*
+Con los datos estadísticos obtenidos anteriormente, podemos generar una lista para facilitar la visualización de los diferentes índices y volumenes.
+
 ```{r}
 values <- c(volumes, overl, dist)
 ```
-## COUNTRY LOOPING
+
+## *Country looping*
+
 En este punto, crearemos un algoritmo para poder testear la similitud del marco climático de cada país más agilmente respecto al de España.
-El marco climático español será un valor fijo en este algoritmo, mientras que los inputs seran los datos climáticos de los diferentes países a testear. 
+El marco climático español será un valor fijo en este algoritmo, mientras que los *inputs* seran los datos climáticos de los diferentes países a testear.
+
+A partir de este loop, generaremos un data frame que recogerá la mayoría de países del mundo con sus respectivos volumenes e indices respecto al marco climático de España.
 
 
-
-Queremos cuantificar el grado de solapamiento de las nubes de puntos descritas por los puntos de los dos países, el receptor (España) y el proyectado.
-Hay que crear ciertos metricos para la determinación de el grado de riesgo de invasión.
