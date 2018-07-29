@@ -1,6 +1,0 @@
-<!--This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License (https://creativecommons.org/licenses/by-nc-sa/3.0/) The data presented in this file MAY NOT include all records shown on the datasheet. This occurs when we are unable to match a territory name to geographical coordinates in an authoritative manner.-->
-
-Region,Latitude,Longitude,Extent,Last Reported,Origin,First Reported,Invasiveness,References,Notes
-"France","46","2","Present","-","-","-","-","EPPO (2014)","-"
-"Italy","42.83333","12.83333","Present","-","-","-","-","EPPO (2014)","-"
-"Spain","40","-4","Present","-","-","-","-","EPPO (2014)","-"

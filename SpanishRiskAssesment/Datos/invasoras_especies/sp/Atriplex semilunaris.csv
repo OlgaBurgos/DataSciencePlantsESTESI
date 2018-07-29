@@ -1,4 +1,0 @@
-<!--This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License (https://creativecommons.org/licenses/by-nc-sa/3.0/) The data presented in this file MAY NOT include all records shown on the datasheet. This occurs when we are unable to match a territory name to geographical coordinates in an authoritative manner.-->
-
-Region,Latitude,Longitude,Extent,Last Reported,Origin,First Reported,Invasiveness,References,Notes
-"Czech Republic","49.75","15","Present","-","-","-","-","Datamining 2011 - Invasive Species Databases","-"
