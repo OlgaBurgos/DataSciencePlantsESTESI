@@ -516,10 +516,13 @@ La primera genera valores estadísticos computando la intersección, la unión y
 
 La segunda función calcula los métricos de superposición para los dos hipervolúmenes.Printa directamente índices de similitud entre los dos volúmenes:
 
->Jaccard similarity (volumen de la intersección de un país respeto al otro, dividido por el volumen de la unión de estos países)
->Sorensen similarity (dos veces el volumen de la interesección de un país sobre el otro, dividido por la suma del volumen de ambos países)
->Unique fraction 1 (volumen del componente único del primer país dividido por el volumen total de éste)
->Unique fraction 2 (volumen del componente único del segundo país dividido por el volumen total de éste))
+>**Similitud de Jaccard**: Volumen de la intersección de un país respeto al otro, dividido por el volumen de la unión de estos países.
+
+>**Similitud de Sorensen**: Dos veces el volumen de la interesección de un país sobre el otro, dividido por la suma del volumen de ambos países.
+
+> **Fracción Única 1**: Volumen del componente único del primer país dividido por el volumen total de éste.
+
+> **Fracción única 2**: Volumen del componente único del segundo país dividido por el volumen total de éste.
 
 Además calcularemos la distancia entre centroides usando la función `hypervolume_distance`
 
@@ -538,7 +541,13 @@ Con los datos estadísticos obtenidos anteriormente, podemos generar una lista p
 values <- c(volumes, overl, dist)
 ```
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!## Bucle de cuantificación de hipervolumenes
+En esta figura ilustramos los diferentes indices obtenidos:
+
+![Grafico].(Plots/EsquemaResultados.png)
+
+
+
+## Bucle de cuantificación de hipervolumenes
 En este punto, crearemos un algoritmo para poder testear la similitud del marco climático de cada país más agilmente respecto al de Peninsula Ibérica. El marco climático Iberico será un valor fijo en este algoritmo, mientras que los *inputs* seran los datos climáticos de los diferentes países a testear. A partir de este bucle, generaremos un data frame que recogerá la mayoría de países del mundo con sus respectivos volumenes e indices respecto al marco climático Ibérico.
 
 Cargamos una lista con todos los paises del mundo:
@@ -556,7 +565,7 @@ CountryCodesSum <- CountryCodes[ ! CountryCodes$V3 %in% black_list, ]
 Inicializamos el bucle
 (No va a ser ejecutado en el html)
 
-```{r}
+```{r eval = FALSE, echo = FALSE}
 my_df <- data.frame()
 counter=1
 
