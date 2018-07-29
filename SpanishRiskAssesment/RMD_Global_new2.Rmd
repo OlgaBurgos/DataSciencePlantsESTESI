@@ -39,13 +39,13 @@ knit_hooks$set(output = function(x, options) {
 ```
 
 # Especies invasoras - Un problema global {.tabset}
-El crecimiento poblacional y la industrialización han llevado al hombre a ocupar prácticamente todos los biomas, impactando gravemente en la diversidad de los sistemas naturales. La biodiversidad es esencial para el mantenimiento de las funciones y servicios ecosistémicos, de los cuales nos beneficiamos, pero a la vez son indispensables para el mantenimiento de la homeostasis terrestre (@Cardinale2012). Los esfuerzos para la conservación de estas funciones han llevado a analizar las causas de pérdida de la biodiversidad, siendo las especies invasoras la segunda mayor amenaza a la biodiversidad, después de la pérdida de hábitat (@SIMBERLOFF2013). Para luchar contra esta causa necesitamos políticas de gestión efectivas, pero el esfuerzo de erradicación aumenta con el tiempo de invasión, y por este motivo es imprescindible tratar de trabajar en la previsión y primeras fases de invasión (@VanWilgen2014).
+El crecimiento poblacional y la industrialización han llevado al hombre a ocupar prácticamente todos los biomas, impactando gravemente en la diversidad de los sistemas naturales. La biodiversidad es esencial para el mantenimiento de las funciones y servicios ecosistémicos, de los cuales nos beneficiamos, pero a la vez son indispensables para el mantenimiento de la homeóstasis terrestre (@Cardinale2012). Los esfuerzos para la conservación de estas funciones han llevado a analizar las causas de pérdida de la biodiversidad, siendo las especies invasoras la segunda mayor amenaza a la biodiversidad, después de la pérdida de hábitat (@SIMBERLOFF2013). Para luchar contra esta causa necesitamos políticas de gestión efectivas, pero el esfuerzo de erradicación aumenta con el tiempo de invasión, y por este motivo es imprescindible tratar de trabajar en la previsión y primeras fases de invasión (@VanWilgen2014).
 Según la Unión Internacional para la Conservación de la naturaleza (UICN), las especies invasoras son:
 
 >“Especie exótica invasora”: especie exótica que se establece en un ecosistema o hábitat natural o seminatural; es un agente de cambio y amenaza la diversidad biológica nativa. (UICN, 2000)
 
 ##¿Por qué son invasoras?
-Existen diversas hipótesis que tratan de explicar los motivos por los cuales algunas especies se convierten en invasoras. La hipótesis mayoritaria es que la falta de enemigos naturales en el nuevo habitat donde la invasora llega, le permite crecer sin control invirtiendo menos en compuestos y estrategias defensivas. Esta es la *Enemy Release Hypothesis*(@Catford200922).
+Existen diversas hipótesis que tratan de explicar los motivos por los cuales algunas especies se convierten en invasoras. La hipótesis mayoritaria es que la falta de enemigos naturales en el nuevo hábitat dónde la invasora llega, le permite crecer sin control invirtiendo menos en compuestos y estrategias defensivas. Esta es la *Enemy Release Hypothesis*(@Catford200922).
 
 Otros autores postulan la regla del 10. De diez especies exóticas que llegan a un nuevo terreno, una se convierte en invasora. Esta hipótesis se basa en el azar y el hecho de que algunas comunidades son mas fáciles de ser invadidas que otras (@Richardson2006409).
 
@@ -108,10 +108,10 @@ library(DataExplorer)
 ```
 
 # Delimitación del MCI {.tabset}
-En primer lugar descargaremos el *dataset* de la base de datos globales [WorldClim](http://worldclim.org/). Elegiremos las [19 variables bioclimáticas](http://worldclim.org/bioclim) con una resolución geográfica de 2.5' (minutos de grado). El argumento `var = "bio"` de la función `getData()` reclama dichas variables bioclimáticas. El portal WorldClim incluye variables climáticas teniendo en cuenta un contexto de cambio climático. Más adelante se pueden testear las diferencias. Las variables referentes a la temperatura están multiplicadas por 10.
+En primer lugar descargaremos el *dataset* de la base de datos globales [WorldClim](http://worldclim.org/). Elegiremos las [19 variables bioclimáticas](http://worldclim.org/bioclim) con una resolución geográfica de 10' (minutos de grado) ya que resoluciones mayores conllevan demasiado esfuerzo computacional. El argumento `var = "bio"` de la función `getData()` reclama dichas variables bioclimáticas. El portal WorldClim incluye variables climáticas teniendo en cuenta un contexto de cambio climático. Más adelante se pueden testear las diferencias. Las variables referentes a la temperatura están multiplicadas por 10.
 
 ```{r,fig.align='center',out.extra='angle=90'}
-worldata <- getData("worldclim",var="bio", res=2.5)
+worldata <- getData("worldclim",var="bio", res=10)
 
 plot (worldata$bio1,
    main = "Mapa de la temperatura media (BIO1) global",
@@ -156,7 +156,7 @@ head(marcoclim)
 ```
 
 Antes de continuar trabajando, necesitamos hacernos una idea de cómo son los datos, para ello realizamos un pequeño *análisis exploratorio* y *data wrangling*.
-```{r}
+```{r fig.align='center'}
 
 marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA's.
 marcoclim <- na.omit(marcoclim)
@@ -165,7 +165,7 @@ plot_str(marcoclim) #estructura de los datos
 plot_histogram(marcoclim) 
 ```
 
-```{r output.lines=20}
+```{r output.lines=20, fig.align='center'}
 cor(marcoclim) # Idea de la correlación de unas variables con otras.
 plot_correlation(marcoclim) #para visualizar mejor la correlación
 ```
@@ -176,17 +176,24 @@ Ahora, podemos representar los datos obtenidos, dependiendo de las variables que
 Para generar un gráfico con temperatura y precipitación
 
 
-```{r}
-plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="lightblue", xlab="Precipitación Anual (mm)", ylab="Temperatura anual media (ºC x10)",main="Temperatura y Precipitación en la Península Ibérica")  
+```{r fig.align='center'}
+plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="blue",alpha=0.1, xlab="Precipitación Anual (mm)", ylab="Temperatura anual media (ºC x10)",main="Temperatura y Precipitación en la Península Ibérica")  
 
 ```
 
 Para generar un gráfico de densidad con estas mismas variables usamos la función `kde2d`(kernel density two dimensions) del paquete `MASS`
-```{r }
-plot(marcoclim$BIO12 ~ marcoclim$BIO1, col = "blue")
+
+El primer gráfico es una distribución de la densidad de solamente una variable, en este caso la temperatura media anual. 
+```{r fig.align='center'}
 d <- density(marcoclim$BIO1) # devuelve los datos de densidad 
 plot(d)
 
+
+```
+
+Por otro lado, podemos también plotear la densidad de dos variables diferentes, en este caso la temperatura y precepitación media anuales: 
+
+```{r fig.align='center'}
 dens <- kde2d(marcoclim$BIO1, marcoclim$BIO12, n=300, lims = c(0,200,0,1400))
 image(dens)
 filled.contour(dens,
@@ -195,7 +202,6 @@ filled.contour(dens,
                ylab= "Annual Precipitation (mm)", main = "Marco Climático Ibérico")
 
 ```
-
 
 # Descartar variables muy correlacionadas (opcional) {.tabset}
 Al trabajar con 19 variables, algunas producto lineal de otras como hemos visto en el gráfico de correlación, estamos trabajando con información redundante. Podemos basarnos en el criterio `VIF` (factores de inflación de varianza), un enfoque simple para identificar la colinealidad entre las variables explicativas para descartar algunas y probar el modelo mas adelante con todas las variables y con solo las seleccionadas. 
@@ -296,7 +302,7 @@ print(pcaclim)
 
 ```
 
-```{r}
+```{r fig.align='center'}
 plot(pcaclim, type = "l")
 summary(pcaclim)
 plot(pcaclim$x[,1],pcaclim$x[,2], col = "lightblue")
@@ -316,7 +322,7 @@ Para facilitar el entendimiento de la contribución de cada una de las variables
 -`ggbiplot`
 
 
-```{r}
+```{r fig.align='center'}
 fviz_pca_var(pcaclim,
              col.var = "contrib", # Color by contributions to the PC
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
@@ -326,7 +332,7 @@ fviz_pca_var(pcaclim,
 
 
 g <- ggbiplot(pcaclim, obs.scale = 1, var.scale = 1, 
-               ellipse = TRUE, alpha=0.1, 
+               ellipse = TRUE, alpha=0.1,col="blue",
               circle = TRUE)
 g <- g + scale_color_discrete(name = '')
 g <- g + theme(legend.direction = 'horizontal', 
@@ -335,7 +341,7 @@ print(g)
 ```
 
 También podríamos realizar una `PCA` solo con las variables que `VIF` < 5(opcional)
-```{r}
+```{r fig.align='center'}
 marcoclimVIF <- marcoclim[,c(2,3,8,9,13,15)]
 
 pcaclim2 <- prcomp(marcoclimVIF, center = TRUE, scale. = TRUE) 
@@ -344,6 +350,7 @@ plot(pcaclim2, type = "l")
 summary(pcaclim2)
 ```
 
+Como podemos comprobar, usando el criterio `VIF` la variabilidad explicada en el PCA es mucho menor que cuando no eliminamos las variables redundantes, por tanto decidimos no trabajar siguiendo este criterio. 
 
 # Obtención de datos de países y proyección sobre el MCI {.tabset}
 Llegados a este punto, pretendemos evaluar si las condiciones climáticas de los diferentes países del mundo se parecen a las de España. Así se podrá
@@ -371,32 +378,35 @@ head(edf)
 
 
 Descargamos los datos del WordClim (ya hecho previamente)
-```{r}
+```{r fig.align='center'}
 #Download the WorldClim Data
-worldata <- getData("worldclim",var="bio", res=2.5)
-plot(worldata$bio1, main =  "Temperatura media anual mundial (ºC x10)")
+worldata <- getData("worldclim",var="bio", res=10)
+
 ```
 
 En este [blog](https://www.gis-blog.com/r-raster-data-acquisition), encontramos como se realiza la descarga y recorte de los paises. Para llamar a un pais concreto se usa la nomenclatura de tres letras definida [aquí](http://kirste.userpage.fu-berlin.de/diverse/doc/ISO_3166.html). Hay una base de datos con los nombres y codigos de los 241 paises que incluye la lista. Podemos importar esos datos:
 ```{r results=FALSE}
 CountryCodes <- read_delim("CountryCodes.csv", 
     ";", escape_double = FALSE, trim_ws = TRUE)
+#A3 son los codigos para descargar el país.
 
 ```
-A3 son los codigos para descargar el país.
+
 
 Descargamos los límites políticos de un país, por ejemplo Dinamarca, de la siguiente forma:
 
-```{r}
+```{r fig.align='center'}
 denmark <- getData('GADM', country='DNK', level=0)
-plot(denmark)
 s<- crop(worldata, denmark)
 s2 <- mask(s, denmark)
 s2<-as.matrix(s2)
 marcoclim.denmark <- as.data.frame(s2)
 names(marcoclim.denmark) <- BIOs
 marcoclim.denmark <- marcoclim.denmark[complete.cases(marcoclim.denmark),]
-
+plot (s$bio1,
+   main = "Mapa de la temperatura media (BIO1) en Dinamarca",
+   xlab = "Longitud (ºC)",
+   ylab = "Latitud (ºC)")
 ```
 Así, obtenemos un `dataframe` con las variables bioclimáticas de este país.
 
@@ -415,7 +425,7 @@ df <- rbind(edf,idf)
 
 Generamos un gráfico para visualizar el grado de solapamiento de ambas nubes de puntos usando la función 
 `ggplot`
-```{r}
+```{r fig.align='center'}
 ggplot(df, aes(x=PC1, y=PC2, col=pais)) + geom_point()
 
 ```
@@ -462,7 +472,7 @@ Pero, ¿Cómo podemos determinar el grado de solapamiento, teniendo en cuenta la
 
 # Determinación del riesgo invasor {.tabset}
 ##Coincidencia climática versus MCI 
-Con el fin de determinar el grado de solapamiento climático de un país cualquiera respecto a España, creamos hipervolúmenes a partir de los dos primeros componentes principales, que explican un 75% de la varianza, y los comparamos, obteniendo así el volumen compartido y otros índices de similitud.
+Con el fin de determinar el grado de solapamiento climático de un país cualquiera respecto al MCI, creamos hipervolúmenes a partir de los dos primeros componentes principales, que explican un 75% de la varianza, y los comparamos, obteniendo así el volumen compartido y otros índices de similitud.
 
 Para ello, utilizaremos el paquete `hypervolume` (@Blonder2017)(@BlonderB2017)
 
@@ -494,7 +504,7 @@ En nuestro caso utilizaremos un `Gaussian KDE`(kernel density estimation) en el 
 En la función `hypervolume_gaussian` por defecto, se le asigna un umbral del 95% asegurando la máxima probabilidad en la estimación de la densidad.
 Además generaremos un plot para visualizar el hipervolumen en el que se genera un centroide.
 
-```{r}
+```{r fig.align='center'}
 hv1sp = hypervolume_gaussian(data=subset(df,pais=="Spain")[1:2730, 1:2])
 plot(hv1sp,show.contour=TRUE,contour.kde.level=0.01)
 
@@ -503,7 +513,7 @@ plot(hv1sp,show.contour=TRUE,contour.kde.level=0.01)
 ## Definiendo el marco climático dinámico
 El siguiente paso será generar un hipervolumen para cada uno de los países que testaremos frente el marco climático ibérico español. Por ejemplo creando un hipervolúmen con los datos de Dinamarca.
 
-```{r}
+```{r fig.align='center'}
 hv2dn = hypervolume_gaussian(data=subset(df,pais=="Din")[1:238, 1:2])
 plot(hv2dn,show.contour=TRUE,contour.kde.level=0.01)
 ```
@@ -534,7 +544,7 @@ dist<- hypervolume_distance(hv1sp, hv2dn, type='centroid')
 ##*Outputs*
 Con los datos estadísticos obtenidos anteriormente, podemos generar una lista para facilitar la visualización de los diferentes índices y volumenes.
 
-```{r}
+```{r fig.align='center'}
 values <- c(volumes, overl, dist)
 ```
 
@@ -610,6 +620,7 @@ names(Volumes) <- Vol.Names
 rownames(Volumes) <- Volumes$Country.Acronym
 names(CountryCodes) = c('Country.Name', 'V3')
 Volume_dataset <- merge(Volumes, CountryCodes, by.x = "Country.Acronym", by.y = "V3")
+write.csv(Volume_dataset, file = "Volumes_dataset.csv")
 ```
 
 # Bibliografía
