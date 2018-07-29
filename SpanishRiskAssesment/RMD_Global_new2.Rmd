@@ -538,9 +538,71 @@ Con los datos estadísticos obtenidos anteriormente, podemos generar una lista p
 values <- c(volumes, overl, dist)
 ```
 
-## *Country looping*
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!## Bucle de cuantificación de hipervolumenes
+En este punto, crearemos un algoritmo para poder testear la similitud del marco climático de cada país más agilmente respecto al de Peninsula Ibérica. El marco climático Iberico será un valor fijo en este algoritmo, mientras que los *inputs* seran los datos climáticos de los diferentes países a testear. A partir de este bucle, generaremos un data frame que recogerá la mayoría de países del mundo con sus respectivos volumenes e indices respecto al marco climático Ibérico.
 
-En este punto, crearemos un algoritmo para poder testear la similitud del marco climático de cada país más agilmente respecto al de España.
-El marco climático español será un valor fijo en este algoritmo, mientras que los *inputs* seran los datos climáticos de los diferentes países a testear.
+Cargamos una lista con todos los paises del mundo:
+```{r}
+CountryCodes <- read.csv("CountryCodes.csv", header=FALSE, sep=";", skip = 1)
+```
 
-A partir de este loop, generaremos un data frame que recogerá la mayoría de países del mundo con sus respectivos volumenes e indices respecto al marco climático de España.
+GIAN! EXPLICA porque quitamos estos paises
+
+```{r}
+black_list = list('ASM', 'AIA', 'ATA', 'ABW', 'BMU', 'BVT', 'IOT', 'CYM', 'CXR', 'CCK', 'GIB', 'GRD', 'KIR', 'LIE', 'MAC', 'MDV', 'MLT', 'MHL', 'FSM', 'MCO', 'MSR', 'NRU', 'ANT', 'NIU', 'NFK', 'MNP', 'PCN', 'RUS', 'SHN', 'KNA', 'LCA', 'SPM', 'VCT', 'SMR', 'SCG', 'SYC', 'TKL', 'TUV', 'UMI', 'VAT', 'VGB', 'WLF')
+CountryCodesSum <- CountryCodes[ ! CountryCodes$V3 %in% black_list, ]
+```
+
+Inicializamos el bucle
+(No va a ser ejecutado en el html)
+
+```{r}
+my_df <- data.frame()
+counter=1
+
+for(ID_cntry in CountryCodesSum$V3) {
+  print(ID_cntry)
+
+countrybound <- getData('GADM', country=ID_cntry, level=0) #Entra el codigo del pais
+s<- crop(worldata, countrybound)
+s2 <- mask(s, countrybound)
+marcoclim.country <- as.data.frame(s2)
+
+names(marcoclim.country) <- BIOs
+
+marcoclim.country <- marcoclim.country[complete.cases(marcoclim.country),]
+i <- predict (pcaclim, newdata = marcoclim.country) 
+i <- i[,1:2]
+idf <- as.data.frame(i)
+ID_label <- paste("Spain vs.", ID_cntry, sep=' ')
+idf$pais <- ID_label
+df <- rbind(edf,idf)
+hv2dn = hypervolume_gaussian(data = subset(df,pais == ID_label)[1:nrow(idf), 1:2]) 
+setH <-hypervolume_set(hv1sp, hv2dn, check.memory = FALSE) #Genereamos valores estad??sticos
+volumes<-get_volume(setH)
+overl<- hypervolume_overlap_statistics(setH)
+dist<- hypervolume_distance(hv1sp, hv2dn, type='centroid')
+values <- c(volumes, overl, dist)
+my_df <- rbind(my_df, values)
+my_df[counter, "Country"] <- ID_cntry
+counter <- counter + 1
+print(my_df)
+}
+rm(counter)
+write.csv(my_df, file = "Volumes.csv")
+```
+ 
+Reintroducimos los resultados:
+
+```{r}
+CountryCodes$V2 <- NULL
+CountryCodes$V4 <- NULL
+Volumes <- read.csv("Volumes.csv", header = T)
+Volumes$X <- NULL
+Vol.Names <- c('Vol.MCI', 'Vol.Country', 'Vol.Intersection', 'Vol.Union', 'Vol.Unique.MCI', 'Vol.Unique.Country', 'Jaccart', 'Sorensen', 'NormVol.MCI', 'NormVol.Country', 'Dist.Centroid', 'Country.Acronym')
+names(Volumes) <- Vol.Names
+rownames(Volumes) <- Volumes$Country.Acronym
+names(CountryCodes) = c('Country.Name', 'V3')
+Volume_dataset <- merge(Volumes, CountryCodes, by.x = "Country.Acronym", by.y = "V3")
+```
+
