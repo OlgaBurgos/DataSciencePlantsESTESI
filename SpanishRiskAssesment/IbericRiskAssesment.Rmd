@@ -111,7 +111,7 @@ library(DataExplorer)
 En primer lugar descargaremos el *dataset* de la base de datos globales [WorldClim](http://worldclim.org/). Elegiremos las [19 variables bioclimáticas](http://worldclim.org/bioclim) con una resolución geográfica de 10' (minutos de grado) ya que resoluciones mayores conllevan demasiado esfuerzo computacional. El argumento `var = "bio"` de la función `getData()` reclama dichas variables bioclimáticas. El portal WorldClim incluye variables climáticas teniendo en cuenta un contexto de cambio climático. Más adelante se pueden testear las diferencias. Las variables referentes a la temperatura están multiplicadas por 10.
 
 ```{r,fig.align='center',out.extra='angle=90'}
-worldata <- getData("worldclim",var="bio", res=10)
+worldata <- getData("worldclim",var="bio", res=2.5)
 
 plot (worldata$bio1,
    main = "Mapa de la temperatura media (BIO1) global",
@@ -305,7 +305,7 @@ print(pcaclim)
 ```{r fig.align='center'}
 plot(pcaclim, type = "l")
 summary(pcaclim)
-plot(pcaclim$x[,1],pcaclim$x[,2], col = "lightblue")
+plot(pcaclim$x[,1],pcaclim$x[,2], col = "blue",alpha=0.1)
 ```
 
 Obtenemos la desviación estándar y la proporción de la varianza de cada una de los componentes principales basándose en las 19 componentes climáticas.
@@ -333,7 +333,7 @@ fviz_pca_var(pcaclim,
 
 g <- ggbiplot(pcaclim, obs.scale = 1, var.scale = 1, 
                ellipse = TRUE, alpha=0.1,col="blue",
-              circle = TRUE)
+              circle = FALSE)
 g <- g + scale_color_discrete(name = '')
 g <- g + theme(legend.direction = 'horizontal', 
                legend.position = 'top')
@@ -380,7 +380,7 @@ head(edf)
 Descargamos los datos del WordClim (ya hecho previamente)
 ```{r fig.align='center'}
 #Download the WorldClim Data
-worldata <- getData("worldclim",var="bio", res=10)
+worldata <- getData("worldclim",var="bio", res=2.5)
 
 ```
 
@@ -396,7 +396,7 @@ CountryCodes <- read_delim("CountryCodes.csv",
 Descargamos los límites políticos de un país, por ejemplo Dinamarca, de la siguiente forma:
 
 ```{r fig.align='center'}
-denmark <- getData('GADM', country='DNK', level=0)
+denmark <- getData('GADM', country='DEN', level=0)
 s<- crop(worldata, denmark)
 s2 <- mask(s, denmark)
 s2<-as.matrix(s2)
