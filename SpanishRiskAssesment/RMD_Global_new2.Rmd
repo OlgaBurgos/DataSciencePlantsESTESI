@@ -1,7 +1,7 @@
 ---
 title: "Valoración del riesgo invasor en la Península Ibérica"
 author: "Erola Fenollosa, Olga Burgos, Gianluca Arauz, Ramon Diaz"
-date: "July 10, 2018"
+date: "July, 2018"
 output:
   html_document:
     toc: true
@@ -39,19 +39,22 @@ knit_hooks$set(output = function(x, options) {
 ```
 
 # Especies invasoras - Un problema global {.tabset}
-Las especies invasoras suponen una problema muy importante para la biodiversidad (@ArauzGarofalo2014). De hecho, se consideran la segunda mayor amenaza a la biodiversidad, después de la pérdida de hábitat. Según la Unión Internacional
-para la Conservación de la naturaleza (UICN), las especies invasoras son:
+El crecimiento poblacional y la industrialización han llevado al hombre a ocupar prácticamente todos los biomas, impactando gravemente en la diversidad de los sistemas naturales. La biodiversidad es esencial para el mantenimiento de las funciones y servicios ecosistémicos, de los cuales nos beneficiamos, pero a la vez son indispensables para el mantenimiento de la homeostasis terrestre (@Cardinale2012). Los esfuerzos para la conservación de estas funciones han llevado a analizar las causas de pérdida de la biodiversidad, siendo las especies invasoras la segunda mayor amenaza a la biodiversidad, después de la pérdida de hábitat (@SIMBERLOFF2013). Para luchar contra esta causa necesitamos políticas de gestión efectivas, pero el esfuerzo de erradicación aumenta con el tiempo de invasión, y por este motivo es imprescindible tratar de trabajar en la previsión y primeras fases de invasión (@VanWilgen2014).
+Según la Unión Internacional para la Conservación de la naturaleza (UICN), las especies invasoras son:
 
 >“Especie exótica invasora”: especie exótica que se establece en un ecosistema o hábitat natural o seminatural; es un agente de cambio y amenaza la diversidad biológica nativa. (UICN, 2000)
 
 ##¿Por qué son invasoras?
-Existen diversas hipótesis que tratan de explicar los motivos por los cuales algunas especies se convierten en invasoras. La hipótesis mayoritaria es que la falta de enemigos naturales en el nuevo habitat donde la invasora llega, le permite crecer sin control invirtiendo menos en compuestos y estrategias defensivas. Esta es la *Enemy Release Hypothesis*.
+Existen diversas hipótesis que tratan de explicar los motivos por los cuales algunas especies se convierten en invasoras. La hipótesis mayoritaria es que la falta de enemigos naturales en el nuevo habitat donde la invasora llega, le permite crecer sin control invirtiendo menos en compuestos y estrategias defensivas. Esta es la *Enemy Release Hypothesis*(@Catford200922).
 
-Otros autores postulan la regla del 10. De diez especies exóticas que llegan a un nuevo terreno, una se convierte en invasora. Esta hipótesis se basa en el azar y el hecho de que algunas comunidades son mas fáciles de ser invadidas que otras.
+Otros autores postulan la regla del 10. De diez especies exóticas que llegan a un nuevo terreno, una se convierte en invasora. Esta hipótesis se basa en el azar y el hecho de que algunas comunidades son mas fáciles de ser invadidas que otras (@Richardson2006409).
 
-Una tercera corriente postula que hay ciertos rasgos que proporcionan a las especies invasoras mayores posibilidades para serlo. Por ejemplo, grandes inversiones en dispersión de semillas, ciclos de vida cortos o crecimiento clonal son algunos de los rasgos propuestos, como los que definen a un "buen invasor".
+Una tercera corriente postula que hay ciertos rasgos que proporcionan a las especies invasoras mayores posibilidades para serlo. Por ejemplo, grandes inversiones en dispersión de semillas, ciclos de vida cortos o crecimiento clonal son algunos de los rasgos propuestos, como los que definen a un "buen invasor"(@VanKleunen2010947).
 
-Ninguna de estas hipótesis és excluyente, por lo que los factores determinantes del éxito invasor podría ser una combinación de aspectos de las tres corrientes. En cualquier caso, resulta evidente que un mejor conocimiento de los factores que determinan si una especie podría convertirse en invasora, sería vital para las políticas de conservación de la biodiversidad, pues la prevención es la acción más económica para erradicar una especie invasora.
+Ninguna de estas hipótesis és excluyente, por lo que los factores determinantes del éxito invasor podría ser una combinación de aspectos de las tres corrientes(@Catford200922). 
+
+Pese a la divergencia de hipòtesis que explican la expansión de las especies invasoras, encontramos una mayor unificación con respecto a las teorias que explican el establecimiento de las especies fuera de su rango nativo. No todas las especies pueden ser encontradas en todos los hàbitats. Cada especie tiene sus requerimientos y por lo tanto es posible definir su nicho ecológico en base a las condiciones donde una especie puede vivir, crecer y reproducirse (@Grinnell1917). El nicho de una especie se define como una región (un hipervolumen de n dimensiones) en un espacio multidimensional  basado en factores ambientales que afectan al bienestar de la especie (Hutchinson 1957). 
+En cualquier caso, resulta evidente que un mejor conocimiento de los factores que determinan si una especie podría convertirse en invasora, sería vital para las políticas de conservación de la biodiversidad, pues la prevención es la acción más económica para erradicar una especie invasora (@Kumschick20131095).
 
 Por eso nosotros queremos comprobar hasta qué punto la similitud con el marco climático de una región, en nuestro caso la Península Íbérica, puede favorecer a la invasión biológica y de esta manera deducir en qué países o regiones, debido a este solapamiento, deben implementarse medidas de prevención mayores.
 
