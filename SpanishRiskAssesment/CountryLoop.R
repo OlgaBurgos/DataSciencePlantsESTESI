@@ -29,7 +29,7 @@ edf$pais <- "Spain"
 hv1sp = hypervolume_gaussian(data=edf[1:nrow(edf), 1:2])
 plot(hv1sp)
 
-CountryCodes <- read.csv("C:/Users/garauz/Dropbox/DataSciencePlantsESTESI/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/CountryCodes.csv", header=FALSE, sep=";", skip = 1)
+CountryCodes <- read.csv("CountryCodes.csv", header=FALSE, sep=";", skip = 1)
 #CountryCodesSum <- read.csv("C:/Users/garauz/Dropbox/DataSciencePlantsESTESI/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/CountryCodes - Copy.csv", header=FALSE, sep=";", skip = 1)
 
 # GIAN -> Eliminando los paises chungos
@@ -75,12 +75,31 @@ values <- c(volumes, overl, dist)
 my_df <- rbind(my_df, values)
 my_df[counter, "Country"] <- ID_cntry
 
-counter = counter + 1
+counter <- counter + 1
 
 print(my_df)
 
 }
 
 rm(counter)
+write.csv(my_df, file = "Volumes.csv")
 
-write.csv(my_df, file = "C:/Users/garauz/Dropbox/DataSciencePlantsESTESI/DataSciencePlantsESTESI/my_df_Gian.csv")
+
+
+CountryCodes <- read.csv("CountryCodes.csv", header=FALSE, sep=";", skip = 1)
+CountryCodes$V2 <- NULL
+CountryCodes$V4 <- NULL
+
+Volumes <- read.csv("Volumes.csv", header = T)
+
+Volumes$X <- NULL
+
+Vol.Names <- c('Vol.MCI', 'Vol.Country', 'Vol.Intersection', 'Vol.Union', 'Vol.Unique.MCI', 'Vol.Unique.Country', 'Jaccart', 'Sorensen', 'NormVol.MCI', 'NormVol.Country', 'Dist.Centroid', 'Country.Acronym')
+
+names(Volumes) <- Vol.Names
+
+rownames(Volumes) <- Volumes$Country.Acronym
+
+names(CountryCodes) = c('Country.Name', 'V3')
+
+Volume_dataset <- merge(Volumes, CountryCodes, by.x = "Country.Acronym", by.y = "V3")
