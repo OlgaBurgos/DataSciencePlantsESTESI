@@ -53,24 +53,19 @@ Una tercera corriente postula que hay ciertos rasgos que proporcionan a las espe
 
 Ninguna de estas hipótesis és excluyente, por lo que los factores determinantes del éxito invasor podría ser una combinación de aspectos de las tres corrientes(@Catford200922). 
 
-Pese a la divergencia de hipòtesis que explican la expansión de las especies invasoras, encontramos una mayor unificación con respecto a las teorias que explican el establecimiento de las especies fuera de su rango nativo. No todas las especies pueden ser encontradas en todos los hàbitats. Cada especie tiene sus requerimientos y por lo tanto es posible definir su nicho ecológico en base a las condiciones donde una especie puede vivir, crecer y reproducirse (@Grinnell1917). El nicho de una especie se define como una región (un hipervolumen de n dimensiones) en un espacio multidimensional  basado en factores ambientales que afectan al bienestar de la especie (Hutchinson 1957). 
-En cualquier caso, resulta evidente que un mejor conocimiento de los factores que determinan si una especie podría convertirse en invasora, sería vital para las políticas de conservación de la biodiversidad, pues la prevención es la acción más económica para erradicar una especie invasora (@Kumschick20131095).
+Pese a la divergencia de hipótesis que explican la expansión de las especies invasoras, encontramos una mayor unificación con respecto a las teorias que explican el establecimiento de las especies fuera de su rango nativo. No todas las especies pueden ser encontradas en todos los hàbitats. Cada especie tiene sus requerimientos y por lo tanto es posible definir su nicho ecológico en base a las condiciones donde una especie puede vivir, crecer y reproducirse (@Grinnell1917). El nicho de una especie se define como una región (un hipervolumen de n dimensiones) en un espacio multidimensional basado en factores ambientales que afectan al bienestar de la especie (Hutchinson 1957). La similitud climatica entre diferentes paises podria ser clave para entender el establecimiento de las especies fuera de su rango nativo y una herramienta muy util para la valoración del riesgo invasor. Un mejor conocimiento de los factores que determinan si una especie podría convertirse en invasora, sería vital para las políticas de conservación de la biodiversidad, pues la prevención es la acción más económica para erradicar una especie invasora (@Kumschick20131095). Saber hasta qué punto la similitud con el marco climático de una región, en nuestro caso la Península Íbérica, puede favorecer a la invasión biológica nos puede permitir definir medidas de prevención mayores.
 
-Por eso nosotros queremos comprobar hasta qué punto la similitud con el marco climático de una región, en nuestro caso la Península Íbérica, puede favorecer a la invasión biológica y de esta manera deducir en qué países o regiones, debido a este solapamiento, deben implementarse medidas de prevención mayores.
 
-# Preguntas de partida y definiciones iniciales {.tabset}
+# Objetivos del trabajo y definiciones iniciales {.tabset}
 
-## Preguntas
--Si las invasiones son exitosas por coincidencia del clima, ¿qué especies podrían aclimatarse en la península ibérica y son por tanto potencialmente invasoras?
+## Objetivos
 
--¿Las especies invasoras actuales en la península ibérica cumplen esa hipótesis de coincidencia del clima?
--Si las condiciones climáticas en la península cambiasen en el contexto del cambio climático, ¿el número de especies potencialmente invasoras sería mayor, menor o igual? ¿El cambio climático podría potenciar la amenaza invasora?
+El objetivo principal de este trabajo es utilizar diferentes herramientas de gestión y analisis de datos para valorar el riesgo invasor en la Península Ibérica, en base a la hipótesis de la similitud climatica como principal factor determinante para el establecimiento de espécies exoticas. Los objetivos especificos son:
 
--Teniendo en cuenta el origen de las especies potencialmente invasoras y los movimientos globales de mercancías y personas, ¿qué invasiones son mas probables? ¿Con qué países deberíamos endurecer las políticas de comercio de especies?
+- Definir el marco climático delimitado por el espacio geografico de la Península Ibérica.
+- Cuantificar el grado de similitud climatica de todos los paises del mundo con el clima de la Península Ibérica.
+- Determinar si hubiera sido posible predecir la invasion de las especies invasoras actuales en España teniendo en cuenta los valores de similitud climática con los paises de origen.
 
--¿Por qué superficie se extenderían las especies potencialmente invasoras en la península? ¿Cuánto es su daño potencial?
-
--Teniendo en cuenta las condiciones climáticas en la península, ¿qué otros países de Europa podrían ser susceptibles a la invasión debido a similitudes con el marco climático de España y Portugal?
 
 ## Definiciones
 >**Marco climatico Ibérico**: Espacio multidimensional definido por los valores de diferentes variables bioclimáticas georreferenciados dentro de la Península Ibérica.
