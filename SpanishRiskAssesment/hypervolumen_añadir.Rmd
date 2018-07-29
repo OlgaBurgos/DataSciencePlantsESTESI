@@ -3,8 +3,8 @@
 ##Coincidencia climática versus MCI 
 Con el fin de determinar el grado de solapamiento climático de un país cualquiera respecto a España, creamos hipervolúmenes a partir de los dos primeros componentes principales, que explican un 75% de la varianza, y los comparamos, obteniendo así el volumen compartido y otros índices de similitud.
 
-Para ello, utilizaremos el paquete `hypervolume` (@doi:10.1111/2041-210X.12865)(@doi:10.1111/geb.12611)
-(Bibliografia--> 3 artículos!!!)
+Para ello, utilizaremos el paquete `hypervolume` (@Blonder2017)(@BlonderB2017)
+
 
 
 # DEFINE THE STATIC ENVIRONMENT
