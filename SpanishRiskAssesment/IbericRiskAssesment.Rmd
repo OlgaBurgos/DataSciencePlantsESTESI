@@ -631,31 +631,32 @@ Los diferentes índices y valores obtenidos anteriormente nos permiten ordenar l
 Cada índice nos revela caracteristicas distintas de la intersección entre los volúmenes. Vamos a explorar los resultados obtenidos considerando el *top ten* de países por cada índice. 
 
 ```{r}
-rVolCount <- arrange(Volumes, desc(Vol.Country)) # Ordenado de mayor volumen a menor
-rVolCount <- rVolCount$Country.Acronym # guardamos la columna con los nombres de los países
 
-rintersection <- arrange(Volumes, desc(Vol.Intersection)) #Ordenado de mayor interesección a menor
+rVolCount <- arrange(Volumes_dataset, desc(Vol.Country)) # Ordenado de mayor volumen a menor
+rVolCount <- rVolCount$Country.Acronym # Guardamos la columna con los nombres de los países
+
+rintersection <- arrange(Volumes_dataset, desc(Vol.Intersection)) #Ordenado de mayor interesección a menor
 rintersection <- rintersection$Country.Acronym
 
-rvoluniqmci <- arrange(Volumes, Vol.Unique.MCI) # Ordenado de menor a mayor volumen único en la Península Iberica.
+rvoluniqmci <- arrange(Volumes_dataset, Vol.Unique.MCI) # Ordenado de menor a mayor volumen único en la Península Iberica.
 rvoluniqmci <- rvoluniqmci$Country.Acronym
 
-rvoluniqcount <- arrange(Volumes, Vol.Unique.Country) # Ordenado de menor a mayor volumen único en la Península Ibérica.
+rvoluniqcount <- arrange(Volumes_dataset, Vol.Unique.Country) # Ordenado de menor a mayor volumen único en la Península Ibérica.
 rvoluniqcount <- rvoluniqcount$Country.Acronym
 
-rjaccard <- arrange(Volumes, desc(Jaccard)) # Ordenado de mayor a menor grado de similitud de Jacacard
+rjaccard <- arrange(Volumes_dataset, desc(Jaccart)) # Ordenado de mayor a menor grado de similitud de Jacacard
 rjaccard <- rjaccard$Country.Acronym
 
-rsorensen <- arrange(Volumes, desc(Sorensen)) # Ordenado de mayor a menor grado de similitud de Sorensen
+rsorensen <- arrange(Volumes_dataset, desc(Sorensen)) # Ordenado de mayor a menor grado de similitud de Sorensen
 rsorensen <- rsorensen$Country.Acronym
 
-rnormvolmci <- arrange(Volumes, NormVol.MCI) # Ordenado de menor a mayor fracción única de MCI
+rnormvolmci <- arrange(Volumes_dataset, NormVol.MCI) # Ordenado de menor a mayor fracción única de MCI
 rnormvolmci <- rnormvolmci$Country.Acronym
 
-rnormvolcount <- arrange(Volumes, NormVol.Country) # Ordenado de menor a mayor fracción única del país contrastado
+rnormvolcount <- arrange(Volumes_dataset, NormVol.Country) # Ordenado de menor a mayor fracción única del país contrastado
 rnormvolcount <- rnormvolcount$Country.Acronym
 
-rdistance <- arrange(Volumes, Dist.Centroid) # Ordenado de menor a mayor distancia entre centroides
+rdistance <- arrange(Volumes_dataset, Dist.Centroid) # Ordenado de menor a mayor distancia entre centroides
 rdistance <- rdistance$Country.Acronym
 
 ranking <- data.frame(rVolCount, rintersection, rvoluniqmci, rvoluniqcount, rjaccard, rsorensen, rnormvolmci, rnormvolcount, rdistance)
@@ -669,11 +670,13 @@ print(topten)
 
 
 
-
 ## Mapa de riesgo mundial
 La mejor forma de presentar los valores obtenidos de similitud entre países es diseñar un mapa mundial con diferentes colores para aquellas zonas con mayor similitud climática con la Península Ibérica, y por lo tanto mayor riesgo invasor.
 
 Para ello, usaremos el paquete `leaflet`, que nos permite la creación de mapas interactivos. En primer lugar descargamos los datos de fronteras y polígonos de todos los países del mundo desde el portal Web de [Thematicmapping](http://thematicmapping.org/downloads/world_borders.php).
+
+Necesitaremos también el paquete `rgdal`, para obtener csv con los datos descargados, con la función `readOGR`. Los datos deben estar en un repositorio real del ordenador para cargarlos, por ejemplo así:
+>world_spdf=readOGR(dsn= "C:/Users/Erola/Desktop/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/WorldBorders ",layer="TM_WORLD_BORDERS_SIMPL-0.3")
 
 ```{r eval = FALSE, echo = FALSE}
 world_spdf=readOGR(dsn= "C:/Users/Erola/Desktop/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/WorldBorders ",layer="TM_WORLD_BORDERS_SIMPL-0.3")
@@ -769,8 +772,25 @@ Importamos los datos
 
 
 # Conclusiones
-A redactar
+Durante el desarrollo de este trabajo, hemos aprendido a utilizar distintas herramientas computacionales para valorar el riesgo invasor en la Península Ibérica en base a la similitud climática con otros países.
+Distintos paquetes de `R`y algunas bases de datos disponibles *on-line*, referentes a variables bioclimáticas de las distintas regiones del planeta, nos han permitido desarrollar un estudio que consideramos muy útil para determinar riesgo invasor, y que sienta las bases de posibles proyectos futuros de evaluación de este tipo.
+Estos resultados, ayudarían al entendimiento de la problemática relacionada con la pérdid de hábitat y diversidad y podrían mejorar políticas de gestión que protejan o controlen la entrada y salida de especies con potencial invasor, protegiendo así la biodiversidad de nuestro país y también del resto. 
 
+Fijándonos en el *ranking* que hemos obtenido, podemos encontrar los países más riesgosos con respecto a la Península Ibérica, dependiendo del métrico o índice al que atendamos. En nuestro caso, hemos determinado el índice de Jaccard y Sorensen como los más fiables para la selección de estos países con condiciones más similares y por tanto de riesgo.
+Como podemos apreciar en los últimos mapas, lo países ordenados de mayor a menor riesgo para la Península Ibérica son:
+1.Argentina
+2.Grecia
+3.Sur África
+4.Italia
+5.Líbano
+6.Portugal
+7.Albania
+8.Turquía
+9.Australia.
+
+El resultado de este ranking tiene sentido pues todos los países listados, contienen clima mediterráneo,o bien comparten cercanía con España, o latitud geográfica. 
+
+Finalmente, nos gustaría resaltar las múltiples posibilidades en cuanto a las variables que se podrían tener en cuenta para seguir evaluando el riesgo, teniendo en cuenta lo desarrollado y obtenido en este trabajo.Por ejemplo, testeo del riesgo invasor de especies animales o plantas a nivel individual, o la determinación del riesgo en base al movimiento de ciudadanos o mercancía entre países, o en base a la cercanía en kilómetros de los territorios.
 
 
 
