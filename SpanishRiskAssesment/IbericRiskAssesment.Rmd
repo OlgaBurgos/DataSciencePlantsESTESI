@@ -90,7 +90,6 @@ Una vez disponibles todos los paquetes, podemos cargar las respectivas librería
 library(raster)
 library(sp)
 library(dismo)
-library(Volume_datasetr)
 library(ggplot2)
 library(plotly)
 library(MASS)
