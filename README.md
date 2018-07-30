@@ -1,6 +1,7 @@
 # IBERIC RISK ASSESMENT
 
-[IR DIRECTAMENTE AL RMD GLOBAL](SpanishRiskAssesment/IbericRiskAssesment.Rmd)
+[IR DIRECTAMENTE AL PROYECTO EN RMARKDOWN](SpanishRiskAssesment/IbericRiskAssesment.Rmd)
+[IR DIRECTAMENTE AL PROYECTO EN HTML](SpanishRiskAssesment/IbericRiskAssesment.html)
 
               
 # DATOS
