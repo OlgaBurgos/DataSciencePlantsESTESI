@@ -434,6 +434,7 @@ A continuación, pretendemos unir dos gráficos de densidad para visualizar el g
 #Para hacer un gráfico de densidad con todos los datos:
 dens <- kde2d(df$PC1, df$PC2, n=300, lims = c(-20,10,-10,10))
 image(dens)
+
 filled.contour(dens,
                color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
                xlab= "PC1",
@@ -457,6 +458,7 @@ filled.contour(dense,
 #Ahora solo del país proyectado:
 densi <- kde2d(idf$PC1, idf$PC2, n=300, lims = c(-12,7,-10,10))
 image(densi)
+
 filled.contour(densi,
                color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
                xlab= "PC1",
@@ -602,6 +604,7 @@ write.csv(my_df, file = "Volumes.csv")
 ```
 
 El bucle recorre todos los paises en un lapso de unas 7 horas aproximadamente. Esto trabajando con una *workstation* de la siguientes caracteríticas:
+
 * Memoria RAM: 64 GB.
 * Disco duro SSD: 256 GB.
 * Procesador: Processador: Intel Core i7-7700 @ 3.6 GHz de 4 núcleos.

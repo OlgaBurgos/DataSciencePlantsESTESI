@@ -823,7 +823,12 @@ CountryCodesSum &lt;- CountryCodes[ ! CountryCodes$V3 %in% black_list, ]</code><
 <p>Como puede verse, la mayoría de los paises de la lista <code>black_list</code> son muy pequeños, como por ejemplo SMR (San Marino), GIB (Gibraltar) o VAT (Ciudad del Vaticano). También aparecen muchos estados insulares, como es el caso de CYM (Islas Caimán), BMU (Bermudas) o SYC (Seychelles). ATA (Antártida) aparece en esta lista, no por tener una superficie pequeña (que no es el caso), sino por la escasa distribución geogràfica de sus datos climáticos.</p>
 <p>Un caso aparte es el de RUS (Rusia), que ha sido colocada en la <code>black_list</code> debido a la extremadamente amplia distrubución geográfica de sus datos climáticos (debido a su gran extensión). Los ordenadores con los que hemos trabajado no disponían de memoria suficiente como para cargar los datos generados por la función <code>hypervolume_gaussian</code> aplicada a Rusia.</p>
 <p>A continuación mostraremos el código del blucle que hemos implementado. Es importante aclarar que el siguiente bloque de código ha sido configurado para no ser ejecutado mediante la opción <code>eval = FALSE</code>:</p>
-<p>El bucle recorre todos los paises en un lapso de unas 7 horas aproximadamente. Esto trabajando con una <em>workstation</em> de la siguientes caracteríticas: * Memoria RAM: 64 GB. * Disco duro SSD: 256 GB. * Procesador: Processador: Intel Core i7-7700 @ 3.6 GHz de 4 núcleos.</p>
+<p>El bucle recorre todos los paises en un lapso de unas 7 horas aproximadamente. Esto trabajando con una <em>workstation</em> de la siguientes caracteríticas:</p>
+<ul>
+<li>Memoria RAM: 64 GB.</li>
+<li>Disco duro SSD: 256 GB.</li>
+<li>Procesador: Processador: Intel Core i7-7700 @ 3.6 GHz de 4 núcleos.</li>
+</ul>
 <p>Como ya hemos avanzado, el <em>output</em> de nuestro bucle es un <em>DataFrame</em> llamado <code>Volumes</code> que incluye todos los índices y volúmenes proporcionados por la función <code>hypervolume_gaussian</code>. Finalmete, editaremos brevemente el <em>DataFrame</em> <code>Volumes</code> con la intención de llegar a un <em>DataFrame</em> un poco más leíble y <em>friendly</em>.</p>
 <pre class="r"><code>CountryCodes$V2 &lt;- NULL
 CountryCodes$V4 &lt;- NULL
