@@ -778,15 +778,16 @@ Estos resultados, ayudarían al entendimiento de la problemática relacionada co
 
 Fijándonos en el *ranking* que hemos obtenido, podemos encontrar los países más riesgosos con respecto a la Península Ibérica, dependiendo del métrico o índice al que atendamos. En nuestro caso, hemos determinado el índice de Jaccard y Sorensen como los más fiables para la selección de estos países con condiciones más similares y por tanto de riesgo.
 Como podemos apreciar en los últimos mapas, lo países ordenados de mayor a menor riesgo para la Península Ibérica son:
-1.Argentina
-2.Grecia
-3.Sur África
-4.Italia
-5.Líbano
-6.Portugal
-7.Albania
-8.Turquía
-9.Australia.
+
+1. Argentina
+2. Grecia
+3. Sur África
+4. Italia
+5. Líbano
+6. Portugal
+7. Albania
+8. Turquía
+9. Australia.
 
 El resultado de este ranking tiene sentido pues todos los países listados, contienen clima mediterráneo,o bien comparten cercanía con España, o latitud geográfica. 
 
