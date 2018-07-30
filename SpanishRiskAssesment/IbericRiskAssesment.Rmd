@@ -79,7 +79,7 @@ El objetivo principal de este trabajo es utilizar diferentes herramientas de ges
 # Paquetes necesarios {.tabset}
 Antes de empezar, instalaremos los paquetes necesarios a lo largo del documento.
 ```{r echo=TRUE, results='hide', message=FALSE, warning=FALSE} 
-list.of.packages <- c("DataExplorer", "raster", "dismo", "plotly", "fmsb", "factoextra", "MASS","hypervolume","alphahull")
+list.of.packages <- c("DataExplorer", "raster", "dismo", "plotly", "fmsb", "factoextra", "MASS","hypervolume","alphahull", "dplyr")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
@@ -105,6 +105,7 @@ library(readr)
 library(hypervolume)
 library(alphahull)
 library(DataExplorer)
+library(dplyr)
 ```
 
 # Delimitación del MCI {.tabset}
@@ -462,7 +463,7 @@ filled.contour(densi,
 
 Pero, ¿Cómo podemos determinar el grado de solapamiento, teniendo en cuenta la densidad de los datos?
 
-# Determinación del riesgo invasor {.tabset}
+# Cuantificación del grado de similitud climática {.tabset}
 ##Coincidencia climática versus MCI 
 Con el fin de determinar el grado de solapamiento climático de un país cualquiera respecto al MCI, creamos hipervolúmenes a partir de los dos primeros componentes principales, que explican un 75% de la varianza, y los comparamos, obteniendo así el volumen compartido y otros índices de similitud.
 
@@ -603,12 +604,73 @@ CountryCodes$V2 <- NULL
 CountryCodes$V4 <- NULL
 Volumes <- read.csv("Volumes.csv", header = T)
 Volumes$X <- NULL
-Vol.Names <- c('Vol.MCI', 'Vol.Country', 'Vol.Intersection', 'Vol.Union', 'Vol.Unique.MCI', 'Vol.Unique.Country', 'Jaccart', 'Sorensen', 'NormVol.MCI', 'NormVol.Country', 'Dist.Centroid', 'Country.Acronym')
+Vol.Names <- c('Vol.MCI', 'Vol.Country', 'Vol.Intersection', 'Vol.Union', 'Vol.Unique.MCI', 'Vol.Unique.Country', 'Jaccard', 'Sorensen', 'NormVol.MCI', 'NormVol.Country', 'Dist.Centroid', 'Country.Acronym')
 names(Volumes) <- Vol.Names
 rownames(Volumes) <- Volumes$Country.Acronym
 names(CountryCodes) = c('Country.Name', 'V3')
 Volume_dataset <- merge(Volumes, CountryCodes, by.x = "Country.Acronym", by.y = "V3")
 write.csv(Volume_dataset, file = "Volumes_dataset.csv")
 ```
+
+# Determinación del riesgo invasor  {.tabset}
+## El *top ten* de paises de mayor riesgo
+Los diferentes índices y valores obtenidos anteriormente nos permiten ordenar los paises de forma que podamos visualizar aquellos que presentan una mayor grado similitud climática. 
+
+Cada índice nos revela caracteristicas distintas de la intersección entre los volumenes. Vamos a explorar los resultados obtenidos considerando el *top ten* de paises por cada indice. 
+
+```{r}
+rVolCount <- arrange(Volumes, desc(Vol.Country)) # Ordenado de mayor volumen a menor
+rVolCount <- rVolCount$Country.Acronym # guardamos la columna con los nombres de los paises
+
+rintersection <- arrange(Volumes, desc(Vol.Intersection)) #Ordenado de mayor interesección a menor
+rintersection <- rintersection$Country.Acronym
+
+rvoluniqmci <- arrange(Volumes, Vol.Unique.MCI) # Ordenado de menor a mayor volumen único en la Península Iberica.
+rvoluniqmci <- rvoluniqmci$Country.Acronym
+
+rvoluniqcount <- arrange(Volumes, Vol.Unique.Country) # Ordenado de menor a mayor volumen único en la Península Ibérica.
+rvoluniqcount <- rvoluniqcount$Country.Acronym
+
+rjaccard <- arrange(Volumes, desc(Jaccard)) # Ordenado de mayor a menor grado de similitud de Jacacard
+rjaccard <- rjaccard$Country.Acronym
+
+rsorensen <- arrange(Volumes, desc(Sorensen)) # Ordenado de mayor a menor grado de similitud de Sorensen
+rsorensen <- rsorensen$Country.Acronym
+
+rnormvolmci <- arrange(Volumes, NormVol.MCI) # Ordenado de menor a mayor fracción única de MCI
+rnormvolmci <- rnormvolmci$Country.Acronym
+
+rnormvolcount <- arrange(Volumes, NormVol.Country) # Ordenado de menor a mayor fracción única del país contrastado
+rnormvolcount <- rnormvolcount$Country.Acronym
+
+rdistance <- arrange(Volumes, Dist.Centroid) # Ordenado de menor a mayor distancia entre centroides
+rdistance <- rdistance$Country.Acronym
+
+ranking <- data.frame(rVolCount, rintersection, rvoluniqmci, rvoluniqcount, rjaccard, rsorensen, rnormvolmci, rnormvolcount, rdistance)
+
+names(ranking) <- c('Vol.Country', 'Vol.Intersection', 'Vol.Unique.MCI', 'Vol.Unique.Country', 'Jaccard', 'Sorensen', 'NormVol.MCI', 'NormVol.Country', 'Dist.Centroid')
+
+topten <- ranking[1:10,] #Sacamos los 10 primeros paises.
+print(topten)
+
+```
+
+
+
+
+## Mapa de riesgo mundial
+Estoy en ello (Erola)
+
+
+
+## Refinando el riesgo invasor en base a otras variables
+Explicar brevemente pasos futuros (Erola lo hace el lunes)
+
+
+
+
+# Conclusiones
+A redactar
+
 
 # Bibliografía
