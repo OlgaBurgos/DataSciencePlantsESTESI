@@ -90,7 +90,7 @@ Una vez disponibles todos los paquetes, podemos cargar las respectivas librería
 library(raster)
 library(sp)
 library(dismo)
-library(readr)
+library(Volume_datasetr)
 library(ggplot2)
 library(plotly)
 library(MASS)
@@ -108,6 +108,7 @@ library(dplyr)
 library(rgdal)
 library(leaflet)
 library(RColorBrewer)
+library(readxl)
 ```
 
 # Delimitación del MCI {.tabset}
@@ -678,16 +679,16 @@ Para ello, usaremos el paquete `leaflet`, que nos permite la creación de mapas 
 Necesitaremos también el paquete `rgdal`, para obtener csv con los datos descargados, con la función `readOGR`. Los datos deben estar en un repositorio real del ordenador para cargarlos, por ejemplo así:
 >world_spdf=readOGR(dsn= "C:/Users/Erola/Desktop/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/WorldBorders ",layer="TM_WORLD_BORDERS_SIMPL-0.3")
 
-```{r eval = FALSE, echo = FALSE}
-world_spdf=readOGR(dsn= "C:/Users/Erola/Desktop/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/WorldBorders ",layer="TM_WORLD_BORDERS_SIMPL-0.3")
+```{r eval = FALSE, echo = TRUE}
+world_spdf=readOGR(dsn= "getwd() ",layer="TM_WORLD_BORDERS_SIMPL-0.3")
 
 ```
 
 
 Combinamos los datos de los polígonos con la variable que queremos visualizar:
 
-### *ÍNDICE DE JACCARD*:
-```{r eval = FALSE, echo = FALSE}
+*ÍNDICE DE JACCARD*:
+```{r eval = FALSE, echo = TRUE}
 world_spdf@data$number<-c(1:246)
 
 dfJac <- Volumes[,c(8,13)]
@@ -714,61 +715,132 @@ leaflet(data = world_spdf1) %>%
   addLegend(pal= pal, values= ~Jaccard, opacity=0.9, title = "Jaccard (%)", position = "bottomleft" )
 ```
 
-### *ÍNDICE DE SORENSEN*:
-```{r eval = FALSE, echo = FALSE}
-world_spdf@data$number<-c(1:246)
+El resultado de éste codigo genera un gráfico interactivo que permite visualizar con zoom los valores del índice en los diferentes paises. 
+Aquí mostramos una imagen PNG del mismo, pero para acceder al gráfico interactivo seguir [este enlace](/Jaccard.html). Los valores NA corresponden a una similitud nula.
 
-dfJac <- Volumes[,c(9,13)]
-names(dfJac) <- c("Jaccard", "ISO3")
+*Grado de similitud climatica respecto la Península Ibérica*
+<center>
+![Grafico](./Plots/JaccardPNG.png)
 
-world_spdf1@data<-merge(world_spdf@data, dfJac, by= "ISO3", all.x= TRUE)
-world_spdf1@data<-arrange(world_spdf1@data, number)
-world_spdf1@data$Jaccard[ which(world_spdf1@data$Jaccard == 0)] = NA
 
-pal <- colorQuantile("YlOrRd", NULL, n = 9)
+## Origen de las actuales especies invasoras en España
+La Ley 42/2007, de 13 de diciembre, del Patrimonio Natural y de la Biodiversidad creó, en su artículo 61.1, el Catálogo Español de Especies Exóticas Invasoras en el que se incluyen todas aquellas especies exóticas invasoras que constituyan, de hecho, o puedan llegar a constituir una amenaza grave para las especies autóctonas, los hábitats o los ecosistemas, la agronomía, o para los recursos económicos asociados al uso del patrimonio natural ([Ministerio de Agricultura , Pesca y Alimentación](https://www.mapama.gob.es/es/biodiversidad/temas/conservacion-de-especies/especies-exoticas-invasoras/)).
 
-state_popup <- paste0("<strong> País: </strong>", 
-                      world_spdf1$NAME, 
-                      "<br><strong>Indice de Sorenson: </strong>", 
-                      world_spdf1$Jaccard)
+El Catálogo Español de Especies Exóticas Invasoras contempla 181 especies de diferentes grupos taxonómicos provinientes de diferentes paises. 
 
-leaflet(data = world_spdf1) %>%
-  addProviderTiles("CartoDB.Positron") %>%
-  addPolygons(fillColor = ~pal(Jaccard), 
-              fillOpacity = 0.8, 
-              color = "#BDBDC3", 
-              weight = 1, 
-              popup = state_popup) %>%
-  addLegend(pal= pal, values= ~Jaccard, opacity=0.9, title = "Sorensen (%)", position = "bottomleft" )
+Con el objetivo de comprobar si aquellos paises con mayor coincidencia climática son origen de más especies actualmente invasoras, se ha realizado una busqueda en los portales de [ISSG](http://issg.org/database/species/List.asp) y [GBIF](https://www.gbif.org/) para definir los paises de origen de las actuales invasoras. 
+
+El resultado de esta busqueda es el siguiente data frame:
+
+```{r}
+origeninvasoras <- read_excel("SpanishRiskAssesment/Datos/origeninvasoras.xlsx")
+```
+
+Recontamos el numero de ocurrencias de cada pais y lo mezclamos con 
+los datos de similitud:
+```{r}
+countriesorigen <-origeninvasoras[,7:56]
+b<-as.matrix(countriesorigen)
+a<-as.vector(b)
+a.t<-table(a)
+a.df <- as.data.frame(a.t)
+df <- mutate_all(a.df, funs(toupper))
+names(df) <- c("Country.Name", "NumSpecies")
+withsp<-merge(df, Volume_dataset, by="Country.Name", all.y = TRUE)
+withsp$NumSpecies <- as.integer(withsp$NumSpecies)
+
+```
+
+Seleccionamos el *top ten* de paises que han aportado mayor número de especies invasoras:
+
+
+```{r}
+ttorigin <- arrange(withsp, desc(NumSpecies))
+ttorigin <- data.frame(ttorigin$Country.Acronym, ttorigin$NumSpecies)
+ttorigin[1:10,] #Sacamos los 10 primeros países.
 
 ```
 
 
+Podemos representar en forma de correlación los resultados obtenidos, para determinar si la mayor similitud climática explica el número de especies invasoras que aporta ese país:
+
+*Distáncia entre centroides vs. Número de especies invasoras aportadas*
+```{r}
+withsp <- withsp[complete.cases(withsp),] 
+
+p <- ggplot(withsp, aes(x=NumSpecies, y=Dist.Centroid)) +
+  geom_point() +
+  geom_smooth(method =lm, se=FALSE )
+p + labs(x = "Número de especies invasoras en España del país considerado", y = "Distáncia entre centroides climáticos" )
+
+```
+
+
+*Valor de Índice de Jaccard vs. Número de especies invasoras aportadas*
+```{r}
+ggplot(withsp, aes(x=NumSpecies, y=Jaccard)) +
+  geom_point() +
+  geom_smooth(method =lm, se=FALSE)
+p + labs(x = "Número de especies invasoras en España del país considerado", y = "Índice de Jaccard" )
+
+```
+
+
+
 ## Refinando el riesgo invasor en base a otras variables
-A parte de la similitud del marco climático, hay otros factores que pueden resultar determinantes para la determinación del riesgo invasor. La cantidad de mercancias y personas que se desplazan de un país a otro, podría ser clave para entender en que medida realmente podrían ocurrir los desplazamientos de especies exóticas. Sin embargo, ello requiere la obtención de nuevos datos y desarrollo de nuevos modelos. De forma exploratoria presentaremos algunos modelos simples explorando datos disponibles como son la biodiversidad de cada país (que implicaria mayor probabilidad de existir una espécie que pueda ser invasora) y la distáncia entre el país y la Península Ibèrica (lo que probablemente facilite también la llegada de especies alóctonas).
+A parte de la similitud del marco climático, hay otros factores que pueden resultar determinantes para la determinación del riesgo invasor. La cantidad de mercancias y personas que se desplazan de un país a otro, podrian ser clave para entender en que medida realmente podrían ocurrir los desplazamientos de especies exóticas. Además, en los resultados presentados en el apartado anterior, hay una variabilidad muy grande, probablemente por trabajar con datos de especies invasoras de diferentes grupos taxonómicos. 
+Todo esto requiere la obtención de nuevos datos y desarrollo de nuevos modelos. De forma exploratoria presentaremos algunos modelos simples explorando datos disponibles como son la biodiversidad de cada país (que implicaria mayor probabilidad de existir una espécie que pueda ser invasora) y la distáncia entre el país y la Península Ibèrica (lo que probablemente facilite también la llegada de especies alóctonas).
 
 *BIODIVERSIDAD*:
 Existen datos de biodiversidad de especies normalizados por el tamaño del país: el [*National Biodiversity Index*](https://www.cbd.int/gbo1/annex.shtml). Los valores estan normalizados entre 1 (Màximo: Indonesia) y 0 (Mínimo: Groenlándia).
 
 Importamos los datos 
 ```{r}
+CountryData <- read_excel("SpanishRiskAssesment/Datos/CountryDataSum.xlsx", 
++     col_types = c("text", "text", "text", 
++         "text", "text", "blank", "blank", 
++         "text", "blank", "blank", "text", 
++         "blank"))
 
-
+names(CountryData)[3] <- "Country.Acronym"
+complete<- merge(Volume_dataset, CountryData, by = "Country.Acronym")
+complete <-merge(withsp, complete, by="Country.Acronym")
 
 ```
 
+Generamos el gráfico:
+```{r}
+complete1 <- complete[complete.cases(complete),]
+complete1$nbi <- as.numeric(complete1$NBI)
 
+p <- ggplot(complete1, aes(x=NumSpecies, y=nbi)) +
+  geom_point() +
+geom_smooth(method = loess, se= TRUE)
+p + labs(x = "Número de especies invasoras en España del país considerado", y = "Índice de Biodiversidad nacional" )
+```
+
+Los 10 paises con mayor valor de biodiversidad son:
+```{r}
+nbirank <- arrange(complete1, desc(nbi))
+nbirank <- data.frame(nbirank$Country.Acronym, nbirank$nbi)
+nbirank[1:10,] #Sacamos los 10 primeros países.
+
+```
 
 
 *DISTÁNCIA GEOGRÁFICA*:
 A través del portal Web [Geodatos](https://www.geodatos.net) hemos podido obtener los valores de distáncia geografica de todos los paises respecto la Península Ibérica.
 
-Importamos los datos
 ```{r}
+complete1 <- complete[complete.cases(complete),]
+complete1$distance.km <- as.numeric(complete1$distance.km)
 
-
-
+p <- ggplot(complete1, aes(x=NumSpecies, y=distance.km)) +
+  geom_point() +
+geom_smooth(method = lm, se= FALSE)
+p + labs(x = "Número de especies invasoras en España del país considerado", y = "Distáncia respecto el país de origen (km)" )
 ```
+
 
 
 # Conclusiones
