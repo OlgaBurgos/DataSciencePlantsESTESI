@@ -14,7 +14,7 @@
  
  # BIBLIOGRAFÍA
  
- [Bibliografía formato .bib] (SpanishRiskAssesment/bibliography.bib)
+ [Bibliografía formato bib] (SpanishRiskAssesment/bibliography.bib)
  
 
 
