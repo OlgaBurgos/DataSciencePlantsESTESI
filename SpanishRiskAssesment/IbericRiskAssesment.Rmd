@@ -514,7 +514,7 @@ plot(hv2dn,show.contour=TRUE,contour.kde.level=0.01)
 Una vez obtenidos los dos hipervolúmenes, utilizaremos la función `hypervolume_set` y `hypervolume_overlap_statistics`.
 La primera genera valores estadísticos computando la intersección, la unión y los componentes únicos(diferencia) de los hipervolúmenes, que podemos observar llamando la función `get_volume`
 
-La segunda función calcula los métricos de superposición para los dos hipervolúmenes.Printa directamente índices de similitud entre los dos volúmenes:
+La segunda función calcula los métricos de superposición para los dos hipervolúmenes. Imprime directamente los índices de similitud entre los dos volúmenes:
 
 >**Similitud de Jaccard**: Volumen de la intersección de un país respeto al otro, dividido por el volumen de la unión de estos países.
 
@@ -545,23 +545,25 @@ En esta figura ilustramos los diferentes índices obtenidos:
 <center>
 ![Grafico](./Plots/EsquemaResultados.png)
 
-## Bucle de cuantificación de hipervolúmenes
-En este punto, crearemos un algorítmo para poder testear la similitud del marco climático de cada país más agilmente respecto al de Peninsula Ibérica. El MCI será un valor fijo en este algoritmo, mientras que los *inputs* seran los datos climáticos de los diferentes países a testear. A partir de este bucle, generaremos un data frame que recogerá la mayoría de países del mundo con sus respectivos volumenes e índices respecto al MCI.
+## Bucle para la cuantificación sistemática de los hipervolúmenes
+En este punto, implementaremos un sencillo *for loop* para testear la similitud del marco climático de cada país respecto al de la Península Ibérica de forma rápida y sistemática. El MCI será un valor fijo en este bucle, mientras que los *inputs* seran los datos climáticos de los diferentes países a testear. A partir de este bucle, generaremos un *DataFrame* que recogerá los volúmenes e índices respecto al MCI de la mayoría de países del mundo. Primero cargaremos una lista con los nombres y los acrónimos de todos los países del mundo:
 
-Cargamos una lista con todos los países del mundo:
 ```{r}
 CountryCodes <- read.csv("CountryCodes.csv", header=FALSE, sep=";", skip = 1)
 ```
 
-GIAN! EXPLICA porque quitamos estos paises
+Decimos "mayoría" de países porque los datos climáticos de algunos de ellos no presentan una distribución geográfica suficientemente amplia como para ser procesados correctamente por la función `hypervolume_gaussian` del paquete `hypervolume`. Para evitar que el bucle se interrumpa, debemos eliminar manualmente dichos paises:
 
 ```{r}
 black_list = list('ASM', 'AIA', 'ATA', 'ABW', 'BMU', 'BVT', 'IOT', 'CYM', 'CXR', 'CCK', 'GIB', 'GRD', 'KIR', 'LIE', 'MAC', 'MDV', 'MLT', 'MHL', 'FSM', 'MCO', 'MSR', 'NRU', 'ANT', 'NIU', 'NFK', 'MNP', 'PCN', 'RUS', 'SHN', 'KNA', 'LCA', 'SPM', 'VCT', 'SMR', 'SCG', 'SYC', 'TKL', 'TUV', 'UMI', 'VAT', 'VGB', 'WLF')
 CountryCodesSum <- CountryCodes[ ! CountryCodes$V3 %in% black_list, ]
 ```
 
-Inicializamos el bucle
-(No va a ser ejecutado en el html)
+Como puede verse, la mayoría de los paises de la lista `black_list` son muy pequeños, como por ejemplo SMR (San Marino), GIB (Gibraltar) o VAT (Ciudad del Vaticano). También aparecen muchos estados insulares, como es el caso de CYM (Islas Caimán), BMU (Bermudas) o SYC (Seychelles). ATA (Antártida) aparece en esta lista, no por tener una superficie pequeña (que no es el caso), sino por la escasa distribución geogràfica de sus datos climáticos.
+
+Un caso aparte es el de RUS (Rusia), que ha sido colocada en la `black_list` debido a la extremadamente amplia distrubución geográfica de sus datos climáticos (debido a su gran extensión). Los ordenadores con los que hemos trabajado no disponían de memoria suficiente como para cargar los datos generados por la función `hypervolume_gaussian` aplicada a Rusia.
+
+A continuación mostraremos el código del blucle que hemos implementado. Es importante aclarar que el siguiente bloque de código ha sido configurado para no ser ejecutado mediante la opción `eval = FALSE`:
 
 ```{r eval = FALSE, echo = FALSE}
 my_df <- data.frame()
@@ -598,8 +600,14 @@ print(my_df)
 rm(counter)
 write.csv(my_df, file = "Volumes.csv")
 ```
- 
-Reintroducimos los resultados:
+
+El bucle recorre todos los paises en un lapso de unas 7 horas aproximadamente. Esto trabajando con una *workstation* de la siguientes caracteríticas:
+* Memoria RAM: 64 GB.
+* Disco duro SSD: 256 GB.
+* Procesador: Processador: Intel Core i7-7700 @ 3.6 GHz de 4 núcleos.
+
+Como ya hemos avanzado, el *output* de nuestro bucle es un *DataFrame* llamado `Volumes` que incluye todos los índices y volúmenes proporcionados por la función `hypervolume_gaussian`. Finalmete, editaremos brevemente el *DataFrame* `Volumes` con la intención de llegar a un *DataFrame* un poco más leíble y *friendly*.
+
 ```{r}
 CountryCodes$V2 <- NULL
 CountryCodes$V4 <- NULL
