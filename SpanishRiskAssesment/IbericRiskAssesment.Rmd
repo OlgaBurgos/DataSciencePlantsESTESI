@@ -1,5 +1,5 @@
 ---
-title: "Valoración del riesgo invasor en la Península Ibérica"
+title: "Valoración del riesgo invasor en la Península Ibérica en base a la similitud climática"
 author: "Erola Fenollosa, Olga Burgos, Gianluca Arauz, Ramon Diaz"
 date: "July, 2018"
 output:
@@ -79,7 +79,7 @@ El objetivo principal de este trabajo es utilizar diferentes herramientas de ges
 # Paquetes necesarios {.tabset}
 Antes de empezar, instalaremos los paquetes necesarios a lo largo del documento.
 ```{r echo=TRUE, results='hide', message=FALSE, warning=FALSE} 
-list.of.packages <- c("DataExplorer", "raster", "dismo", "plotly", "fmsb", "factoextra", "MASS","hypervolume","alphahull", "dplyr")
+list.of.packages <- c("DataExplorer", "raster", "dismo", "plotly", "fmsb", "factoextra", "MASS","hypervolume","alphahull", "dplyr", "rgdal", "leaflet", "RColorBrewer")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
@@ -106,6 +106,9 @@ library(hypervolume)
 library(alphahull)
 library(DataExplorer)
 library(dplyr)
+library(rgdal)
+library(leaflet)
+library(RColorBrewer)
 ```
 
 # Delimitación del MCI {.tabset}
@@ -598,7 +601,6 @@ write.csv(my_df, file = "Volumes.csv")
 ```
  
 Reintroducimos los resultados:
-
 ```{r}
 CountryCodes$V2 <- NULL
 CountryCodes$V4 <- NULL
@@ -659,18 +661,107 @@ print(topten)
 
 
 ## Mapa de riesgo mundial
-Estoy en ello (Erola)
+La mejor forma de presentar los valores obtenidos de similitud entre paises es diseñar un mapa mundial con diferentes colores para aquellas zonas con mayor similitud climatica con la Península Ibérica, y por lo tanto mayor riesgo invasor.
 
+Para ello, usaremos el paquete `leaflet`, que nos permite la creación de mapas interactivos. En primer lugar descargamos los datos de fronteras y poligonos de todos los paises del mundo desde el portal Web de [Thematicmapping](http://thematicmapping.org/downloads/world_borders.php).
+
+```{r}
+world_spdf=readOGR(dsn= "C:/Users/Erola/Desktop/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/WorldBorders ",layer="TM_WORLD_BORDERS_SIMPL-0.3")
+
+```
+
+
+Combinamos los datos de los polígonos con la variable que queremos visualizar:
+
+### *ÍNDICE DE JACCARD*:
+```{r}
+world_spdf@data$number<-c(1:246)
+
+dfJac <- Volumes[,c(8,13)]
+names(dfJac) <- c("Jaccard", "ISO3")
+
+world_spdf1@data<-merge(world_spdf@data, dfJac, by= "ISO3", all.x= TRUE)
+world_spdf1@data<-arrange(world_spdf1@data, number)
+world_spdf1@data$Jaccard[ which(world_spdf1@data$Jaccard == 0)] = NA
+
+pal <- colorQuantile("YlOrRd", NULL, n = 9)
+
+state_popup <- paste0("<strong> País: </strong>", 
+                      world_spdf1$NAME, 
+                      "<br><strong>Indice de Jaccard: </strong>", 
+                      world_spdf1$Jaccard)
+
+leaflet(data = world_spdf1) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(fillColor = ~pal(Jaccard), 
+              fillOpacity = 0.8, 
+              color = "#BDBDC3", 
+              weight = 1, 
+              popup = state_popup) %>%
+  addLegend(pal= pal, values= ~Jaccard, opacity=0.9, title = "Jaccard (%)", position = "bottomleft" )
+```
+
+### *ÍNDICE DE SORENSEN*:
+```{r}
+world_spdf@data$number<-c(1:246)
+
+dfJac <- Volumes[,c(9,13)]
+names(dfJac) <- c("Jaccard", "ISO3")
+
+world_spdf1@data<-merge(world_spdf@data, dfJac, by= "ISO3", all.x= TRUE)
+world_spdf1@data<-arrange(world_spdf1@data, number)
+world_spdf1@data$Jaccard[ which(world_spdf1@data$Jaccard == 0)] = NA
+
+pal <- colorQuantile("YlOrRd", NULL, n = 9)
+
+state_popup <- paste0("<strong> País: </strong>", 
+                      world_spdf1$NAME, 
+                      "<br><strong>Indice de Sorenson: </strong>", 
+                      world_spdf1$Jaccard)
+
+leaflet(data = world_spdf1) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(fillColor = ~pal(Jaccard), 
+              fillOpacity = 0.8, 
+              color = "#BDBDC3", 
+              weight = 1, 
+              popup = state_popup) %>%
+  addLegend(pal= pal, values= ~Jaccard, opacity=0.9, title = "Sorensen (%)", position = "bottomleft" )
+
+```
 
 
 ## Refinando el riesgo invasor en base a otras variables
-Explicar brevemente pasos futuros (Erola lo hace el lunes)
+A parte de la similitud del marco climático, hay otros factores que pueden resultar determinantes para la determinación del riesgo invasor. La cantidad de mercancias y personas que se desplazan de un pais a otro, podria ser clave para entender en que medida realmente podrian ocurrir los desplazamientos de especies exoticas. Sin embargo ello requiere la obtención de nuevos datos y desarrollo de nuevos modelos. De forma exploratoria presentaremos algunos modelos simples explorando datos disponibles como son la biodiversidad de cada país (que implicaria mayor probabilidad de existir una espécie que pueda ser invasora) y la distáncia entre el país y la Península Ibèrica (lo que probablemente facilite tambien la llegada de espècies alóctonas).
+
+*BIODIVERSIDAD*:
+Existen datos de biodiversidad de especies normalizados por el tamaño del pais: el [*National Biodiversity Index*](https://www.cbd.int/gbo1/annex.shtml). Los valores estan normalizados entre 1 (Màximo: Indonesia) y 0 (Mínimo: Groenlándia).
+
+Importamos los datos 
+```{r}
 
 
+
+```
+
+
+
+
+*DISTÁNCIA GEOGRÁFICA*:
+A través del portal Web [Geodatos](https://www.geodatos.net) hemos podido obtener los valores de distáncia geografica de todos los paises respecto la Península Ibérica.
+
+Importamos los datos
+```{r}
+
+
+
+```
 
 
 # Conclusiones
 A redactar
+
+
 
 
 # Bibliografía
