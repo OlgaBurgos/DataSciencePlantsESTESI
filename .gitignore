@@ -1,6 +1,7 @@
 /SpanishRiskAssesment/Bibliografía
 /SpanishRiskAssesment/wc2-5
 /SpanishRiskAssesment/wc10
+/SpanishRiskAssesment/Datos
 
 .Rproj.user
 .Rhistory
@@ -8,7 +9,7 @@
 .Ruserdata
 DataSciencePlantsESTESI.Rproj
 DataSciencePlantsESTESI2.Rproj
-.gitignore
+
 wc10
 GADM_2.8_ESP_adm0.rds
 GADM_2.8_RUS_adm0.rds
