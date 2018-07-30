@@ -82,7 +82,6 @@ Antes de empezar, instalaremos los paquetes necesarios a lo largo del documento.
 list.of.packages <- c("DataExplorer", "raster", "dismo", "plotly", "fmsb", "factoextra", "MASS","hypervolume","alphahull", "dplyr", "rgdal", "leaflet", "RColorBrewer")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
-
 ```
 
 Una vez disponibles todos los paquetes, podemos cargar las respectivas librerías.
