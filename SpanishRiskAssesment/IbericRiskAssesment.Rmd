@@ -474,7 +474,7 @@ Para ello, utilizaremos el paquete `hypervolume` (@Blonder2017)(@BlonderB2017)
 
 ##Definiendo el marco climático estático
 
-Una vez obtenidos los datos del marco climático español, realizado el análisis de componentes principales y creado un data frame con los resultados de ésta, definiremos el primer hipervolumen.
+Una vez obtenidos los datos del MCI, realizado el análisis de componentes principales y creado un data frame con los resultados de éste, definiremos el primer hipervolumen.
 Seguidamente recordamos la forma de realizar los pasos mencionados.
 
 
@@ -495,7 +495,7 @@ edf$pais <- "Spain"
 El hipervolumen de n-dimensiones es una medida que generaliza el concepto de volumen a espacios de dimensión superior a tres. 
 En nuestro caso utilizaremos un `Gaussian KDE`(kernel density estimation) en el que todos los puntos contribuyen a la densidad de la probabilidad global.
 
-En la función `hypervolume_gaussian` por defecto, se le asigna un umbral del 95% asegurando la máxima probabilidad en la estimación de la densidad.
+En la función `hypervolume_gaussian`, por defecto, se le asigna un umbral del 95%, asegurando la máxima probabilidad en la estimación de la densidad.
 Además generaremos un plot para visualizar el hipervolumen en el que se genera un centroide.
 
 ```{r fig.align='center'}
@@ -505,7 +505,7 @@ plot(hv1sp,show.contour=TRUE,contour.kde.level=0.01)
 ```
 
 ## Definiendo el marco climático dinámico
-El siguiente paso será generar un hipervolumen para cada uno de los países que testaremos frente el marco climático ibérico español. Por ejemplo creando un hipervolúmen con los datos de Dinamarca.
+El siguiente paso será generar un hipervolumen para cada uno de los países que testearemos frente al MCI. Por ejemplo, creando un hipervolúmen con los datos de Dinamarca.
 
 ```{r fig.align='center'}
 hv2dn = hypervolume_gaussian(data=subset(df,pais=="Din")[1:238, 1:2])
@@ -536,20 +536,20 @@ dist<- hypervolume_distance(hv1sp, hv2dn, type='centroid')
 ```
 
 ##*Outputs*
-Con los datos estadísticos obtenidos anteriormente, podemos generar una lista para facilitar la visualización de los diferentes índices y volumenes.
+Con los datos estadísticos obtenidos anteriormente, podemos generar una lista para facilitar la visualización de los diferentes índices y volúmenes.
 
 ```{r fig.align='center'}
 values <- c(volumes, overl, dist)
 ```
 
-En esta figura ilustramos los diferentes indices obtenidos:
+En esta figura ilustramos los diferentes índices obtenidos:
 <center>
 ![Grafico](./Plots/EsquemaResultados.png)
 
 ## Bucle de cuantificación de hipervolúmenes
-En este punto, crearemos un algoritmo para poder testear la similitud del marco climático de cada país más agilmente respecto al de Peninsula Ibérica. El marco climático Iberico será un valor fijo en este algoritmo, mientras que los *inputs* seran los datos climáticos de los diferentes países a testear. A partir de este bucle, generaremos un data frame que recogerá la mayoría de países del mundo con sus respectivos volumenes e indices respecto al marco climático Ibérico.
+En este punto, crearemos un algorítmo para poder testear la similitud del marco climático de cada país más agilmente respecto al de Peninsula Ibérica. El MCI será un valor fijo en este algoritmo, mientras que los *inputs* seran los datos climáticos de los diferentes países a testear. A partir de este bucle, generaremos un data frame que recogerá la mayoría de países del mundo con sus respectivos volumenes e índices respecto al MCI.
 
-Cargamos una lista con todos los paises del mundo:
+Cargamos una lista con todos los países del mundo:
 ```{r}
 CountryCodes <- read.csv("CountryCodes.csv", header=FALSE, sep=";", skip = 1)
 ```
@@ -571,7 +571,7 @@ counter=1
 for(ID_cntry in CountryCodesSum$V3) {
   print(ID_cntry)
 
-countrybound <- getData('GADM', country=ID_cntry, level=0) #Entra el codigo del pais
+countrybound <- getData('GADM', country=ID_cntry, level=0) #Entra el código del país
 s<- crop(worldata, countrybound)
 s2 <- mask(s, countrybound)
 marcoclim.country <- as.data.frame(s2)
@@ -586,7 +586,7 @@ ID_label <- paste("Spain vs.", ID_cntry, sep=' ')
 idf$pais <- ID_label
 df <- rbind(edf,idf)
 hv2dn = hypervolume_gaussian(data = subset(df,pais == ID_label)[1:nrow(idf), 1:2]) 
-setH <-hypervolume_set(hv1sp, hv2dn, check.memory = FALSE) #Genereamos valores estad??sticos
+setH <-hypervolume_set(hv1sp, hv2dn, check.memory = FALSE) 
 volumes<-get_volume(setH)
 overl<- hypervolume_overlap_statistics(setH)
 dist<- hypervolume_distance(hv1sp, hv2dn, type='centroid')
@@ -615,14 +615,14 @@ write.csv(Volume_dataset, file = "Volumes_dataset.csv")
 ```
 
 # Determinación del riesgo invasor  {.tabset}
-## El *top ten* de paises de mayor riesgo
-Los diferentes índices y valores obtenidos anteriormente nos permiten ordenar los paises de forma que podamos visualizar aquellos que presentan una mayor grado similitud climática. 
+## El *top ten* de países de mayor riesgo
+Los diferentes índices y valores obtenidos anteriormente nos permiten ordenar los países de forma que podamos visualizar aquellos que presentan un mayor grado de similitud climática. 
 
-Cada índice nos revela caracteristicas distintas de la intersección entre los volumenes. Vamos a explorar los resultados obtenidos considerando el *top ten* de paises por cada indice. 
+Cada índice nos revela caracteristicas distintas de la intersección entre los volúmenes. Vamos a explorar los resultados obtenidos considerando el *top ten* de países por cada índice. 
 
 ```{r}
 rVolCount <- arrange(Volumes, desc(Vol.Country)) # Ordenado de mayor volumen a menor
-rVolCount <- rVolCount$Country.Acronym # guardamos la columna con los nombres de los paises
+rVolCount <- rVolCount$Country.Acronym # guardamos la columna con los nombres de los países
 
 rintersection <- arrange(Volumes, desc(Vol.Intersection)) #Ordenado de mayor interesección a menor
 rintersection <- rintersection$Country.Acronym
@@ -652,7 +652,7 @@ ranking <- data.frame(rVolCount, rintersection, rvoluniqmci, rvoluniqcount, rjac
 
 names(ranking) <- c('Vol.Country', 'Vol.Intersection', 'Vol.Unique.MCI', 'Vol.Unique.Country', 'Jaccard', 'Sorensen', 'NormVol.MCI', 'NormVol.Country', 'Dist.Centroid')
 
-topten <- ranking[1:10,] #Sacamos los 10 primeros paises.
+topten <- ranking[1:10,] #Sacamos los 10 primeros países.
 print(topten)
 
 ```
@@ -661,9 +661,9 @@ print(topten)
 
 
 ## Mapa de riesgo mundial
-La mejor forma de presentar los valores obtenidos de similitud entre paises es diseñar un mapa mundial con diferentes colores para aquellas zonas con mayor similitud climatica con la Península Ibérica, y por lo tanto mayor riesgo invasor.
+La mejor forma de presentar los valores obtenidos de similitud entre países es diseñar un mapa mundial con diferentes colores para aquellas zonas con mayor similitud climática con la Península Ibérica, y por lo tanto mayor riesgo invasor.
 
-Para ello, usaremos el paquete `leaflet`, que nos permite la creación de mapas interactivos. En primer lugar descargamos los datos de fronteras y poligonos de todos los paises del mundo desde el portal Web de [Thematicmapping](http://thematicmapping.org/downloads/world_borders.php).
+Para ello, usaremos el paquete `leaflet`, que nos permite la creación de mapas interactivos. En primer lugar descargamos los datos de fronteras y polígonos de todos los países del mundo desde el portal Web de [Thematicmapping](http://thematicmapping.org/downloads/world_borders.php).
 
 ```{r}
 world_spdf=readOGR(dsn= "C:/Users/Erola/Desktop/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/WorldBorders ",layer="TM_WORLD_BORDERS_SIMPL-0.3")
@@ -732,10 +732,10 @@ leaflet(data = world_spdf1) %>%
 
 
 ## Refinando el riesgo invasor en base a otras variables
-A parte de la similitud del marco climático, hay otros factores que pueden resultar determinantes para la determinación del riesgo invasor. La cantidad de mercancias y personas que se desplazan de un pais a otro, podria ser clave para entender en que medida realmente podrian ocurrir los desplazamientos de especies exoticas. Sin embargo ello requiere la obtención de nuevos datos y desarrollo de nuevos modelos. De forma exploratoria presentaremos algunos modelos simples explorando datos disponibles como son la biodiversidad de cada país (que implicaria mayor probabilidad de existir una espécie que pueda ser invasora) y la distáncia entre el país y la Península Ibèrica (lo que probablemente facilite tambien la llegada de espècies alóctonas).
+A parte de la similitud del marco climático, hay otros factores que pueden resultar determinantes para la determinación del riesgo invasor. La cantidad de mercancias y personas que se desplazan de un país a otro, podría ser clave para entender en que medida realmente podrían ocurrir los desplazamientos de especies exóticas. Sin embargo, ello requiere la obtención de nuevos datos y desarrollo de nuevos modelos. De forma exploratoria presentaremos algunos modelos simples explorando datos disponibles como son la biodiversidad de cada país (que implicaria mayor probabilidad de existir una espécie que pueda ser invasora) y la distáncia entre el país y la Península Ibèrica (lo que probablemente facilite también la llegada de especies alóctonas).
 
 *BIODIVERSIDAD*:
-Existen datos de biodiversidad de especies normalizados por el tamaño del pais: el [*National Biodiversity Index*](https://www.cbd.int/gbo1/annex.shtml). Los valores estan normalizados entre 1 (Màximo: Indonesia) y 0 (Mínimo: Groenlándia).
+Existen datos de biodiversidad de especies normalizados por el tamaño del país: el [*National Biodiversity Index*](https://www.cbd.int/gbo1/annex.shtml). Los valores estan normalizados entre 1 (Màximo: Indonesia) y 0 (Mínimo: Groenlándia).
 
 Importamos los datos 
 ```{r}
