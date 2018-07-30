@@ -665,7 +665,7 @@ La mejor forma de presentar los valores obtenidos de similitud entre países es 
 
 Para ello, usaremos el paquete `leaflet`, que nos permite la creación de mapas interactivos. En primer lugar descargamos los datos de fronteras y polígonos de todos los países del mundo desde el portal Web de [Thematicmapping](http://thematicmapping.org/downloads/world_borders.php).
 
-```{r}
+```{r eval = FALSE, echo = FALSE}
 world_spdf=readOGR(dsn= "C:/Users/Erola/Desktop/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/WorldBorders ",layer="TM_WORLD_BORDERS_SIMPL-0.3")
 
 ```
@@ -674,7 +674,7 @@ world_spdf=readOGR(dsn= "C:/Users/Erola/Desktop/DataSciencePlantsESTESI/SpanishR
 Combinamos los datos de los polígonos con la variable que queremos visualizar:
 
 ### *ÍNDICE DE JACCARD*:
-```{r}
+```{r eval = FALSE, echo = FALSE}
 world_spdf@data$number<-c(1:246)
 
 dfJac <- Volumes[,c(8,13)]
@@ -702,7 +702,7 @@ leaflet(data = world_spdf1) %>%
 ```
 
 ### *ÍNDICE DE SORENSEN*:
-```{r}
+```{r eval = FALSE, echo = FALSE}
 world_spdf@data$number<-c(1:246)
 
 dfJac <- Volumes[,c(9,13)]
