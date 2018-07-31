@@ -121,8 +121,9 @@ En primer lugar descargaremos el *dataset* de la base de datos globales [WorldCl
 
 ```{r,fig.align='center',out.extra='angle=90'}
 worldata <- getData("worldclim",var="bio", res=10)
+worldata_25 <-getData("worldclim",var="bio",res=2.5)
 
-plot (worldata$bio1,
+plot (worldata_25$bio1,
    main = "Mapa de la temperatura media (BIO1) global",
    xlab = "Longitud (ºC)",
    ylab = "Latitud (ºC)")
@@ -132,7 +133,7 @@ Los datos de `worldata` se encuentran en formato rasterizado. Ahora debemos sele
 
 ```{r, fig.align='center', out.extra='angle=90'}
 e <- extent(-10, 4, 36, 44)
-s.crop <- crop(worldata, e)
+s.crop <- crop(worldata_25, e)
 
 plot (s.crop$bio1,
    main = "Mapa de la temperatura media (BIO1) en la Península Ibérica",
@@ -142,7 +143,7 @@ plot (s.crop$bio1,
 El archivo `s.crop` también se encuentra en formato rasterizado. Para trabajar más cómodamente, construiremos un *dataframe* llamado `marcoclim`, definiendo los nombres de las variables bioclimáticas:
 
 ```{r}
-
+s.crop <- crop(worldata, e)
 marcoclim <- as.data.frame(s.crop)
 
 BIOs <- paste('BIO', (1:19), sep = '')
@@ -381,7 +382,8 @@ s2<-as.matrix(s2)
 marcoclim.denmark <- as.data.frame(s2)
 names(marcoclim.denmark) <- BIOs
 marcoclim.denmark <- marcoclim.denmark[complete.cases(marcoclim.denmark),]
-plot (s$bio1,
+h<- crop(worldata_25, denmark)
+plot (h$bio1,
    main = "Mapa de la temperatura media (BIO1) en Dinamarca",
    xlab = "Longitud (ºC)",
    ylab = "Latitud (ºC)")
@@ -573,10 +575,10 @@ write.csv(Volume_dataset, file = "Volumes_dataset.csv")
 ```
 
 # Determinación del riesgo invasor  {.tabset}
-## El *top ten* de países de mayor riesgo
+## El *top 10* de países de mayor riesgo
 Los diferentes índices y valores obtenidos anteriormente nos permiten ordenar los países de forma que podamos visualizar aquellos que presentan un mayor grado de similitud climática. 
 
-Cada índice nos revela características distintas de la intersección entre los volúmenes. Vamos a explorar los resultados obtenidos considerando el *top ten* de países por cada índice. 
+Cada índice nos revela características distintas de la intersección entre los volúmenes. Vamos a explorar los resultados obtenidos considerando el *top 10* de países por cada índice. 
 
 ```{r}
 
@@ -700,7 +702,7 @@ withsp$NumSpecies <- as.integer(withsp$NumSpecies)
 
 ```
 
-Seleccionamos el *top ten* de países que han aportado mayor número de especies invasoras:
+Seleccionamos el *top 10* de países que han aportado mayor número de especies invasoras:
 
 
 ```{r}
@@ -791,12 +793,11 @@ Durante el desarrollo de este trabajo, hemos aprendido a utilizar distintas herr
 Distintos paquetes de `R`y algunas bases de datos disponibles *on-line*, referentes a variables bioclimáticas de las distintas regiones del planeta, nos han permitido desarrollar un estudio que consideramos muy útil para determinar riesgo invasor, y que sienta las bases de posibles proyectos futuros de evaluación de este tipo.
 Estos resultados, ayudarían al entendimiento de la problemática relacionada con la pérdida de hábitat y diversidad y podrían mejorar políticas de gestión que protejan o controlen la entrada y salida de especies con potencial invasor, protegiendo así la biodiversidad de nuestro país y también del resto. 
 
-Fijándonos en el *ranking* que hemos obtenido, podemos encontrar los países con más riesgo respecto a la Península Ibérica, dependiendo del métrico o índice al que atendamos. En nuestro caso, hemos determinado el índice de Jaccard y Sorensen como los más representativos de la similitud de volumenes para la selección de estos países con condiciones más similares y por tanto de riesgo.
-Como podemos apreciar en los últimos mapas, lo países ordenados de mayor a menor riesgo para la Península Ibérica son:
+Fijándonos en los *rankings* que hemos obtenido, podemos encontrar diferentes países con más riesgo respecto a la Península Ibérica, dependiendo del métrico o índice al que atendamos. En nuestro caso, hemos determinado el **índice de Jaccard**  como el parámetro más representativo de la similitud de volúmenes para la selección de estos países con condiciones más similares y por tanto de riesgo. Como podemos apreciar en el último mapa, lo países ordenados de mayor a menor riesgo para la Península Ibérica son:
 
 1. Argentina
 2. Grecia
-3. Sur África
+3. Sudáfrica
 4. Italia
 5. Líbano
 6. Portugal
@@ -804,17 +805,19 @@ Como podemos apreciar en los últimos mapas, lo países ordenados de mayor a men
 8. Turquía
 9. Australia.
 
-El resultado de este ranking tiene sentido pues todos los países listados, contienen clima mediterráneo, o bien comparten cercanía con España, o latitud geográfica. 
+El resultado de este ranking tiene sentido pues todos los países listados, contienen **clima mediterráneo**, o bien comparten cercanía con España, o latitud geográfica. 
 
-Algunos de estos países también constan en el ranquing de países.... 
-- NUM SPECIES
-- BIODIVER
-- PROXIMIDAD
+Teniendo en cuenta los otros *rankings* de número de especies fuente, de biodiversidad y de distancia geográfica, podemos ir más allá en la evaluación del riesgo invasor. En primer lugar, la mitad de países que aparecen en la lista de los 10 países que más especies invasoras han aportado a España, también aparecen en los *top 10* de los parámetros de similitud medidos. 
+Por ejemplo, **Argentina** es el quinto país del que provienen más especies invasoras y a la vez es el país con mayor índice de Jaccard, es decir, más parecido climáticamente a la península ibérica. 
+En segundo lugar, atendiendo la biodiversidad presente respecto a la superficie del país, podemos observar como uno de los países que se encuentra en el *top 10* del índice de Jaccard, **Australia**, también lo está en el *top 10* de mayor biodiversidad. Es decir, Australia presenta un riesgo añadido a parte de la similitud climática ya que aumenta la probabilidad de que alguna de las especies llegue a ser invasora en la península ibérica.
+Otro aspecto interesante a comentar en referencia a los datos de biodiversidad, sería que de la lista del *top 10* de países con mayor volumen climático (proyectado sobre la península ibérica), algunos se corresponden con los países de mayor biodiversidad mundial, confirmando la relación ya descrita de mayor biodiversidad en lugares climáticamente más diversos. 
 
+Si asumimos que el número de especies invasoras en España viene definido por distintos factores, podríamos evaluar la correlación de cada uno de ellos con ese número. Por ejemplo, según nuestros resultados observamos que a mayor similitud (índice de Jaccard y distancia entre centroides), mayor número de especies invasoras provenientes de ese país. A mayor biodiversidad nacional se ha observado una tendencia a incrementar el número de especies invasoras que han llegado a la península ibérica. Por último, atendiendo a la distancia entre otros países con España observamos que a menor distancia, menor número de especies invasoras seguramente porque los países o regiones cercanas forman parte de la distribución ecológica de las especies que se encuentran en nuestro país o dicho de otra forma, no tendrían carácter invasor por su probable cercanía filogenética y similitud biogeográfica. 
 
+Finalmente, nos gustaría resaltar las múltiples posibilidades en cuanto a las variables que se podrían tener en cuenta para seguir evaluando el riesgo, teniendo en cuenta lo desarrollado y obtenido en este trabajo. Por ejemplo, testeo del riesgo invasor de especies animales o plantas a nivel individual y taxonómico o la determinación del riesgo en base al movimiento de ciudadanos o mercancía entre países.
 
+Visto en perspectiva, el presente trabajo representa una primera aproximación de un método para valorar el riesgo invasor desde un punto de vista del *data science*, una ciencia emergente con gran cantidad de herramientas y en constante evolución que con el tiempo, permitirán el desarrollo de modelos más transversales y de mayor complejidad.
 
-Finalmente, nos gustaría resaltar las múltiples posibilidades en cuanto a las variables que se podrían tener en cuenta para seguir evaluando el riesgo, teniendo en cuenta lo desarrollado y obtenido en este trabajo.Por ejemplo, testeo del riesgo invasor de especies animales o plantas a nivel individual, o la determinación del riesgo en base al movimiento de ciudadanos o mercancía entre países, o en base a la cercanía en kilómetros de los territorios.
 
 
 
