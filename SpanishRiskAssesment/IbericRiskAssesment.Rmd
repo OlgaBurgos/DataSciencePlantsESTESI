@@ -447,7 +447,7 @@ En la función `hypervolume_gaussian`, por defecto, se le asigna un umbral del 9
 Además generaremos un plot para visualizar el hipervolumen en el que se genera un centroide (en rojo al centro del volumen).
 
 ```{r fig.align='center'}
-hv1sp = hypervolume_gaussian(data=subset(df,pais=="PenIberica")[1:41573, 1:2])
+hv1sp = hypervolume_gaussian(data=subset(df,pais=="PenIberica")[1:2730, 1:2])
 plot(hv1sp,show.contour=TRUE,contour.kde.level=0.01)
 
 ```
@@ -456,7 +456,7 @@ plot(hv1sp,show.contour=TRUE,contour.kde.level=0.01)
 El siguiente paso será generar un hipervolumen para cada uno de los países que testearemos frente al MCI. Por ejemplo, creamos un hipervolúmen con los datos de Dinamarca.
 
 ```{r fig.align='center'}
-hv2dn = hypervolume_gaussian(data=subset(df,pais=="Dinamarca")[1:3571, 1:2])
+hv2dn = hypervolume_gaussian(data=subset(df,pais=="Dinamarca")[1:238, 1:2])
 plot(hv2dn,show.contour=TRUE,contour.kde.level=0.01)
 ```
 
