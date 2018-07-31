@@ -65,7 +65,7 @@ El objetivo principal de este trabajo es utilizar diferentes herramientas de ges
 
 - Definir el marco climático delimitado por el espacio geográfico de la Península Ibérica.
 - Cuantificar el grado de similitud climática de todos los países del mundo con el clima de la Península Ibérica.
-- Determinar si hubiera sido posible predecir la invasión de las especies invasoras actuales en España teniendo en cuenta los valores de similitud climática con los países de origen.
+- Determinar si los paises con mayor similitud climática son tambien fuente de mayores espécies invasoras en España.
 
 
 ## Definiciones
@@ -75,9 +75,14 @@ El objetivo principal de este trabajo es utilizar diferentes herramientas de ges
 
 >**Nicho climático**: Espacio multidimensional definido por los valores de diferentes variables bioclimáticas de los puntos de presencia de una especie.
 
->**Especie potencialmente invasora en la Peninsula Ibérica**: Especie cuyo nicho climático está comprendido dentro del MCI.
 
 # Paquetes necesarios {.tabset}
+La versión de R con la que se ha trabajado es:
+```{r}
+Rv <- R.Version()
+Rv$version.string
+```
+
 Antes de empezar, instalaremos los paquetes necesarios a lo largo del documento.
 ```{r echo=TRUE, results='hide', message=FALSE, warning=FALSE} 
 list.of.packages <- c("DataExplorer", "raster", "dismo", "plotly", "fmsb", "factoextra", "MASS","hypervolume","alphahull", "dplyr", "rgdal", "leaflet", "RColorBrewer")
@@ -112,7 +117,7 @@ library(readxl)
 ```
 
 # Delimitación del MCI {.tabset}
-En primer lugar descargaremos el *dataset* de la base de datos globales [WorldClim](http://worldclim.org/). Elegiremos las [19 variables bioclimáticas](http://worldclim.org/bioclim) con una resolución geográfica de 10' (minutos de grado) ya que resoluciones mayores conllevan demasiado esfuerzo computacional. El argumento `var = "bio"` de la función `getData()` reclama dichas variables bioclimáticas. El portal WorldClim incluye variables climáticas teniendo en cuenta un contexto de cambio climático. Más adelante se pueden testear las diferencias. Las variables referentes a la temperatura están multiplicadas por 10.
+En primer lugar descargaremos el *dataset* de la base de datos globales [WorldClim](http://worldclim.org/) que ofrece [19 variables bioclimáticas](http://worldclim.org/bioclim) con una resolución geográfica de 10' (minutos de grado) ya que resoluciones mayores conllevan demasiado esfuerzo computacional. El argumento `var = "bio"` de la función `getData()` reclama dichas variables bioclimáticas. Las variables referentes a la temperatura están multiplicadas por 10.
 
 ```{r,fig.align='center',out.extra='angle=90'}
 worldata <- getData("worldclim",var="bio", res=10)
@@ -156,8 +161,6 @@ Para no perder tiempo descargando cada vez los datos del marcoclim y preparándo
 ```{r warning=FALSE}
 marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
-
-head(marcoclim)
 ```
 
 Antes de continuar trabajando, necesitamos hacernos una idea de cómo son los datos, para ello realizamos un pequeño análisis exploratorio y *data wrangling*.
@@ -170,6 +173,7 @@ En nuestro caso, eliminamos los missing values del marcoclim.
 ```{r fig.align='center'}
 marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA's.
 marcoclim <- na.omit(marcoclim)
+head(marcoclim 
 ```
 
 ## Estructura de los datos
@@ -180,7 +184,7 @@ plot_str(marcoclim) #estructura de los datos
 plot_histogram(marcoclim) 
 ```
 
-## Corralación entre variables
+## Correlación entre variables
 
 ```{r output.lines=20, fig.align='center', warning=FALSE}
 cor(marcoclim) # Idea de la correlación de unas variables con otras.
@@ -191,22 +195,20 @@ plot_correlation(marcoclim) #para visualizar mejor la correlación
 
 Ahora, podemos representar los datos obtenidos, dependiendo de las variables que nos interesa mostrar:
 
-Para generar un gráfico con temperatura y precipitación
+Para generar un gráfico con temperatura y precipitación:
 
 ```{r fig.align='center'}
 plot(marcoclim$BIO1~marcoclim$BIO12, pch=19, col="blue", xlab="Precipitación Anual (mm)", ylab="Temperatura anual media (ºC x10)",main="Temperatura y Precipitación en la Península Ibérica")
 ```
 
-Para generar un gráfico de densidad con estas mismas variables usamos la función `kde2d`(kernel density two dimensions) del paquete `MASS`
-
-El primer gráfico es una distribución de la densidad de solamente una variable, en este caso la temperatura media anual.
+Podemos graficar las variables teniendo en cuenta su densidad estimada en base a métodos como *Kernel Density Estimation*. La estimación de la función de densidad para la temperatura media anual seria: 
 
 ```{r fig.align='center'}
 d <- density(marcoclim$BIO1) # devuelve los datos de densidad 
 plot(d)
 ```
 
-Por otro lado, podemos también plotear la densidad de dos variables diferentes, en este caso la temperatura y precepitación media anuales: 
+Para generar un gráfico de densidad con dos variables usamos la función `kde2d`(kernel density two dimensions) del paquete `MASS`, usando las variables de temperatura media anual y precimitación media anual:
 
 ```{r fig.align='center'}
 dens <- kde2d(marcoclim$BIO1, marcoclim$BIO12, n=300, lims = c(0,200,0,1400))
@@ -218,11 +220,10 @@ filled.contour(dens,
 ```
 
 # Descartar variables muy correlacionadas (opcional) {.tabset}
-Al trabajar con 19 variables, algunas producto lineal de otras como hemos visto en el gráfico de correlación, estamos trabajando con información redundante. Podemos basarnos en el criterio `VIF` (factores de inflación de varianza), un enfoque simple para identificar la colinealidad entre las variables explicativas para descartar algunas y probar el modelo mas adelante con todas las variables y con solo las seleccionadas. 
+Al trabajar con 19 variables, algunas producto lineal de otras como hemos visto en el gráfico de correlación, estamos trabajando con información redundante. Podemos basarnos en el criterio `VIF` (factores de inflación de varianza), un enfoque simple para identificar la colinealidad entre las variables explicativas para descartar algunas y probar el modelo más adelante con todas las variables y con solo las seleccionadas. 
 
-Esto se describe en este [blog](https://www.r-bloggers.com/collinearity-and-stepwise-vif-selection/)
+La cuantificación de los factores de inflación de la varianza y el descarte paso a paso se pueden realizar con una función descrita en el blog [beckmw](https://beckmw.wordpress.com/2013/02/05/collinearity-and-stepwise-vif-selection/):
 
-Definimos la función de cálculo y selección de variables con el `VIF`
 ```{r warning=FALSE}
 vif_func<-function(in_frame,thresh=10,trace=T,...){
   
@@ -290,16 +291,19 @@ vif_func<-function(in_frame,thresh=10,trace=T,...){
 }
 ```
 
-Aplicamos la función a nuestros datos. Ésta va calculando los `VIF`, y en cada cálculo quita el que tiene mayor valor hasta quedarse con valores de VIF por debajo del umbral (en nuestro caso hasta quedarnos con 5 valores)
+Aplicamos la función a nuestros datos. Ésta va calculando los `VIF`, y en cada cálculo quita el que tiene mayor valor hasta quedarse con valores de VIF por debajo del umbral definido (en nuestro caso hasta quedarnos con  valores inferiores a 5, un umbral recomendado).
+
 ```{r, warning=FALSE, output.lines=22}
 vif_func(in_frame=marcoclim,thresh=5,trace=T) 
 ```
+Estas son las variables con las que nos quedariamos para reducir la colinealidad. 
+
 
 
 # Reducción de dimensionalidad mediante PCA {.tabset}
 Para describir de forma reducida el MCI realizamos una reducción de dimensiones mediante *análisis de componentes principales*.
 
-## PCA con la función `prcomp`
+## PCA con todas las variables
 
 Realizamos la PCA con nuestros datos utilizando la función `prcomp` que R tiene incorporada.
 ```{r output.lines=27}
@@ -310,17 +314,14 @@ print(pcaclim)
 ```{r fig.align='center'}
 plot(pcaclim, type = "l")
 summary(pcaclim)
-plot(pcaclim$x[,1],pcaclim$x[,2], col = "blue")
 ```
 
-## Porcentaje de variabilidad explicada por PC1 y PC2
-
-Obtenemos la desviación estándar y la proporción de la varianza de cada una de los componentes principales basándose en las 19 componentes climáticas. Con PC1 y PC2 se explica un **75,44%** de la variabilidad, suficiente para continuar trabajando.
+Obtenemos la desviación estándar y la proporción de la varianza de cada una de los componentes principales basándose en las 19 variables climáticas. Con PC1 y PC2 se explica un **75,44%** de la variabilidad. Teniendo en cuenta el objetivo del trabajo, consideramos adecuado quedarnos con los dos primeros componentes.
 
 Además, podemos calcular el peso de cada variable bioclimática para cada componente principal, con `pca$rotation`
 ```{r}
-pcaclim$rotation[,1]
-pcaclim$rotation[,2]
+pcaclim$rotation[,1] # PC1
+pcaclim$rotation[,2] # PC2
 ```
 
 Para facilitar el entendimiento de la contribución de cada una de las variables en el análisis de componentes principales, Podemos generar plots con las funciones:
@@ -345,7 +346,6 @@ print(g)
 ```
 
 ## PCA con la función 'VIF'
-
 También podríamos realizar una `PCA` solo con las variables que `VIF` < 5(opcional)
 ```{r fig.align='center'}
 marcoclimVIF <- marcoclim[,c(2,3,8,9,13,15)]
@@ -356,10 +356,10 @@ plot(pcaclim2, type = "l")
 summary(pcaclim2)
 ```
 
-Como podemos comprobar, usando el criterio `VIF` la variabilidad explicada en el PCA es mucho menor que cuando no eliminamos las variables redundantes, por tanto decidimos no trabajar siguiendo este criterio. 
+Como podemos comprobar, usando el criterio `VIF` la variabilidad explicada en el PCA con dos componentes resulta del 58.05%, un porcentaje inferior que cuando no eliminamos las variables redundantes, por tanto decidimos no trabajar siguiendo este criterio. 
 
 # Obtención de datos de países y proyección sobre el MCI {.tabset}
-Llegados a este punto, pretendemos evaluar si las condiciones climáticas de los diferentes países del mundo se parecen a las de España. Así se podrá determinar después qué especies podrían encontrar condiciones favorables en nuestro país actuando como invasoras y qué especies españolas podrían serlo para otros países. Con estas evidencias se controlarían mejor la entrada y salida de especies invasoras, mejorando las políticas de comercio y transporte por ejemplo. Por eso proyectamos los datos del marco climático de estos países sobre el nuestro.
+Llegados a este punto, pretendemos evaluar si las condiciones climáticas de los diferentes países del mundo se parecen a las de la Península Ibérica. Así se podrá determinar después qué especies podrían encontrar condiciones favorables en nuestro país actuando como invasoras y qué especies españolas podrían serlo para otros países. Con estas evidencias se controlarían mejor la entrada y salida de especies invasoras, mejorando las políticas de comercio y transporte por ejemplo. Por eso proyectamos los datos del marco climático de estos países sobre el nuestro.
 
 
 Cargamos los datos del marco climático ibérico:
@@ -374,7 +374,7 @@ Preparamos los datos de la Península Ibérica de los dos primeros componentes:
 ```{r}
 e <- pcaclim$x[,1:2]
 edf <- as.data.frame(e)
-edf$pais <- "Spain" #Añadimos una varaible de Pais, con todas las etiquetes "Spain"
+edf$pais <- "PenIbérica" #Añadimos una varaible de Pais, con todas las etiquetes "PenIbérica"
 head(edf)
 ```
 
@@ -416,7 +416,7 @@ i <- predict (pcaclim, newdata = marcoclim.denmark)
 i <- i[,1:2]
 
 idf <- as.data.frame(i) 
-idf$pais <- "Din" 
+idf$pais <- "Dinamarca" 
 
 df <- rbind(edf,idf) 
 ```
@@ -426,27 +426,14 @@ Generamos un gráfico para visualizar el grado de solapamiento de ambas nubes de
 `ggplot`
 
 ```{r fig.align='center'}
-ggplot(df, aes(x=PC1, y=PC2, col=pais)) + geom_point()
+ggplot(df, aes(x=PC1, y=PC2, col=pais)) + geom_point() + ggtitle("Proyección de Dinamarca sobre el PCA del Marco Climático Ibérico")
+p + labs(x = "PC1 (46.3%)", y = "PC2 (29.1%)" )
 ```
 
+Para entender mejor el solapamiento podemos generar gráficos de densidad:
 
-A continuación, pretendemos unir dos gráficos de densidad para visualizar el grado de solapamiento de ambas nubes de puntos:
-
+Para el Marco Climático Ibérico:
 ```{r fig.align='center'}
-#Para hacer un gráfico de densidad con todos los datos:
-dens <- kde2d(df$PC1, df$PC2, n=300, lims = c(-20,10,-10,10))
-image(dens)
-
-filled.contour(dens,
-               color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
-               xlab= "PC1",
-               ylab= "PC2", main = "Contraste de marcos climaticos")
-```
-
-
-```{r fig.align='center'}
-
-#Ahora solo con los datos de España:
 dense <- kde2d(edf$PC1, edf$PC2, n=300, lims = c(-12,7,-10,10))
 image(dense)
 filled.contour(dense,
@@ -455,25 +442,25 @@ filled.contour(dense,
                ylab= "PC2", main = "Marco climático Ibérico")
 ```
 
-
+Para Dinamarca:
 ```{r fig.align='center'}
-#Ahora solo del país proyectado:
 densi <- kde2d(idf$PC1, idf$PC2, n=300, lims = c(-12,7,-10,10))
 image(densi)
-
 filled.contour(densi,
                color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
                xlab= "PC1",
                ylab= "PC2", main = "Marco climático Ibérico del pais proyectado")
 ```
 
-Pero, ¿Cómo podemos determinar el grado de solapamiento, teniendo en cuenta la densidad de los datos?
+Pero, ¿Cómo podemos cuantificar el grado de solapamiento, teniendo en cuenta la densidad de los datos?
 
 # Cuantificación del grado de similitud climática {.tabset}
 ##Coincidencia climática versus MCI 
-Con el fin de determinar el grado de solapamiento climático de un país cualquiera respecto al MCI, creamos hipervolúmenes a partir de los dos primeros componentes principales, que explican un 75% de la varianza, y los comparamos, obteniendo así el volumen compartido y otros índices de similitud.
+Con el fin de determinar el grado de solapamiento climático de un país cualquiera respecto al MCI, creamos hipervolúmenes a partir de los dos primeros componentes principales, que explican un 75.44% de la varianza, y los comparamos, obteniendo así el volumen compartido y otros índices de similitud.
 
-Para ello, utilizaremos el paquete `hypervolume` (@Blonder2017)(@BlonderB2017)
+Para ello, utilizaremos el paquete `hypervolume` (@Blonder2017)(@BlonderB2017), un paquete diseñado para estimar la forma y volumen de bases de datos de más de una dimension y realizar operaciones con ellos: intersección, unión, determinación de los componentes únicos, tests de inclusión y detección de agujeros. Usa una aproximación basada en geometria estocástica ([CRAN] (https://cran.r-project.org/web/packages/hypervolume/hypervolume.pdf)).
+
+Con el objetivo de determinar valores de solapamiento del MCI con todos los paises del mundo, crearemos un bucle para contrastar pais a pais. En primer lugar definiremos el hipervolumen definido por los puntos en el PCA del marco climático Ibérico, a lo que denominaremos marco estático. El marco dinámico estará constituido por aquellos elementos en bucle, dinámicos, de los cuales iremos sacando un conjunto de *outputs*. En las diferentes pestañas definiremos estos elementos.
 
 ##Definiendo el marco climático estático
 
