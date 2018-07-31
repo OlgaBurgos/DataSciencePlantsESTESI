@@ -1,10 +1,10 @@
-# IBERIC RISK ASSESMENT
+# IBERIC RISK ASSESSMENT
 ## Valoración del riesgo invasor en la Península Ibérica en base a la similitud climática
 
-Trabajo desarrollado por Erola Fenollosa, Olga Burgos, Gianluca Arauz, Ramon Diaz para el curso de experto universitario: ["DATA SCIENCE (CIENCIA DE LOS DATOS): APLICACIONES A LA BIOLOGÍA Y A LA MEDICINA CON PYTHON Y R"] (http://biost3.blogspot.com/2018/02/ciencia-de-los-datos-data-science.html)
+Trabajo desarrollado por Erola Fenollosa, Olga Burgos, Gianluca Arauz, Ramon Diaz para el curso de experto universitario: ["DATA SCIENCE (CIENCIA DE LOS DATOS): APLICACIONES A LA BIOLOGÍA Y A LA MEDICINA CON PYTHON Y R"](http://biost3.blogspot.com/2018/02/ciencia-de-los-datos-data-science.html) de Mayo a Julio de 2018 en la Universidad de Barcelona.
 
 Este repositorio contiene:
-- El trabajo desarrollado en [R Markdown] (SpanishRiskAssesment/IbericRiskAssesment.Rmd)
+- El trabajo desarrollado en [R Markdown](SpanishRiskAssesment/IbericRiskAssesment.Rmd)
 - El trabajo compilado en [versión Html](SpanishRiskAssesment/IbericRiskAssesment.html)
 
 Así como las bases de datos utilizadas y generadas, en la carpeta "[Datos](SpanishRiskAssesment/Datos)"
