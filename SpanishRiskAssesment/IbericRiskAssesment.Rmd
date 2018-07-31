@@ -54,18 +54,18 @@ Una tercera corriente postula que hay ciertos rasgos que proporcionan a las espe
 
 Ninguna de estas hipótesis es excluyente, por lo que los factores determinantes del éxito invasor podría ser una combinación de aspectos de las tres corrientes (@Catford200922). 
 
-Pese a la divergencia de hipótesis que explican la expansión de las especies invasoras, encontramos una mayor unificación con respecto a las teorias que explican el establecimiento de las especies fuera de su rango nativo. No todas las especies pueden ser encontradas en todos los hàbitats. Cada especie tiene sus requerimientos y por lo tanto es posible definir su nicho ecológico en base a las condiciones donde una especie puede vivir, crecer y reproducirse (@Grinnell1917). El nicho de una especie se define como una región (un hipervolumen de n dimensiones) en un espacio multidimensional basado en factores ambientales que afectan al bienestar de la especie (Hutchinson 1957). La similitud climatica entre diferentes paises podria ser clave para entender el establecimiento de las especies fuera de su rango nativo y una herramienta muy util para la valoración del riesgo invasor. Un mejor conocimiento de los factores que determinan si una especie podría convertirse en invasora, sería vital para las políticas de conservación de la biodiversidad, pues la prevención es la acción más económica para erradicar una especie invasora (@Kumschick20131095). Saber hasta qué punto la similitud con el marco climático de una región, en nuestro caso la Península Íbérica, puede favorecer a la invasión biológica nos puede permitir definir medidas de prevención mayores.
+Pese a la divergencia de hipótesis que explican la expansión de las especies invasoras, encontramos una mayor unificación con respecto a las teorías que explican el establecimiento de las especies fuera de su rango nativo. No todas las especies pueden ser encontradas en todos los hábitats. Cada especie tiene sus requerimientos y por lo tanto es posible definir su nicho ecológico en base a las condiciones donde una especie puede vivir, crecer y reproducirse (@Grinnell1917). El nicho de una especie se define como una región (un hipervolumen de n dimensiones) en un espacio multidimensional basado en factores ambientales que afectan al bienestar de la especie (Hutchinson 1957). La similitud climática entre diferentes países podría ser clave para entender el establecimiento de las especies fuera de su rango nativo y una herramienta muy útil para la valoración del riesgo invasor. Un mejor conocimiento de los factores que determinan si una especie podría convertirse en invasora, sería vital para las políticas de conservación de la biodiversidad, pues la prevención es la acción más económica para erradicar una especie invasora (@Kumschick20131095). Saber hasta qué punto la similitud con el marco climático de una región, en nuestro caso la Península Íbérica, puede favorecer a la invasión biológica nos puede permitir definir medidas de prevención mayores.
 
 
 # Objetivos del trabajo y definiciones iniciales {.tabset}
 
 ## Objetivos
 
-El objetivo principal de este trabajo es utilizar diferentes herramientas de gestión y analisis de datos para valorar el riesgo invasor en la Península Ibérica, en base a la hipótesis de la similitud climatica como principal factor determinante para el establecimiento de espécies exoticas. Los objetivos especificos son:
+El objetivo principal de este trabajo es utilizar diferentes herramientas de gestión y análisis de datos para valorar el riesgo invasor en la Península Ibérica, en base a la hipótesis de la similitud climática como principal factor determinante para el establecimiento de espécies exóticas. Los objetivos específicos son:
 
-- Definir el marco climático delimitado por el espacio geografico de la Península Ibérica.
-- Cuantificar el grado de similitud climatica de todos los paises del mundo con el clima de la Península Ibérica.
-- Determinar si hubiera sido posible predecir la invasion de las especies invasoras actuales en España teniendo en cuenta los valores de similitud climática con los paises de origen.
+- Definir el marco climático delimitado por el espacio geográfico de la Península Ibérica.
+- Cuantificar el grado de similitud climática de todos los países del mundo con el clima de la Península Ibérica.
+- Determinar si hubiera sido posible predecir la invasión de las especies invasoras actuales en España teniendo en cuenta los valores de similitud climática con los países de origen.
 
 
 ## Definiciones
@@ -152,7 +152,7 @@ write.csv(marcoclim, file="Datos/MarcoClim2.5.csv")
 ```
 
 # Análisis exploratorio {.tabset}
-Para no perder tiempo descargando cada vez los datos del marcoclim y preparandolos, cargamos directamente el csv generado:
+Para no perder tiempo descargando cada vez los datos del marcoclim y preparándolos, cargamos directamente el csv generado:
 ```{r warning=FALSE}
 marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
@@ -164,7 +164,8 @@ Antes de continuar trabajando, necesitamos hacernos una idea de cómo son los da
 
 ## *Data wrangling*
 
-PENDING EXPLAnation
+En la mayoría de ocasiones los datos con los que se trabaja necesitan de una limpieza y una preparación previa para ser analizados. 
+En nuestro caso, eliminamos los missing values del marcoclim.
 
 ```{r fig.align='center'}
 marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA's.
@@ -361,7 +362,7 @@ Como podemos comprobar, usando el criterio `VIF` la variabilidad explicada en el
 Llegados a este punto, pretendemos evaluar si las condiciones climáticas de los diferentes países del mundo se parecen a las de España. Así se podrá determinar después qué especies podrían encontrar condiciones favorables en nuestro país actuando como invasoras y qué especies españolas podrían serlo para otros países. Con estas evidencias se controlarían mejor la entrada y salida de especies invasoras, mejorando las políticas de comercio y transporte por ejemplo. Por eso proyectamos los datos del marco climático de estos países sobre el nuestro.
 
 
-Cargamos los datos del marco climatico ibérico:
+Cargamos los datos del marco climático ibérico:
 ```{r warning=FALSE}
 marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
@@ -730,9 +731,9 @@ La Ley 42/2007, de 13 de diciembre, del Patrimonio Natural y de la Biodiversidad
 
 El Catálogo Español de Especies Exóticas Invasoras contempla 181 especies de diferentes grupos taxonómicos provinientes de diferentes paises. 
 
-Con el objetivo de comprobar si aquellos paises con mayor coincidencia climática son origen de más especies actualmente invasoras, se ha realizado una busqueda en los portales de [ISSG](http://issg.org/database/species/List.asp) y [GBIF](https://www.gbif.org/) para definir los paises de origen de las actuales invasoras. 
+Con el objetivo de comprobar si aquellos países con mayor coincidencia climática son origen de más especies actualmente invasoras, se ha realizado una búsqueda en los portales de [ISSG](http://issg.org/database/species/List.asp) y [GBIF](https://www.gbif.org/) para definir los países de origen de las actuales invasoras. 
 
-El resultado de esta busqueda es el siguiente data frame:
+El resultado de esta búsqueda es el siguiente data frame:
 
 ```{r}
 origeninvasoras <- read_excel("SpanishRiskAssesment/Datos/origeninvasoras.xlsx")
@@ -790,8 +791,8 @@ p + labs(x = "Número de especies invasoras en España del país considerado", y
 
 
 ## Refinando el riesgo invasor en base a otras variables
-A parte de la similitud del marco climático, hay otros factores que pueden resultar determinantes para la determinación del riesgo invasor. La cantidad de mercancias y personas que se desplazan de un país a otro, podrian ser clave para entender en que medida realmente podrían ocurrir los desplazamientos de especies exóticas. Además, en los resultados presentados en el apartado anterior, hay una variabilidad muy grande, probablemente por trabajar con datos de especies invasoras de diferentes grupos taxonómicos. 
-Todo esto requiere la obtención de nuevos datos y desarrollo de nuevos modelos. De forma exploratoria presentaremos algunos modelos simples explorando datos disponibles como son la biodiversidad de cada país (que implicaria mayor probabilidad de existir una espécie que pueda ser invasora) y la distáncia entre el país y la Península Ibèrica (lo que probablemente facilite también la llegada de especies alóctonas).
+A parte de la similitud del marco climático, hay otros factores que pueden resultar determinantes para la determinación del riesgo invasor. La cantidad de mercancías y personas que se desplazan de un país a otro, podrían ser clave para entender en que medida realmente podrían ocurrir los desplazamientos de especies exóticas. Además, en los resultados presentados en el apartado anterior, hay una variabilidad muy grande, probablemente por trabajar con datos de especies invasoras de diferentes grupos taxonómicos. 
+Todo esto requiere la obtención de nuevos datos y desarrollo de nuevos modelos. De forma exploratoria presentaremos algunos modelos simples explorando datos disponibles como son la biodiversidad de cada país (que implicaría mayor probabilidad de existir una espécie que pueda ser invasora) y la distáncia entre el país y la Península Ibèrica (lo que probablemente facilite también la llegada de especies alóctonas).
 
 *BIODIVERSIDAD*:
 Existen datos de biodiversidad de especies normalizados por el tamaño del país: el [*National Biodiversity Index*](https://www.cbd.int/gbo1/annex.shtml). Los valores estan normalizados entre 1 (Màximo: Indonesia) y 0 (Mínimo: Groenlándia).
@@ -848,9 +849,9 @@ p + labs(x = "Número de especies invasoras en España del país considerado", y
 # Conclusiones
 Durante el desarrollo de este trabajo, hemos aprendido a utilizar distintas herramientas computacionales para valorar el riesgo invasor en la Península Ibérica en base a la similitud climática con otros países.
 Distintos paquetes de `R`y algunas bases de datos disponibles *on-line*, referentes a variables bioclimáticas de las distintas regiones del planeta, nos han permitido desarrollar un estudio que consideramos muy útil para determinar riesgo invasor, y que sienta las bases de posibles proyectos futuros de evaluación de este tipo.
-Estos resultados, ayudarían al entendimiento de la problemática relacionada con la pérdid de hábitat y diversidad y podrían mejorar políticas de gestión que protejan o controlen la entrada y salida de especies con potencial invasor, protegiendo así la biodiversidad de nuestro país y también del resto. 
+Estos resultados, ayudarían al entendimiento de la problemática relacionada con la pérdida de hábitat y diversidad y podrían mejorar políticas de gestión que protejan o controlen la entrada y salida de especies con potencial invasor, protegiendo así la biodiversidad de nuestro país y también del resto. 
 
-Fijándonos en el *ranking* que hemos obtenido, podemos encontrar los países más riesgosos con respecto a la Península Ibérica, dependiendo del métrico o índice al que atendamos. En nuestro caso, hemos determinado el índice de Jaccard y Sorensen como los más fiables para la selección de estos países con condiciones más similares y por tanto de riesgo.
+Fijándonos en el *ranking* que hemos obtenido, podemos encontrar los países con más riesgo respecto a la Península Ibérica, dependiendo del métrico o índice al que atendamos. En nuestro caso, hemos determinado el índice de Jaccard y Sorensen como los más fiables para la selección de estos países con condiciones más similares y por tanto de riesgo.
 Como podemos apreciar en los últimos mapas, lo países ordenados de mayor a menor riesgo para la Península Ibérica son:
 
 1. Argentina
