@@ -173,7 +173,7 @@ En nuestro caso, eliminamos los missing values del marcoclim.
 ```{r fig.align='center'}
 marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA's.
 marcoclim <- na.omit(marcoclim)
-head(marcoclim 
+head(marcoclim)
 ```
 
 ## Estructura de los datos
