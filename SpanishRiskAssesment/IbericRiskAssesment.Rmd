@@ -374,13 +374,6 @@ edf$pais <- "PenIberica" #Añadimos una varaible de País, con todas las etiquet
 head(edf)
 ```
 
-
-Descargamos los datos del WordClim (ya hecho previamente)
-```{r fig.align='center'}
-#Download the WorldClim Data
-worldata <- getData("worldclim",var="bio", res=2.5)
-```
-
 En este [blog](https://www.gis-blog.com/r-raster-data-acquisition), encontramos como se realiza la descarga y recorte de los países. Para llamar a un país concreto se usa la nomenclatura de tres letras definida [aquí](http://kirste.userpage.fu-berlin.de/diverse/doc/ISO_3166.html). Hay una base de datos con los nombres y codigos de los 241 países que incluye la lista. Podemos importar esos datos:
 ```{r results=FALSE}
 CountryCodes <- read_delim("CountryCodes.csv", 
