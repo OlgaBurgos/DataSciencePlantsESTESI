@@ -133,7 +133,7 @@ Los datos de `worldata` se encuentran en formato rasterizado. Ahora debemos sele
 
 ```{r, fig.align='center', out.extra='angle=90'}
 e <- extent(-10, 4, 36, 44)
-s.crop <- crop(worldata_25, e)
+s.crop <- crop(worldata, e)
 
 plot (s.crop$bio1,
    main = "Mapa de la temperatura media (BIO1) en la Península Ibérica",
@@ -393,7 +393,7 @@ Descargamos los límites políticos de un país, por ejemplo Dinamarca, de la si
 
 ```{r fig.align='center'}
 denmark <- getData('GADM', country='DNK', level=0)
-s<- crop(worldata_25, denmark)
+s<- crop(worldata, denmark)
 s2 <- mask(s, denmark)
 s2<-as.matrix(s2)
 marcoclim.denmark <- as.data.frame(s2)
