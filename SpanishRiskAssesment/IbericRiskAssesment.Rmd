@@ -85,7 +85,7 @@ Rv$version.string
 
 Antes de empezar, instalaremos los paquetes necesarios a lo largo del documento.
 ```{r echo=TRUE, results='hide', message=FALSE, warning=FALSE} 
-list.of.packages <- c("DataExplorer", "raster", "dismo", "plotly", "fmsb", "factoextra", "MASS","hypervolume","alphahull", "dplyr", "rgdal", "leaflet", "RColorBrewer")
+list.of.packages <- c("DataExplorer", "raster", "dismo", "plotly", "fmsb", "factoextra", "MASS","hypervolume","alphahull", "dplyr", "rgdal", "leaflet", "RColorBrewer", "devtools")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 ```
@@ -337,11 +337,7 @@ fviz_pca_var(pcaclim,
 )  
 
 g <- ggbiplot(pcaclim, obs.scale = 1, var.scale = 1, 
-               ellipse = TRUE, alpha=0.1,col="blue",
-              circle = FALSE)
-g <- g + scale_color_discrete(name = '')
-g <- g + theme(legend.direction = 'horizontal', 
-               legend.position = 'top')
+               ellipse = TRUE, alpha=0.02, circle = FALSE)
 print(g)
 ```
 
