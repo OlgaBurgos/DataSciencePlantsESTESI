@@ -1,6 +1,6 @@
 ---
 title: "Valoración del riesgo invasor en la Península Ibérica en base a la similitud climática"
-author: "Erola Fenollosa, Olga Burgos, Gianluca Arauz, Ramon Diaz"
+author: "Gianluca Arauz, Olga Burgos, Ramon Diaz y Erola Fenollosa"
 date: "July, 2018"
 output:
   html_document:
