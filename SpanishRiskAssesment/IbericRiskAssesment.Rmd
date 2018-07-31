@@ -65,7 +65,7 @@ El objetivo principal de este trabajo es utilizar diferentes herramientas de ges
 
 - Definir el marco climático delimitado por el espacio geográfico de la Península Ibérica.
 - Cuantificar el grado de similitud climática de todos los países del mundo con el clima de la Península Ibérica.
-- Determinar si los paises con mayor similitud climática son tambien fuente de mayores espécies invasoras en España.
+- Determinar si los países con mayor similitud climática son tambien fuente de mayores espécies invasoras en España.
 
 
 ## Definiciones
@@ -362,7 +362,7 @@ Como podemos comprobar, usando el criterio `VIF` la variabilidad explicada en el
 Llegados a este punto, pretendemos evaluar si las condiciones climáticas de los diferentes países del mundo se parecen a las de la Península Ibérica. Así se podrá determinar después qué especies podrían encontrar condiciones favorables en nuestro país actuando como invasoras y qué especies españolas podrían serlo para otros países. Con estas evidencias se controlarían mejor la entrada y salida de especies invasoras, mejorando las políticas de comercio y transporte por ejemplo. Por eso proyectamos los datos del marco climático de estos países sobre el nuestro.
 
 
-Cargamos los datos del marco climático ibérico:
+Cargamos los datos del Marco Climático Ibérico:
 ```{r warning=FALSE}
 marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
     col_types = cols(X1 = col_skip()))
@@ -374,7 +374,7 @@ Preparamos los datos de la Península Ibérica de los dos primeros componentes:
 ```{r}
 e <- pcaclim$x[,1:2]
 edf <- as.data.frame(e)
-edf$pais <- "PenIberica" #Añadimos una varaible de Pais, con todas las etiquetes "PenIberica"
+edf$pais <- "PenIberica" #Añadimos una varaible de País, con todas las etiquetes "PenIberica"
 head(edf)
 ```
 
@@ -385,7 +385,7 @@ Descargamos los datos del WordClim (ya hecho previamente)
 worldata <- getData("worldclim",var="bio", res=2.5)
 ```
 
-En este [blog](https://www.gis-blog.com/r-raster-data-acquisition), encontramos como se realiza la descarga y recorte de los paises. Para llamar a un pais concreto se usa la nomenclatura de tres letras definida [aquí](http://kirste.userpage.fu-berlin.de/diverse/doc/ISO_3166.html). Hay una base de datos con los nombres y codigos de los 241 paises que incluye la lista. Podemos importar esos datos:
+En este [blog](https://www.gis-blog.com/r-raster-data-acquisition), encontramos como se realiza la descarga y recorte de los países. Para llamar a un país concreto se usa la nomenclatura de tres letras definida [aquí](http://kirste.userpage.fu-berlin.de/diverse/doc/ISO_3166.html). Hay una base de datos con los nombres y codigos de los 241 países que incluye la lista. Podemos importar esos datos:
 ```{r results=FALSE}
 CountryCodes <- read_delim("CountryCodes.csv", 
     ";", escape_double = FALSE, trim_ws = TRUE)
@@ -449,7 +449,7 @@ image(densi)
 filled.contour(densi,
                color.palette=colorRampPalette(c('gray94','blue','yellow','red','darkred')),
                xlab= "PC1",
-               ylab= "PC2", main = "Marco climático Ibérico del pais proyectado")
+               ylab= "PC2", main = "Marco climático Ibérico del país proyectado")
 ```
 
 Pero, ¿Cómo podemos cuantificar el grado de solapamiento, teniendo en cuenta la densidad de los datos?
@@ -460,7 +460,7 @@ Con el fin de determinar el grado de solapamiento climático de un país cualqui
 
 Para ello, utilizaremos el paquete `hypervolume` (@Blonder2017)(@BlonderB2017), un paquete diseñado para estimar la forma y volumen de bases de datos de más de una dimension y realizar operaciones con ellos: intersección, unión, determinación de los componentes únicos, tests de inclusión y detección de agujeros. Usa una aproximación basada en geometria estocástica ([CRAN] (https://cran.r-project.org/web/packages/hypervolume/hypervolume.pdf)).
 
-Con el objetivo de determinar valores de solapamiento del MCI con todos los paises del mundo, crearemos un bucle para contrastar pais a pais. En primer lugar definiremos el hipervolumen definido por los puntos en el PCA del marco climático Ibérico, a lo que denominaremos marco estático. El marco dinámico estará constituido por aquellos elementos en bucle, dinámicos, de los cuales iremos sacando un conjunto de *outputs*. En las diferentes pestañas definiremos estos elementos.
+Con el objetivo de determinar valores de solapamiento del MCI con todos los países del mundo, crearemos un bucle para contrastar país a país. En primer lugar definiremos el hipervolumen definido por los puntos en el PCA del MCI, a lo que denominaremos marco estático. El marco dinámico estará constituido por aquellos elementos en bucle, dinámicos, de los cuales iremos sacando un conjunto de *outputs*. En las diferentes pestañas definiremos estos elementos.
 
 ##Definiendo el marco climático estático
 Una vez obtenidos los datos del MCI, realizado el análisis de componentes principales y creado un data frame con los resultados de éste, definiremos el primer hipervolumen. El hipervolumen de n-dimensiones es una medida que generaliza el concepto de volumen a espacios de dimensión. En nuestro caso utilizaremos un `Gaussian KDE`(*kernel density estimation*) en el que todos los puntos contribuyen a la densidad de la probabilidad global ya que testeando vemos que es el mejor algoritmo de inclusion de puntos por nuestra tipologia de distribuciones. 
@@ -524,14 +524,14 @@ En este punto, implementaremos un sencillo *for loop* para testear la similitud 
 CountryCodes <- read.csv("CountryCodes.csv", header=FALSE, sep=";", skip = 1)
 ```
 
-Decimos "mayoría" de países porque los datos climáticos de algunos de ellos no presentan una distribución geográfica suficientemente amplia como para ser procesados correctamente por la función `hypervolume_gaussian` del paquete `hypervolume`. Para evitar que el bucle se interrumpa, debemos eliminar manualmente dichos paises:
+Decimos "mayoría" de países porque los datos climáticos de algunos de ellos no presentan una distribución geográfica suficientemente amplia como para ser procesados correctamente por la función `hypervolume_gaussian` del paquete `hypervolume`. Para evitar que el bucle se interrumpa, debemos eliminar manualmente dichos países:
 
 ```{r}
 black_list = list('ASM', 'AIA', 'ATA', 'ABW', 'BMU', 'BVT', 'IOT', 'CYM', 'CXR', 'CCK', 'GIB', 'GRD', 'KIR', 'LIE', 'MAC', 'MDV', 'MLT', 'MHL', 'FSM', 'MCO', 'MSR', 'NRU', 'ANT', 'NIU', 'NFK', 'MNP', 'PCN', 'RUS', 'SHN', 'KNA', 'LCA', 'SPM', 'VCT', 'SMR', 'SCG', 'SYC', 'TKL', 'TUV', 'UMI', 'VAT', 'VGB', 'WLF')
 CountryCodesSum <- CountryCodes[ ! CountryCodes$V3 %in% black_list, ]
 ```
 
-Como puede verse, la mayoría de los paises de la lista `black_list` son muy pequeños, como por ejemplo SMR (San Marino), GIB (Gibraltar) o VAT (Ciudad del Vaticano). También aparecen muchos estados insulares, como es el caso de CYM (Islas Caimán), BMU (Bermudas) o SYC (Seychelles). ATA (Antártida) aparece en esta lista, no por tener una superficie pequeña (que no es el caso), sino por la escasa distribución geogràfica de sus datos climáticos.
+Como puede verse, la mayoría de los países de la lista `black_list` son muy pequeños, como por ejemplo SMR (San Marino), GIB (Gibraltar) o VAT (Ciudad del Vaticano). También aparecen muchos estados insulares, como es el caso de CYM (Islas Caimán), BMU (Bermudas) o SYC (Seychelles). ATA (Antártida) aparece en esta lista, no por tener una superficie pequeña (que no es el caso), sino por la escasa distribución geogràfica de sus datos climáticos.
 
 Un caso aparte es el de RUS (Rusia), que ha sido colocada en la `black_list` debido a la extremadamente amplia distrubución geográfica de sus datos climáticos (debido a su gran extensión). Los ordenadores con los que hemos trabajado no disponían de memoria suficiente como para cargar los datos generados por la función `hypervolume_gaussian` aplicada a Rusia.
 
@@ -573,7 +573,7 @@ rm(counter)
 write.csv(my_df, file = "Volumes.csv")
 ```
 
-El bucle recorre todos los paises en un lapso de unas 7 horas aproximadamente. Esto trabajando con una *workstation* de la siguientes caracteríticas:
+El bucle recorre todos los países en un lapso de unas 7 horas aproximadamente. Esto trabajando con una *workstation* de la siguientes caracteríticas:
 
 * Memoria RAM: 64 GB.
 * Disco duro SSD: 256 GB.
@@ -687,7 +687,7 @@ leaflet(data = world_spdf1) %>%
   addLegend(pal= pal, values= ~Jaccard, opacity=0.9, title = "Jaccard (%)", position = "bottomleft" )
 ```
 
-El resultado de éste codigo genera un gráfico interactivo que permite visualizar con zoom los valores del índice en los diferentes paises. 
+El resultado de éste codigo genera un gráfico interactivo que permite visualizar con zoom los valores del índice en los diferentes países. 
 Aquí mostramos una imagen PNG del mismo, pero para acceder al gráfico interactivo seguir [este enlace](/Jaccard.html). Los valores NA corresponden a una similitud nula.
 
 *Grado de similitud climatica respecto la Península Ibérica*
@@ -698,7 +698,7 @@ Aquí mostramos una imagen PNG del mismo, pero para acceder al gráfico interact
 ## Origen de las actuales especies invasoras en España
 La Ley 42/2007, de 13 de diciembre, del Patrimonio Natural y de la Biodiversidad creó, en su artículo 61.1, el Catálogo Español de Especies Exóticas Invasoras en el que se incluyen todas aquellas especies exóticas invasoras que constituyan, de hecho, o puedan llegar a constituir una amenaza grave para las especies autóctonas, los hábitats o los ecosistemas, la agronomía, o para los recursos económicos asociados al uso del patrimonio natural ([Ministerio de Agricultura , Pesca y Alimentación](https://www.mapama.gob.es/es/biodiversidad/temas/conservacion-de-especies/especies-exoticas-invasoras/)).
 
-El Catálogo Español de Especies Exóticas Invasoras contempla 181 especies de diferentes grupos taxonómicos provinientes de diferentes paises. 
+El Catálogo Español de Especies Exóticas Invasoras contempla 181 especies de diferentes grupos taxonómicos provinientes de diferentes países. 
 
 Con el objetivo de comprobar si aquellos países con mayor coincidencia climática son fuente de más especies actualmente invasoras, se ha realizado una búsqueda en los portales de [ISSG](http://issg.org/database/species/List.asp) y [GBIF](https://www.gbif.org/) para definir los países de origen de las actuales invasoras. 
 
@@ -708,7 +708,7 @@ El resultado de esta búsqueda es el siguiente *data frame*:
 origeninvasoras <- read_excel("SpanishRiskAssesment/Datos/origeninvasoras.xlsx")
 ```
 
-Recontamos el numero de ocurrencias de cada pais y lo mezclamos con 
+Recontamos el numero de ocurrencias de cada país y lo mezclamos con 
 los datos de similitud:
 ```{r}
 countriesorigen <-origeninvasoras[,7:56]
@@ -723,7 +723,7 @@ withsp$NumSpecies <- as.integer(withsp$NumSpecies)
 
 ```
 
-Seleccionamos el *top ten* de paises que han aportado mayor número de especies invasoras:
+Seleccionamos el *top ten* de países que han aportado mayor número de especies invasoras:
 
 
 ```{r}
@@ -791,7 +791,7 @@ geom_smooth(method = loess, se= TRUE)
 p + labs(x = "Número de especies invasoras en España del país considerado", y = "Índice de Biodiversidad nacional" )
 ```
 
-Los 10 paises con mayor valor de biodiversidad son:
+Los 10 países con mayor valor de biodiversidad son:
 ```{r}
 nbirank <- arrange(complete1, desc(nbi))
 nbirank <- data.frame(nbirank$Country.Acronym, nbirank$nbi)
@@ -801,7 +801,7 @@ nbirank[1:10,] #Sacamos los 10 primeros países.
 
 
 *DISTÁNCIA GEOGRÁFICA*:
-A través del portal Web [Geodatos](https://www.geodatos.net) hemos podido obtener los valores de distáncia geografica de todos los paises respecto la Península Ibérica.
+A través del portal Web [Geodatos](https://www.geodatos.net) hemos podido obtener los valores de distancia geográfica de todos los países respecto la Península Ibérica.
 
 ```{r}
 complete1 <- complete[complete.cases(complete),]
@@ -835,7 +835,7 @@ Como podemos apreciar en los últimos mapas, lo países ordenados de mayor a men
 
 El resultado de este ranking tiene sentido pues todos los países listados, contienen clima mediterráneo, o bien comparten cercanía con España, o latitud geográfica. 
 
-Algunos de estos paises también constan en el ranquing de paises.... 
+Algunos de estos países también constan en el ranquing de países.... 
 - NUM SPECIES
 - BIODIVER
 - PROXIMIDAD
