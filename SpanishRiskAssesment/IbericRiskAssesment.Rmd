@@ -582,7 +582,7 @@ CountryCodes$V2 <- NULL
 CountryCodes$V4 <- NULL
 Volumes <- read.csv("Volumes.csv", header = T)
 Volumes$X <- NULL
-Vol.Names <- c('Vol.MCI', 'Vol.Country', 'Vol.Intersection', 'Vol.Union', 'Vol.Unique.MCI', 'Vol.Unique.Country', 'Jaccart', 'Sorensen', 'NormVol.MCI', 'NormVol.Country', 'Dist.Centroid', 'Country.Acronym')
+Vol.Names <- c('Vol.MCI', 'Vol.Country', 'Vol.Intersection', 'Vol.Union', 'Vol.Unique.MCI', 'Vol.Unique.Country', 'Jaccard', 'Sorensen', 'NormVol.MCI', 'NormVol.Country', 'Dist.Centroid', 'Country.Acronym')
 names(Volumes) <- Vol.Names
 rownames(Volumes) <- Volumes$Country.Acronym
 names(CountryCodes) = c('Country.Name', 'V3')
@@ -612,7 +612,7 @@ rvoluniqmci <- rvoluniqmci$Country.Acronym
 rvoluniqcount <- arrange(Volumes_dataset, Vol.Unique.Country) # Ordenado de menor a mayor volumen único en la Península Ibérica.
 rvoluniqcount <- rvoluniqcount$Country.Acronym
 
-rjaccard <- arrange(Volumes_dataset, desc(Jaccart)) # Ordenado de mayor a menor grado de similitud de Jacacard
+rjaccard <- arrange(Volumes_dataset, desc(Jaccard)) # Ordenado de mayor a menor grado de similitud de Jacacard
 rjaccard <- rjaccard$Country.Acronym
 
 rsorensen <- arrange(Volumes_dataset, desc(Sorensen)) # Ordenado de mayor a menor grado de similitud de Sorensen
@@ -700,7 +700,7 @@ Con el objetivo de comprobar si aquellos países con mayor coincidencia climáti
 El resultado de esta búsqueda es el siguiente *data frame*:
 
 ```{r}
-origeninvasoras <- read_excel("Datos/origeninvasoras.xlsx")
+origeninvasoras <- read_excel("origeninvasoras.xlsx")
 ```
 
 Recontamos el numero de ocurrencias de cada país y lo mezclamos con 
@@ -745,7 +745,7 @@ p + labs(x = "Número de especies invasoras en España del país considerado", y
 
 *Valor de Índice de Jaccard vs. Número de especies invasoras aportadas*
 ```{r}
-p <-ggplot(withsp, aes(x=NumSpecies, y=Jaccart)) +
+p <-ggplot(withsp, aes(x=NumSpecies, y=Jaccard)) +
   geom_point() +
   geom_smooth(method =lm, se=FALSE)
 p + labs(x = "Número de especies invasoras en España del país considerado", y = "Índice de Jaccard" )
