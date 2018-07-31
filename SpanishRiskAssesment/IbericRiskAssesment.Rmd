@@ -426,7 +426,7 @@ Generamos un gráfico para visualizar el grado de solapamiento de ambas nubes de
 `ggplot`
 
 ```{r fig.align='center'}
-ggplot(df, aes(x=PC1, y=PC2, col=pais)) + geom_point() + ggtitle("Proyección de Dinamarca sobre el PCA del Marco Climático Ibérico")
+p<-ggplot(df, aes(x=PC1, y=PC2, col=pais)) + geom_point() + ggtitle("Proyección de Dinamarca sobre el PCA del Marco Climático Ibérico")
 p + labs(x = "PC1 (46.3%)", y = "PC2 (29.1%)" )
 ```
 
