@@ -374,7 +374,7 @@ Preparamos los datos de la Península Ibérica de los dos primeros componentes:
 ```{r}
 e <- pcaclim$x[,1:2]
 edf <- as.data.frame(e)
-edf$pais <- "PenIbérica" #Añadimos una varaible de Pais, con todas las etiquetes "PenIbérica"
+edf$pais <- "PenIberica" #Añadimos una varaible de Pais, con todas las etiquetes "PenIberica"
 head(edf)
 ```
 
@@ -463,45 +463,26 @@ Para ello, utilizaremos el paquete `hypervolume` (@Blonder2017)(@BlonderB2017), 
 Con el objetivo de determinar valores de solapamiento del MCI con todos los paises del mundo, crearemos un bucle para contrastar pais a pais. En primer lugar definiremos el hipervolumen definido por los puntos en el PCA del marco climático Ibérico, a lo que denominaremos marco estático. El marco dinámico estará constituido por aquellos elementos en bucle, dinámicos, de los cuales iremos sacando un conjunto de *outputs*. En las diferentes pestañas definiremos estos elementos.
 
 ##Definiendo el marco climático estático
-
-Una vez obtenidos los datos del MCI, realizado el análisis de componentes principales y creado un data frame con los resultados de éste, definiremos el primer hipervolumen.
-Seguidamente recordamos la forma de realizar los pasos mencionados.
-
-
-```{r}
-worldata <- getData("worldclim",var="bio", res=10)
-e <- extent(-10,4,36,44)
-s.crop <- crop(worldata, e)
-a<-as.matrix(s.crop)
-marcoclim <- as.data.frame(a)
-names(marcoclim) <- BIOs
-marcoclim <- marcoclim[complete.cases(marcoclim),]
-pcaclim <- prcomp(marcoclim, center = TRUE, scale. = TRUE) 
-e <- pcaclim$x[,1:2]
-edf <- as.data.frame(e)
-edf$pais <- "Spain"
-```
-
-El hipervolumen de n-dimensiones es una medida que generaliza el concepto de volumen a espacios de dimensión superior a tres. 
-En nuestro caso utilizaremos un `Gaussian KDE`(kernel density estimation) en el que todos los puntos contribuyen a la densidad de la probabilidad global.
+Una vez obtenidos los datos del MCI, realizado el análisis de componentes principales y creado un data frame con los resultados de éste, definiremos el primer hipervolumen. El hipervolumen de n-dimensiones es una medida que generaliza el concepto de volumen a espacios de dimensión. En nuestro caso utilizaremos un `Gaussian KDE`(*kernel density estimation*) en el que todos los puntos contribuyen a la densidad de la probabilidad global ya que testeando vemos que es el mejor algoritmo de inclusion de puntos por nuestra tipologia de distribuciones. 
 
 En la función `hypervolume_gaussian`, por defecto, se le asigna un umbral del 95%, asegurando la máxima probabilidad en la estimación de la densidad.
-Además generaremos un plot para visualizar el hipervolumen en el que se genera un centroide.
+Además generaremos un plot para visualizar el hipervolumen en el que se genera un centroide (en rojo al centro del volumen).
 
 ```{r fig.align='center'}
-hv1sp = hypervolume_gaussian(data=subset(df,pais=="Spain")[1:2730, 1:2])
+hv1sp = hypervolume_gaussian(data=subset(df,pais=="PenIberica")[1:2730, 1:2])
 plot(hv1sp,show.contour=TRUE,contour.kde.level=0.01)
 
 ```
 
 ## Definiendo el marco climático dinámico
-El siguiente paso será generar un hipervolumen para cada uno de los países que testearemos frente al MCI. Por ejemplo, creando un hipervolúmen con los datos de Dinamarca.
+El siguiente paso será generar un hipervolumen para cada uno de los países que testearemos frente al MCI. Por ejemplo, creamos un hipervolúmen con los datos de Dinamarca.
 
 ```{r fig.align='center'}
-hv2dn = hypervolume_gaussian(data=subset(df,pais=="Din")[1:238, 1:2])
+hv2dn = hypervolume_gaussian(data=subset(df,pais=="Dinamarca")[1:238, 1:2])
 plot(hv2dn,show.contour=TRUE,contour.kde.level=0.01)
 ```
 
+## *Outputs*
 Una vez obtenidos los dos hipervolúmenes, utilizaremos la función `hypervolume_set` y `hypervolume_overlap_statistics`.
 La primera genera valores estadísticos computando la intersección, la unión y los componentes únicos(diferencia) de los hipervolúmenes, que podemos observar llamando la función `get_volume`
 
@@ -525,7 +506,6 @@ overl<- hypervolume_overlap_statistics(setH)
 dist<- hypervolume_distance(hv1sp, hv2dn, type='centroid')
 ```
 
-##*Outputs*
 Con los datos estadísticos obtenidos anteriormente, podemos generar una lista para facilitar la visualización de los diferentes índices y volúmenes.
 
 ```{r fig.align='center'}
@@ -534,10 +514,11 @@ values <- c(volumes, overl, dist)
 
 En esta figura ilustramos los diferentes índices obtenidos:
 <center>
-![Grafico](./Plots/EsquemaResultados.png)
+![Métricos de contraste de similitud](./Plots/EsquemaResultados.png)
+
 
 ## Bucle para la cuantificación sistemática de los hipervolúmenes
-En este punto, implementaremos un sencillo *for loop* para testear la similitud del marco climático de cada país respecto al de la Península Ibérica de forma rápida y sistemática. El MCI será un valor fijo en este bucle, mientras que los *inputs* seran los datos climáticos de los diferentes países a testear. A partir de este bucle, generaremos un *DataFrame* que recogerá los volúmenes e índices respecto al MCI de la mayoría de países del mundo. Primero cargaremos una lista con los nombres y los acrónimos de todos los países del mundo:
+En este punto, implementaremos un sencillo *for loop* para testear la similitud del marco climático de cada país respecto al de la Península Ibérica de forma rápida y sistemática. El MCI será un valor fijo en este bucle, mientras que los *inputs* seran los datos climáticos de los diferentes países a testear. A partir de este bucle, generaremos como *output* un *DataFrame* que recogerá los volúmenes e índices respecto al MCI de la mayoría de países del mundo. Primero cargaremos una lista con los nombres y los acrónimos de todos los países del mundo:
 
 ```{r}
 CountryCodes <- read.csv("CountryCodes.csv", header=FALSE, sep=";", skip = 1)
@@ -617,7 +598,7 @@ write.csv(Volume_dataset, file = "Volumes_dataset.csv")
 ## El *top ten* de países de mayor riesgo
 Los diferentes índices y valores obtenidos anteriormente nos permiten ordenar los países de forma que podamos visualizar aquellos que presentan un mayor grado de similitud climática. 
 
-Cada índice nos revela caracteristicas distintas de la intersección entre los volúmenes. Vamos a explorar los resultados obtenidos considerando el *top ten* de países por cada índice. 
+Cada índice nos revela características distintas de la intersección entre los volúmenes. Vamos a explorar los resultados obtenidos considerando el *top ten* de países por cada índice. 
 
 ```{r}
 
@@ -667,6 +648,7 @@ La mejor forma de presentar los valores obtenidos de similitud entre países es 
 Para ello, usaremos el paquete `leaflet`, que nos permite la creación de mapas interactivos. En primer lugar descargamos los datos de fronteras y polígonos de todos los países del mundo desde el portal Web de [Thematicmapping](http://thematicmapping.org/downloads/world_borders.php).
 
 Necesitaremos también el paquete `rgdal`, para obtener csv con los datos descargados, con la función `readOGR`. Los datos deben estar en un repositorio real del ordenador para cargarlos, por ejemplo así:
+
 >world_spdf=readOGR(dsn= "C:/Users/Erola/Desktop/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/WorldBorders ",layer="TM_WORLD_BORDERS_SIMPL-0.3")
 
 ```{r eval = FALSE, echo = TRUE}
@@ -710,7 +692,7 @@ Aquí mostramos una imagen PNG del mismo, pero para acceder al gráfico interact
 
 *Grado de similitud climatica respecto la Península Ibérica*
 <center>
-![Grafico](./Plots/JaccardPNG.png)
+![Similtud climática en base al índice de Jaccard](./Plots/JaccardPNG.png)
 
 
 ## Origen de las actuales especies invasoras en España
@@ -718,9 +700,9 @@ La Ley 42/2007, de 13 de diciembre, del Patrimonio Natural y de la Biodiversidad
 
 El Catálogo Español de Especies Exóticas Invasoras contempla 181 especies de diferentes grupos taxonómicos provinientes de diferentes paises. 
 
-Con el objetivo de comprobar si aquellos países con mayor coincidencia climática son origen de más especies actualmente invasoras, se ha realizado una búsqueda en los portales de [ISSG](http://issg.org/database/species/List.asp) y [GBIF](https://www.gbif.org/) para definir los países de origen de las actuales invasoras. 
+Con el objetivo de comprobar si aquellos países con mayor coincidencia climática son fuente de más especies actualmente invasoras, se ha realizado una búsqueda en los portales de [ISSG](http://issg.org/database/species/List.asp) y [GBIF](https://www.gbif.org/) para definir los países de origen de las actuales invasoras. 
 
-El resultado de esta búsqueda es el siguiente data frame:
+El resultado de esta búsqueda es el siguiente *data frame*:
 
 ```{r}
 origeninvasoras <- read_excel("SpanishRiskAssesment/Datos/origeninvasoras.xlsx")
@@ -779,7 +761,7 @@ p + labs(x = "Número de especies invasoras en España del país considerado", y
 
 ## Refinando el riesgo invasor en base a otras variables
 A parte de la similitud del marco climático, hay otros factores que pueden resultar determinantes para la determinación del riesgo invasor. La cantidad de mercancías y personas que se desplazan de un país a otro, podrían ser clave para entender en que medida realmente podrían ocurrir los desplazamientos de especies exóticas. Además, en los resultados presentados en el apartado anterior, hay una variabilidad muy grande, probablemente por trabajar con datos de especies invasoras de diferentes grupos taxonómicos. 
-Todo esto requiere la obtención de nuevos datos y desarrollo de nuevos modelos. De forma exploratoria presentaremos algunos modelos simples explorando datos disponibles como son la biodiversidad de cada país (que implicaría mayor probabilidad de existir una espécie que pueda ser invasora) y la distáncia entre el país y la Península Ibèrica (lo que probablemente facilite también la llegada de especies alóctonas).
+Todo esto requiere la obtención de nuevos datos y desarrollo de nuevos modelos. De forma exploratoria presentaremos algunos modelos simples explorando datos disponibles como son la biodiversidad de cada país (que implicaría mayor probabilidad de existir una espécie que pueda ser invasora) y la distáncia entre el país y la Península Ibérica (lo que probablemente facilite también la llegada de especies alóctonas).
 
 *BIODIVERSIDAD*:
 Existen datos de biodiversidad de especies normalizados por el tamaño del país: el [*National Biodiversity Index*](https://www.cbd.int/gbo1/annex.shtml). Los valores estan normalizados entre 1 (Màximo: Indonesia) y 0 (Mínimo: Groenlándia).
@@ -834,11 +816,11 @@ p + labs(x = "Número de especies invasoras en España del país considerado", y
 
 
 # Conclusiones
-Durante el desarrollo de este trabajo, hemos aprendido a utilizar distintas herramientas computacionales para valorar el riesgo invasor en la Península Ibérica en base a la similitud climática con otros países.
+Durante el desarrollo de este trabajo, hemos aprendido a utilizar distintas herramientas computacionales para valorar el grado de similitud climática de la Península Ibérica con el resto del mundo, con el objetivo de estimar el riesgo invasor. 
 Distintos paquetes de `R`y algunas bases de datos disponibles *on-line*, referentes a variables bioclimáticas de las distintas regiones del planeta, nos han permitido desarrollar un estudio que consideramos muy útil para determinar riesgo invasor, y que sienta las bases de posibles proyectos futuros de evaluación de este tipo.
 Estos resultados, ayudarían al entendimiento de la problemática relacionada con la pérdida de hábitat y diversidad y podrían mejorar políticas de gestión que protejan o controlen la entrada y salida de especies con potencial invasor, protegiendo así la biodiversidad de nuestro país y también del resto. 
 
-Fijándonos en el *ranking* que hemos obtenido, podemos encontrar los países con más riesgo respecto a la Península Ibérica, dependiendo del métrico o índice al que atendamos. En nuestro caso, hemos determinado el índice de Jaccard y Sorensen como los más fiables para la selección de estos países con condiciones más similares y por tanto de riesgo.
+Fijándonos en el *ranking* que hemos obtenido, podemos encontrar los países con más riesgo respecto a la Península Ibérica, dependiendo del métrico o índice al que atendamos. En nuestro caso, hemos determinado el índice de Jaccard y Sorensen como los más representativos de la similitud de volumenes para la selección de estos países con condiciones más similares y por tanto de riesgo.
 Como podemos apreciar en los últimos mapas, lo países ordenados de mayor a menor riesgo para la Península Ibérica son:
 
 1. Argentina
@@ -851,7 +833,15 @@ Como podemos apreciar en los últimos mapas, lo países ordenados de mayor a men
 8. Turquía
 9. Australia.
 
-El resultado de este ranking tiene sentido pues todos los países listados, contienen clima mediterráneo,o bien comparten cercanía con España, o latitud geográfica. 
+El resultado de este ranking tiene sentido pues todos los países listados, contienen clima mediterráneo, o bien comparten cercanía con España, o latitud geográfica. 
+
+Algunos de estos paises también constan en el ranquing de paises.... 
+- NUM SPECIES
+- BIODIVER
+- PROXIMIDAD
+
+
+
 
 Finalmente, nos gustaría resaltar las múltiples posibilidades en cuanto a las variables que se podrían tener en cuenta para seguir evaluando el riesgo, teniendo en cuenta lo desarrollado y obtenido en este trabajo.Por ejemplo, testeo del riesgo invasor de especies animales o plantas a nivel individual, o la determinación del riesgo en base al movimiento de ciudadanos o mercancía entre países, o en base a la cercanía en kilómetros de los territorios.
 
