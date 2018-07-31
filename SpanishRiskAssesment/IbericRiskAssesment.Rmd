@@ -121,9 +121,8 @@ En primer lugar descargaremos el *dataset* de la base de datos globales [WorldCl
 
 ```{r,fig.align='center',out.extra='angle=90'}
 worldata <- getData("worldclim",var="bio", res=10)
-worldata_25 <- getData("worldclim",var="bio", res=2.5)
 
-plot (worldata_25$bio1,
+plot (worldata$bio1,
    main = "Mapa de la temperatura media (BIO1) global",
    xlab = "Longitud (ºC)",
    ylab = "Latitud (ºC)")
@@ -153,15 +152,10 @@ names(marcoclim) <- BIOs
 
 Finalmente, exportamos el *dataframe* `marcoclim` en formato `*.csv`.
 ```{r}
-write.csv(marcoclim, file="Datos/MarcoClim2.5.csv")
+write.csv(marcoclim, file="Datos/MarcoClim.csv")
 ```
 
 # Análisis exploratorio {.tabset}
-Para no perder tiempo descargando cada vez los datos del marcoclim y preparándolos, cargamos directamente el csv generado:
-```{r warning=FALSE}
-marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
-    col_types = cols(X1 = col_skip()))
-```
 
 Antes de continuar trabajando, necesitamos hacernos una idea de cómo son los datos, para ello realizamos un pequeño análisis exploratorio y *data wrangling*.
 
@@ -358,16 +352,11 @@ Como podemos comprobar, usando el criterio `VIF` la variabilidad explicada en el
 Llegados a este punto, pretendemos evaluar si las condiciones climáticas de los diferentes países del mundo se parecen a las de la Península Ibérica. Así se podrá determinar después qué especies podrían encontrar condiciones favorables en nuestro país actuando como invasoras y qué especies españolas podrían serlo para otros países. Con estas evidencias se controlarían mejor la entrada y salida de especies invasoras, mejorando las políticas de comercio y transporte por ejemplo. Por eso proyectamos los datos del marco climático de estos países sobre el nuestro.
 
 
-Cargamos los datos del Marco Climático Ibérico:
+Preparamos los datos de la Península Ibérica de los dos primeros componentes:
 ```{r warning=FALSE}
-marcoclim<- read_csv("Datos/MarcoClim2.5.csv", 
-    col_types = cols(X1 = col_skip()))
 
 marcoclim <- marcoclim[complete.cases(marcoclim),] # Elimina NA's
-```
 
-Preparamos los datos de la Península Ibérica de los dos primeros componentes:
-```{r}
 e <- pcaclim$x[,1:2]
 edf <- as.data.frame(e)
 edf$pais <- "PenIberica" #Añadimos una varaible de País, con todas las etiquetes "PenIberica"
