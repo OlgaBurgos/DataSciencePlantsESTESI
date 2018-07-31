@@ -465,7 +465,7 @@ En la función `hypervolume_gaussian`, por defecto, se le asigna un umbral del 9
 Además generaremos un plot para visualizar el hipervolumen en el que se genera un centroide (en rojo al centro del volumen).
 
 ```{r fig.align='center'}
-hv1sp = hypervolume_gaussian(data=subset(df,pais=="PenIberica")[1:2730, 1:2])
+hv1sp = hypervolume_gaussian(data=subset(df,pais=="PenIberica")[1:41573, 1:2])
 plot(hv1sp,show.contour=TRUE,contour.kde.level=0.01)
 
 ```
@@ -474,7 +474,7 @@ plot(hv1sp,show.contour=TRUE,contour.kde.level=0.01)
 El siguiente paso será generar un hipervolumen para cada uno de los países que testearemos frente al MCI. Por ejemplo, creamos un hipervolúmen con los datos de Dinamarca.
 
 ```{r fig.align='center'}
-hv2dn = hypervolume_gaussian(data=subset(df,pais=="Dinamarca")[1:238, 1:2])
+hv2dn = hypervolume_gaussian(data=subset(df,pais=="Dinamarca")[1:3571, 1:2])
 plot(hv2dn,show.contour=TRUE,contour.kde.level=0.01)
 ```
 
@@ -645,10 +645,9 @@ Para ello, usaremos el paquete `leaflet`, que nos permite la creación de mapas 
 
 Necesitaremos también el paquete `rgdal`, para obtener csv con los datos descargados, con la función `readOGR`. Los datos deben estar en un repositorio real del ordenador para cargarlos, por ejemplo así:
 
->world_spdf=readOGR(dsn= "C:/Users/Erola/Desktop/DataSciencePlantsESTESI/SpanishRiskAssesment/Datos/WorldBorders ",layer="TM_WORLD_BORDERS_SIMPL-0.3")
-
 ```{r eval = FALSE, echo = TRUE}
-world_spdf=readOGR(dsn= "getwd() ",layer="TM_WORLD_BORDERS_SIMPL-0.3")
+#world_spdf=readOGR(dsn= "getwd() ",layer="TM_WORLD_BORDERS_SIMPL-0.3")
+world_spdf=readOGR(dsn= "C:/WorldBorders",layer="TM_WORLD_BORDERS_SIMPL-0.3")
 
 ```
 
@@ -659,21 +658,21 @@ Combinamos los datos de los polígonos con la variable que queremos visualizar:
 ```{r eval = FALSE, echo = TRUE}
 world_spdf@data$number<-c(1:246)
 
-dfJac <- Volumes[,c(8,13)]
+dfJac <- Volumes[,c(7,12)]
 names(dfJac) <- c("Jaccard", "ISO3")
 
-world_spdf1@data<-merge(world_spdf@data, dfJac, by= "ISO3", all.x= TRUE)
-world_spdf1@data<-arrange(world_spdf1@data, number)
-world_spdf1@data$Jaccard[ which(world_spdf1@data$Jaccard == 0)] = NA
+world_spdf@data<-merge(world_spdf@data, dfJac, by= "ISO3", all.x= TRUE)
+world_spdf@data<-arrange(world_spdf@data, number)
+world_spdf@data$Jaccard[ which(world_spdf@data$Jaccard == 0)] = NA
 
 pal <- colorQuantile("YlOrRd", NULL, n = 9)
 
 state_popup <- paste0("<strong> País: </strong>", 
-                      world_spdf1$NAME, 
+                      world_spdf$NAME, 
                       "<br><strong>Indice de Jaccard: </strong>", 
-                      world_spdf1$Jaccard)
+                      world_spdf$Jaccard)
 
-leaflet(data = world_spdf1) %>%
+leaflet(data = world_spdf) %>%
   addProviderTiles("CartoDB.Positron") %>%
   addPolygons(fillColor = ~pal(Jaccard), 
               fillOpacity = 0.8, 
@@ -684,7 +683,7 @@ leaflet(data = world_spdf1) %>%
 ```
 
 El resultado de éste codigo genera un gráfico interactivo que permite visualizar con zoom los valores del índice en los diferentes países. 
-Aquí mostramos una imagen PNG del mismo, pero para acceder al gráfico interactivo seguir [este enlace](/Jaccard.html). Los valores NA corresponden a una similitud nula.
+Aquí mostramos una imagen PNG del mismo, pero para acceder al gráfico interactivo seguir [este enlace](Jaccard.html). Los valores NA corresponden a una similitud nula.
 
 *Grado de similitud climatica respecto la Península Ibérica*
 <center>
@@ -701,7 +700,7 @@ Con el objetivo de comprobar si aquellos países con mayor coincidencia climáti
 El resultado de esta búsqueda es el siguiente *data frame*:
 
 ```{r}
-origeninvasoras <- read_excel("SpanishRiskAssesment/Datos/origeninvasoras.xlsx")
+origeninvasoras <- read_excel("Datos/origeninvasoras.xlsx")
 ```
 
 Recontamos el numero de ocurrencias de cada país y lo mezclamos con 
@@ -746,7 +745,7 @@ p + labs(x = "Número de especies invasoras en España del país considerado", y
 
 *Valor de Índice de Jaccard vs. Número de especies invasoras aportadas*
 ```{r}
-ggplot(withsp, aes(x=NumSpecies, y=Jaccard)) +
+p <-ggplot(withsp, aes(x=NumSpecies, y=Jaccart)) +
   geom_point() +
   geom_smooth(method =lm, se=FALSE)
 p + labs(x = "Número de especies invasoras en España del país considerado", y = "Índice de Jaccard" )
@@ -764,11 +763,7 @@ Existen datos de biodiversidad de especies normalizados por el tamaño del país
 
 Importamos los datos 
 ```{r}
-CountryData <- read_excel("SpanishRiskAssesment/Datos/CountryDataSum.xlsx", 
-+     col_types = c("text", "text", "text", 
-+         "text", "text", "blank", "blank", 
-+         "text", "blank", "blank", "text", 
-+         "blank"))
+CountryData <- read_excel("Datos/CountryDataSum.xlsx")
 
 names(CountryData)[3] <- "Country.Acronym"
 complete<- merge(Volume_dataset, CountryData, by = "Country.Acronym")
@@ -778,10 +773,9 @@ complete <-merge(withsp, complete, by="Country.Acronym")
 
 Generamos el gráfico:
 ```{r}
-complete1 <- complete[complete.cases(complete),]
-complete1$nbi <- as.numeric(complete1$NBI)
+complete$nbi <- as.numeric(complete$NBI)
 
-p <- ggplot(complete1, aes(x=NumSpecies, y=nbi)) +
+p <- ggplot(complete, aes(x=NumSpecies, y=nbi)) +
   geom_point() +
 geom_smooth(method = loess, se= TRUE)
 p + labs(x = "Número de especies invasoras en España del país considerado", y = "Índice de Biodiversidad nacional" )
@@ -789,7 +783,7 @@ p + labs(x = "Número de especies invasoras en España del país considerado", y
 
 Los 10 países con mayor valor de biodiversidad son:
 ```{r}
-nbirank <- arrange(complete1, desc(nbi))
+nbirank <- arrange(complete, desc(nbi))
 nbirank <- data.frame(nbirank$Country.Acronym, nbirank$nbi)
 nbirank[1:10,] #Sacamos los 10 primeros países.
 
@@ -800,10 +794,9 @@ nbirank[1:10,] #Sacamos los 10 primeros países.
 A través del portal Web [Geodatos](https://www.geodatos.net) hemos podido obtener los valores de distancia geográfica de todos los países respecto la Península Ibérica.
 
 ```{r}
-complete1 <- complete[complete.cases(complete),]
-complete1$distance.km <- as.numeric(complete1$distance.km)
+complete$distance.km <- as.numeric(complete$distance.km)
 
-p <- ggplot(complete1, aes(x=NumSpecies, y=distance.km)) +
+p <- ggplot(complete, aes(x=NumSpecies, y=distance.km)) +
   geom_point() +
 geom_smooth(method = lm, se= FALSE)
 p + labs(x = "Número de especies invasoras en España del país considerado", y = "Distáncia respecto el país de origen (km)" )
