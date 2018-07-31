@@ -616,7 +616,7 @@ CountryCodes$V2 <- NULL
 CountryCodes$V4 <- NULL
 Volumes <- read.csv("Volumes.csv", header = T)
 Volumes$X <- NULL
-Vol.Names <- c('Vol.MCI', 'Vol.Country', 'Vol.Intersection', 'Vol.Union', 'Vol.Unique.MCI', 'Vol.Unique.Country', 'Jaccard', 'Sorensen', 'NormVol.MCI', 'NormVol.Country', 'Dist.Centroid', 'Country.Acronym')
+Vol.Names <- c('Vol.MCI', 'Vol.Country', 'Vol.Intersection', 'Vol.Union', 'Vol.Unique.MCI', 'Vol.Unique.Country', 'Jaccart', 'Sorensen', 'NormVol.MCI', 'NormVol.Country', 'Dist.Centroid', 'Country.Acronym')
 names(Volumes) <- Vol.Names
 rownames(Volumes) <- Volumes$Country.Acronym
 names(CountryCodes) = c('Country.Name', 'V3')
@@ -631,6 +631,8 @@ Los diferentes índices y valores obtenidos anteriormente nos permiten ordenar l
 Cada índice nos revela caracteristicas distintas de la intersección entre los volúmenes. Vamos a explorar los resultados obtenidos considerando el *top ten* de países por cada índice. 
 
 ```{r}
+
+Volumes_dataset <- read.csv("Volumes_dataset.csv")
 
 rVolCount <- arrange(Volumes_dataset, desc(Vol.Country)) # Ordenado de mayor volumen a menor
 rVolCount <- rVolCount$Country.Acronym # Guardamos la columna con los nombres de los países
